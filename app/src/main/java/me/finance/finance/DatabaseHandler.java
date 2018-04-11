@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHandler{
 
     private SQLiteOpenHelper openHelper;
@@ -46,11 +49,28 @@ public class DatabaseHandler{
         database.execSQL("CREATE TABLE IF NOT EXISTS intakes (" +
                 "_id INTEGER, " +
                 "value FLOAT, " +
-                "date DATE, " +
+                "date TEXT, " +
                 "name TEXT," +
                 "comment TEXT" +
                 ");");
         System.out.println(":)))");
+    }
+
+    /** For testing;
+     *  How loop through the DB
+     */
+
+    public void insertTable() {
+        database.execSQL("INSERT INTO intakes VALUES (1, 2, 'TEST', 'TEST', 'TEST');");
+        List<String> name = new ArrayList<String>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
+         cursor.moveToFirst();
+         while(!cursor.isAfterLast()){
+             name.add(cursor.getString(3));
+             cursor.moveToNext();
+         }
+         cursor.close();
+         System.out.println(name);
     }
 
 
