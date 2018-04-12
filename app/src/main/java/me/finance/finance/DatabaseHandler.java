@@ -17,12 +17,6 @@ public class DatabaseHandler{
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "finances.db";
-    public static final String INTAKE_TABLE_NAME = "intakes";
-    public static final String INTAKE_COLUMN_ID = "id";
-    public static final String INTAKE_COLUMN_VALUE = "value";
-    public static final String INTAKE_COLUMN_DATE = "date";
-    public static final String INTAKE_COLUMN_NAME = "name";
-    public static final String INTAKE_COLUMN_COMMENT = "comment";
 
     private DatabaseHandler(Context context) {
         this.openHelper = new DatabaseHelper(context);
@@ -35,16 +29,31 @@ public class DatabaseHandler{
         return instance;
     }
 
+     /*
+     *
+     * Establishes connection to database
+     *
+     */
     public void open() {
         this.database = openHelper.getWritableDatabase();
     }
 
+    /*
+    *
+    * Closes connection if exists
+    *
+    */
     public void close() {
         if (database != null) {
             this.database.close();
         }
     }
 
+     /*
+     *
+     * Hard coded creation of a table in database, just for testing purposes
+     *
+     */
     public void createTable() {
         database.execSQL("CREATE TABLE IF NOT EXISTS intakes (" +
                 "_id INTEGER, " +
@@ -56,10 +65,11 @@ public class DatabaseHandler{
         System.out.println(":)))");
     }
 
-    /** For testing;
-     *  How loop through the DB
+     /*
+     *
+     * Inserts dummy values into test table, also shows how to query
+     *
      */
-
     public void insertTable() {
         database.execSQL("INSERT INTO intakes VALUES (1, 2, 'TEST', 'TEST', 'TEST');");
         List<String> name = new ArrayList<String>();
