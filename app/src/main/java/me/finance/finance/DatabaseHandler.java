@@ -60,16 +60,14 @@ public class DatabaseHandler{
                 "value FLOAT, " +
                 "date TEXT, " +
                 "name TEXT," +
-                "comment TEXT," +
-                "PRIMARY KEY(_id)" +
+                "comment TEXT" +
                 ");");
         database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "value FLOAT, " +
                 "date TEXT, " +
                 "name TEXT, " +
-                "comment TEXT, " +
-                "PRIMARY KEY(_id)" +
+                "comment TEXT" +
                 ");");
         System.out.println(":)))");
     }
