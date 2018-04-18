@@ -71,6 +71,7 @@ public class DatabaseHandler{
                 "name TEXT, " +
                 "comment TEXT" +
                 ");");
+
         System.out.println(":)))");
     }
 
