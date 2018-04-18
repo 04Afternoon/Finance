@@ -58,14 +58,16 @@ public class DatabaseHandler{
         database.execSQL("CREATE TABLE IF NOT EXISTS intakes (" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "value FLOAT, " +
-                "date TEXT, " +
+                "date DATE, " +
                 "name TEXT," +
                 "comment TEXT" +
                 ");");
         database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "value FLOAT, " +
-                "date TEXT, " +
+                "start_date DATE, " +
+                "iteration TEXT, " +
+                "end_date DATE, " +
                 "name TEXT, " +
                 "comment TEXT" +
                 ");");
@@ -77,17 +79,35 @@ public class DatabaseHandler{
      * Inserts dummy values into test table, also shows how to query
      *
      */
-    public void insertTable() {
-        database.execSQL("INSERT INTO intakes VALUES (1, 2, 'TEST', 'TEST', 'TEST');");
-        List<String> name = new ArrayList<String>();
+    public void insertDummyValues() {
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (200.5, '2017-12-17', 'Felix Auf', 'Lohn');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2017-06-07', 'Harald Koinig', 'Biergeld');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-01-07', 'Harald Koinig', 'OEH Beitrag');");
+
+        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
+        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
+        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag');");
+
+        List<String> intakes = new ArrayList<String>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
          cursor.moveToFirst();
          while(!cursor.isAfterLast()){
-             name.add(cursor.getString(3));
+             intakes.add(cursor.getString(4));
              cursor.moveToNext();
          }
          cursor.close();
-         System.out.println(name);
+         System.out.println("INTAKES " + intakes);
+
+        List<String> permanents = new ArrayList<String>();
+        Cursor cursor2 = database.rawQuery("SELECT * FROM permanents", null);
+        cursor2.moveToFirst();
+        while(!cursor2.isAfterLast()){
+            permanents.add(cursor2.getString(6));
+            cursor2.moveToNext();
+
+        }
+        cursor2.close();
+        System.out.println("PERMANENTS " + permanents);
     }
 
 
