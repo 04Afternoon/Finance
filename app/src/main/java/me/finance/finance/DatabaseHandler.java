@@ -1,17 +1,13 @@
 package me.finance.finance;
 
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-
-import me.finance.finance.Model.Intake;
 
 public class DatabaseHandler{
 
@@ -79,7 +75,8 @@ public class DatabaseHandler{
         System.out.println(":)))");
     }
 
-    /*public List<Intake> getIntakes()
+
+       /*public List<Intake> getIntakes()
     {
         String sql = "SELECT * FROM intakes";
         List<Intake> intakes = new ArrayList<>();
@@ -100,7 +97,8 @@ public class DatabaseHandler{
 
     }*/
 
-     /*
+
+    /*
      *
      * Inserts dummy values into test table, also shows how to query
      *
