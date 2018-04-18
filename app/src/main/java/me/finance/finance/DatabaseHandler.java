@@ -9,6 +9,8 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.finance.finance.Model.Intake;
+
 public class DatabaseHandler{
 
     private SQLiteOpenHelper openHelper;
@@ -97,7 +99,30 @@ public class DatabaseHandler{
         System.out.println(":)))");
     }
 
-     /*
+
+       public List<Intake> getIntakes()
+    {
+        String sql = "SELECT * FROM intakes";
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery(sql, null);
+        while(!cursor.isAfterLast()){
+            intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), cursor.getString(5)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return intakes;
+    }
+
+    public void addIntake(Intake intake)
+    {
+        String sql = "INSERT INTO intakes (value, date, name, comment) VALUES (" + intake.getValue() + ", '" + intake.getDate() + "', '" +
+                intake.getName() + "', '" + intake.getComment() + "');";
+        database.execSQL(sql);
+
+    }
+
+
+    /*
      *
      * Inserts dummy values into test table, also shows how to query
      *
