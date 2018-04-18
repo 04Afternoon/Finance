@@ -9,6 +9,8 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.finance.finance.Model.Intake;
+
 public class DatabaseHandler{
 
     private SQLiteOpenHelper openHelper;
@@ -76,7 +78,7 @@ public class DatabaseHandler{
     }
 
 
-       /*public List<Intake> getIntakes()
+       public List<Intake> getIntakes()
     {
         String sql = "SELECT * FROM intakes";
         List<Intake> intakes = new ArrayList<>();
@@ -95,7 +97,7 @@ public class DatabaseHandler{
                 intake.getName() + "', '" + intake.getComment() + "');";
         database.execSQL(sql);
 
-    }*/
+    }
 
 
     /*
