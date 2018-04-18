@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import me.finance.finance.Model.Intake;
+
 public class OverviewActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
@@ -41,18 +43,17 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
-        System.out.println("Database added");
         databaseHandler.open();
         databaseHandler.createTables();
-        databaseHandler.insertDummyValues();
-        databaseHandler.close();
+        //databaseHandler.insertDummyValues();
+
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
-
+        System.out.println("Database closed");
+        databaseHandler.close();
     }
 
 }

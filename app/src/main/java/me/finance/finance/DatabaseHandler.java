@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,12 +81,16 @@ public class DatabaseHandler{
 
        public List<Intake> getIntakes()
     {
-        String sql = "SELECT * FROM intakes";
+        //String sql = "SELECT * FROM intakes";
         List<Intake> intakes = new ArrayList<>();
-        Cursor cursor = database.rawQuery(sql, null);
-        while(!cursor.isAfterLast()){
-            intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), cursor.getString(5)));
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
+        if(cursor.moveToFirst())
+        {
+       do {
+            intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), "Hallo"/*cursor.getString(5)*/));
             cursor.moveToNext();
+
+        }while(cursor.moveToNext());
         }
         cursor.close();
         return intakes;
@@ -93,9 +98,16 @@ public class DatabaseHandler{
 
     public void addIntake(Intake intake)
     {
-        String sql = "INSERT INTO intakes (value, date, name, comment) VALUES (" + intake.getValue() + ", '" + intake.getDate() + "', '" +
+        /*String sql = "INSERT INTO intakes (value, date, name, comment) VALUES (" + intake.getValue() + ", '" + intake.getDate() + "', '" +
                 intake.getName() + "', '" + intake.getComment() + "');";
-        database.execSQL(sql);
+        database.execSQL(sql);*/
+
+        SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment) VALUES (NULL, ?, ?, ?,? )");
+        sql.bindDouble(1, intake.getValue());
+        sql.bindString(2, intake.getDate());
+        sql.bindString(3, intake.getName());
+        sql.bindString(4, intake.getComment());
+        sql.execute();
 
     }
 

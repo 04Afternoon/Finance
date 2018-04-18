@@ -5,13 +5,20 @@ import java.sql.Date;
 public class Intake {
 
     private int id_;
-    private float value_;
+    private double value_;
     private String date_;
     private String name_;
     private String comment_;
 
-    public Intake(int id_, float value_, String date_, String name_, String comment_) {
+    public Intake(int id_, double value_, String date_, String name_, String comment_) {
         this.id_ = id_;
+        this.value_ = value_;
+        this.date_ = date_;
+        this.name_ = name_;
+        this.comment_ = comment_;
+    }
+
+    public Intake(double value_, String date_, String name_, String comment_) {
         this.value_ = value_;
         this.date_ = date_;
         this.name_ = name_;
@@ -22,7 +29,7 @@ public class Intake {
         return id_;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value_;
     }
 
