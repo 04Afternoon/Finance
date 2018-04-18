@@ -60,8 +60,14 @@ public class DatabaseHandler{
                 "value FLOAT, " +
                 "date DATE, " +
                 "name TEXT," +
-                "comment TEXT" +
+                "comment TEXT, " +
+                "category INTEGER, " +
+                "payment_opt INTEGER, " +
+                "FOREIGN KEY(category) REFERENCES categories(_id), " +
+                "FOREIGN KEY(payment) REFERENCES payment(_id)" +
                 ");");
+
+
         database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "value FLOAT, " +
@@ -69,8 +75,24 @@ public class DatabaseHandler{
                 "iteration TEXT, " +
                 "end_date DATE, " +
                 "name TEXT, " +
-                "comment TEXT" +
+                "comment TEXT, " +
+                "category INTEGER, " +
+                "payment_opt INTEGER, " +
+                "next_exec DATE, " +
+                "FOREIGN KEY(category) REFERENCES categories(_id), " +
+                "FOREIGN KEY(payment) REFERENCES payment(_id)" +
                 ");");
+
+        database.execSQL("CREATE TABLE IF NOT EXISTS categories(" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT " +
+                ");");
+
+        database.execSQL("CREATE TABLE IF NOT EXISTS payment(" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT " +
+                ");");
+
 
         System.out.println(":)))");
     }
@@ -88,6 +110,11 @@ public class DatabaseHandler{
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag');");
+
+        database.execSQL("INSERT INTO payment (name) VALUES ('Bar');");
+
+        database.execSQL("INSERT INTO categories (name) VALUES ('Bier');");
+
 
         List<String> intakes = new ArrayList<String>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
@@ -109,6 +136,28 @@ public class DatabaseHandler{
         }
         cursor2.close();
         System.out.println("PERMANENTS " + permanents);
+
+        List<String> category = new ArrayList<String>();
+        Cursor cursor3 = database.rawQuery("SELECT * FROM categories", null);
+        cursor3.moveToFirst();
+        while(!cursor3.isAfterLast()){
+            category.add(cursor3.getString(1));
+            cursor3.moveToNext();
+
+        }
+        cursor3.close();
+        System.out.println("CATEGORIES " + category);
+
+        List<String> payment = new ArrayList<String>();
+        Cursor cursor4 = database.rawQuery("SELECT * FROM payment", null);
+        cursor4.moveToFirst();
+        while(!cursor4.isAfterLast()){
+            payment.add(cursor4.getString(1));
+            cursor4.moveToNext();
+
+        }
+        cursor4.close();
+        System.out.println("PAYMENT " + payment);
     }
 
 
