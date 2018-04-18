@@ -1,13 +1,17 @@
 package me.finance.finance;
 
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.finance.finance.Model.Intake;
 
 public class DatabaseHandler{
 
@@ -74,6 +78,27 @@ public class DatabaseHandler{
 
         System.out.println(":)))");
     }
+
+    /*public List<Intake> getIntakes()
+    {
+        String sql = "SELECT * FROM intakes";
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery(sql, null);
+        while(!cursor.isAfterLast()){
+            intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), cursor.getString(5)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return intakes;
+    }
+
+    public void addIntake(Intake intake)
+    {
+        String sql = "INSERT INTO intakes (value, date, name, comment) VALUES (" + intake.getValue() + ", '" + intake.getDate() + "', '" +
+                intake.getName() + "', '" + intake.getComment() + "');";
+        database.execSQL(sql);
+
+    }*/
 
      /*
      *

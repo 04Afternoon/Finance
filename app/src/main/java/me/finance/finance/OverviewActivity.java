@@ -41,6 +41,7 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
+        System.out.println("Database added");
         databaseHandler.open();
         databaseHandler.createTables();
         databaseHandler.insertDummyValues();
