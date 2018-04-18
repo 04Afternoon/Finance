@@ -54,13 +54,22 @@ public class DatabaseHandler{
      * Hard coded creation of a table in database, just for testing purposes
      *
      */
-    public void createTable() {
+    public void createTables() {
         database.execSQL("CREATE TABLE IF NOT EXISTS intakes (" +
-                "_id INTEGER, " +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "value FLOAT, " +
                 "date TEXT, " +
                 "name TEXT," +
-                "comment TEXT" +
+                "comment TEXT," +
+                "PRIMARY KEY(_id)" +
+                ");");
+        database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "value FLOAT, " +
+                "date TEXT, " +
+                "name TEXT, " +
+                "comment TEXT, " +
+                "PRIMARY KEY(_id)" +
                 ");");
         System.out.println(":)))");
     }

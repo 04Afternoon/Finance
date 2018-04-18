@@ -42,7 +42,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
         databaseHandler.open();
-        databaseHandler.createTable();
+        databaseHandler.createTables();
         databaseHandler.close();
 
         mTextMessage = (TextView) findViewById(R.id.message);
