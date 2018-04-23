@@ -1,18 +1,14 @@
 package me.finance.finance;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.List;
-
-import me.finance.finance.Model.Intake;
-
-public class OverviewActivity extends AppCompatActivity {
+public class OverviewActivity extends FragmentActivity {
 
     private TextView mTextMessage;
     private DatabaseHandler DBHandler;
@@ -22,15 +18,27 @@ public class OverviewActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    //mTextMessage.setText(R.string.title_home);
+                case R.id.navigation_balance:
+                    setTitle("BALANCE");
+                    FragmentBalance balance = new FragmentBalance();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, balance).commit();
                     return true;
-                case R.id.navigation_dashboard:
-                    //mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_one:
+                    setTitle("ONE");
+                    FragmentOne one = new FragmentOne();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, one).commit();
                     return true;
-                case R.id.navigation_notifications:
-                    //mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_two:
+                    setTitle("TWO");
+                    FragmentTwo two = new FragmentTwo();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, two).commit();
+                    return true;
+                case R.id.navigation_three:
+                    setTitle("THREE");
+                    FragmentThree three = new FragmentThree();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, three).commit();
                     return true;
             }
             return false;

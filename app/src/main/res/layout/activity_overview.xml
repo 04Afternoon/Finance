@@ -7,122 +7,22 @@
     android:layout_height="match_parent"
     tools:context="me.finance.finance.OverviewActivity">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="10dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
-        <TextView
-            android:id="@+id/bilanz_title"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/border"
-            android:gravity="center"
-            android:text="Bilanz"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@style/CustomProgressBarHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/activity_vertical_margin"
-            android:max="100"
-            android:progress="73"
-            android:progressBackgroundTint="#FC0000"
-            android:progressTint="#00C60D"
-            tools:layout_editor_absoluteY="178dp" />
-
-        <Button
-            android:id="@+id/ausgaben"
-            android:layout_width="@dimen/box_size"
-            android:layout_height="@dimen/box_size"
-            android:layout_alignBaseline="@+id/einnahmen"
-            android:layout_alignBottom="@+id/einnahmen"
-            android:layout_alignStart="@+id/progressBar"
-            android:layout_marginStart="33dp"
-            android:background="@drawable/round_button"
-            android:backgroundTint="#FC0000"
-            android:text="-"
-            android:textSize="40sp" />
-
-        <Button
-            android:id="@+id/einnahmen"
-            android:layout_width="@dimen/box_size"
-            android:layout_height="@dimen/box_size"
-            android:layout_alignEnd="@+id/progressBar"
-            android:layout_below="@+id/progressBar"
-            android:layout_marginEnd="31dp"
-            android:layout_marginTop="26dp"
-            android:background="@drawable/round_button"
-            android:backgroundTint="#00C60D"
-            android:text="+"
-            android:textSize="40sp" />
-
-        <TextView
-            android:id="@+id/ausgaben_monat"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/einnahmen_monat"
-            android:background="@drawable/border"
-            android:gravity="center"
-            android:text="Ausgaben"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/einnahmen_monat"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/einnahmen"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/border"
-            android:gravity="center"
-            android:text="Einnahmen"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="150dp"
-            android:layout_height="35dp"
-            android:layout_above="@+id/progressBar"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
-            android:gravity="center"
-            android:textAlignment="center" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="250dp"
-            android:layout_height="35dp"
-            android:layout_above="@+id/textView2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            android:text="Total"
-            android:textStyle="bold"
-            android:textAlignment="center" />
-
-    </RelativeLayout>
-
-
+    <fragment
+        android:id="@+id/fragment"
+        android:name="me.finance.finance.FragmentBalance"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -135,5 +35,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
+
 
 </android.support.constraint.ConstraintLayout>

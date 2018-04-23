@@ -1,10 +1,9 @@
 package me.finance.finance;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.content.Context;
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class DatabaseHandler{
                 "category INTEGER, " +
                 "payment_opt INTEGER, " +
                 "FOREIGN KEY(category) REFERENCES categories(_id), " +
-                "FOREIGN KEY(payment) REFERENCES payment(_id)" +
+                "FOREIGN KEY(payment_opt) REFERENCES payment(_id)" +
                 ");");
 
 
@@ -83,7 +82,7 @@ public class DatabaseHandler{
                 "payment_opt INTEGER, " +
                 "next_exec DATE, " +
                 "FOREIGN KEY(category) REFERENCES categories(_id), " +
-                "FOREIGN KEY(payment) REFERENCES payment(_id)" +
+                "FOREIGN KEY(payment_opt) REFERENCES payment(_id)" +
                 ");");
 
         database.execSQL("CREATE TABLE IF NOT EXISTS categories(" +
