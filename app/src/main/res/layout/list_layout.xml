@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/zweck"
+        android:layout_width="307dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_weight="50"
+        android:gravity="center"
+        android:text="links"
+        android:textAlignment="viewStart" />
+
+    <TextView
+        android:id="@+id/int_or_val"
+        android:layout_width="101dp"
+        android:layout_height="50dp"
+        android:layout_weight="90"
+        android:gravity="center"
+        android:text="rechts"
+        android:textAlignment="textEnd" />
+</LinearLayout>

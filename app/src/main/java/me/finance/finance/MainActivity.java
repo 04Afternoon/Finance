@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class OverviewActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity {
 
     private TextView mTextMessage;
     private DatabaseHandler DBHandler;
@@ -25,20 +25,21 @@ public class OverviewActivity extends FragmentActivity {
                     FragmentBalance balance = new FragmentBalance();
                     fragmentManager.beginTransaction().replace(R.id.fragment, balance).commit();
                     return true;
-                case R.id.navigation_one:
-                    setTitle("ONE");
-                    FragmentOne one = new FragmentOne();
-                    fragmentManager.beginTransaction().replace(R.id.fragment, one).commit();
+                case R.id.navigation_months:
+                    FragmentMonths months = new FragmentMonths();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, months).commit();
                     return true;
-                case R.id.navigation_two:
-                    setTitle("TWO");
-                    FragmentTwo two = new FragmentTwo();
-                    fragmentManager.beginTransaction().replace(R.id.fragment, two).commit();
+                case R.id.navigation_permanents:
+                    FragmentPermanents perms = new FragmentPermanents();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, perms).commit();
                     return true;
-                case R.id.navigation_three:
-                    setTitle("THREE");
-                    FragmentThree three = new FragmentThree();
-                    fragmentManager.beginTransaction().replace(R.id.fragment, three).commit();
+                case R.id.navigation_stats:
+                    FragmentStats stats = new FragmentStats();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, stats).commit();
+                    return true;
+                case R.id.navigation_settings:
+                    FragmentSettings settings = new FragmentSettings();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, settings).commit();
                     return true;
             }
             return false;

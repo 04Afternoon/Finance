@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.finance.finance.OverviewActivity">
+    tools:context="me.finance.finance.MainActivity">
 
     <fragment
         android:id="@+id/fragment"

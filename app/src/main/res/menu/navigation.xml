@@ -4,21 +4,26 @@
     <item
         android:id="@+id/navigation_balance"
         android:icon="@drawable/home"
-        android:title="FragmentBalance" />
+        android:title="Bilanz" />
 
     <item
-        android:id="@+id/navigation_one"
-        android:icon="@drawable/coins"
-        android:title="FragmentOne" />
+        android:id="@+id/navigation_months"
+        android:icon="@drawable/months"
+        android:title="Monat" />
 
     <item
-        android:id="@+id/navigation_two"
-        android:icon="@drawable/exchange"
-        android:title="FragmentTwo" />
+        android:id="@+id/navigation_permanents"
+        android:icon="@drawable/clock"
+        android:title="Daueraufträge" />
 
     <item
-        android:id="@+id/navigation_three"
-        android:icon="@drawable/money"
-        android:title="FragmentThree" />
+        android:id="@+id/navigation_stats"
+        android:icon="@drawable/stats"
+        android:title="Statistik" />
+
+    <item
+    android:id="@+id/navigation_settings"
+    android:icon="@drawable/settings"
+    android:title="Einstellungen" />
 
 </menu>
