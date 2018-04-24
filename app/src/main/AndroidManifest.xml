@@ -2,11 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.finance.finance">
 
+    <!--
+    Icon from https://www.iconfinder.com/icons/2250033/cash_fees_money_purse_shop_spend_wallet_icon#size=256
+    Under Licence: CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+    Author must be credited somewhere (just in source code or in the app?)
+    -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon_256"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon_256"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
