@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
@@ -64,5 +65,7 @@ public class MainActivity extends FragmentActivity {
         System.out.println("Database closed");
         databaseHandler.close();
     }
+
+
 
 }

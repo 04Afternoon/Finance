@@ -1,13 +1,19 @@
 package me.finance.finance;
 
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,11 +24,17 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class FragmentPermanents extends Fragment {
     private ListView mListView;
-    private Context context;
+    private Context context, containerContext;
     private View view;
 
     public FragmentPermanents() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        context = getContext();
     }
 
 
@@ -33,7 +45,18 @@ public class FragmentPermanents extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_permanents, container, false);
         mListView = (ListView) view.findViewById(R.id.perms_list);
-        context = container.getContext();
+        containerContext = container.getContext();
+
+        ImageButton add_perms_button = view.findViewById(R.id.add_perms_button);
+        buttonEffect(add_perms_button);
+
+        add_perms_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT ADD BUTTON", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
 
         populateListView();
 
@@ -61,9 +84,33 @@ public class FragmentPermanents extends Fragment {
         System.out.println("DEBUG:" + itemsArrayList);
 
 
-        CustomAdapter adapter = new CustomAdapter(context, itemsArrayList);
+        CustomAdapter adapter = new CustomAdapter(containerContext, itemsArrayList);
 
         ListView itemsListView  = (ListView) view.findViewById(R.id.perms_list);
         itemsListView.setAdapter(adapter);
+    }
+
+
+    //copied from https://stackoverflow.com/questions/7175873/click-effect-on-button-in-android
+    public static void buttonEffect(View button){
+        button.setOnTouchListener(new View.OnTouchListener() {
+
+            @SuppressLint("ClickableViewAccessibility")
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(0xe0f47521, PorterDuff.Mode.SRC_ATOP);
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
     }
 }

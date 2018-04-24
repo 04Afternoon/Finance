@@ -65,8 +65,8 @@
             android:id="@+id/months_search_button"
             android:layout_width="44dp"
             android:layout_height="43dp"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_search_category_default"
+            android:background="@android:drawable/ic_search_category_default"
+            android:backgroundTint="@android:color/black"
             android:tint="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
