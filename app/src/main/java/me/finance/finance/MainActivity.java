@@ -55,15 +55,15 @@ public class MainActivity extends FragmentActivity {
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
         databaseHandler.open();
         databaseHandler.createTables();
-        //databaseHandler.insertDummyValues();
+        databaseHandler.insertDummyValues();
 
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        System.out.println("Database closed");
-        databaseHandler.close();
+        //System.out.println("Database closed");
+        //databaseHandler.close();
     }
 
 
