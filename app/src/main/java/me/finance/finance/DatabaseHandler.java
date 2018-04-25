@@ -104,8 +104,8 @@ public class DatabaseHandler{
                 ");");
     }
 
-    public List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
+    public ArrayList<Category> getCategories() {
+        ArrayList<Category> categories = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -125,8 +125,8 @@ public class DatabaseHandler{
         return category;
     }
 
-    public List<Payment> getPayments() {
-        List<Payment> payments = new ArrayList<>();
+    public ArrayList<Payment> getPayments() {
+        ArrayList<Payment> payments = new ArrayList<>();
         Payment payment = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
@@ -312,7 +312,7 @@ public class DatabaseHandler{
     //  ;)
     public void addCategoryBetter(String name_)
     {
-        String sql = "INSERT INTO TABLE categories (name) VALUES (" + name_+ ");";
+        String sql = "INSERT INTO categories (name) VALUES (\"" + name_+ "\");";
         database.execSQL(sql);
     }
 

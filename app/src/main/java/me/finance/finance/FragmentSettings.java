@@ -40,10 +40,12 @@ public class FragmentSettings extends Fragment {
         Button categories = view.findViewById(R.id.categories_settings_button);
         Button accounts = view.findViewById(R.id.accounts_settings_button);
 
+        final Intent intent = new Intent(getActivity(), CategoryActivity.class);
+
         categories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent intent = new Intent(getActivity(), CategoryActivity.class);
+               intent.putExtra("settings", "manage categories");
                startActivity(intent);
             }
         });
@@ -51,8 +53,8 @@ public class FragmentSettings extends Fragment {
         accounts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT ACCOUNTS BUTTON", Toast.LENGTH_SHORT);
-                toast.show();
+                intent.putExtra("settings", "manage accounts");
+                startActivity(intent);
             }
         });
 
