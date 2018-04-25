@@ -149,6 +149,14 @@ public class DatabaseHandler{
         return payment;
     }
 
+    public void removeCategory(String name){
+        database.delete("categories", "name = " + name, null);
+    }
+
+    public void removePayment(String name){
+        database.delete("payment", "name = " + name, null);
+    }
+
 
     public void deleteTableContents(){
         database.delete("intakes", null, null);
@@ -298,6 +306,14 @@ public class DatabaseHandler{
         long id = sql.executeInsert();
 
         return id;
+    }
+
+
+    //  ;)
+    public void addCategoryBetter(String name_)
+    {
+        String sql = "INSERT INTO TABLE categories (name) VALUES (" + name_+ ");";
+        database.execSQL(sql);
     }
 
 
