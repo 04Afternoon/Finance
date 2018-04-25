@@ -4,6 +4,15 @@ public class Payment {
     private int id_;
     private String name_;
 
+    public Payment(int id_, String name_) {
+        this.id_ = id_;
+        this.name_ = name_;
+    }
+
+    public Payment(String name_) {
+        this.name_ = name_;
+    }
+
     public int getId(){
         return id_;
     }

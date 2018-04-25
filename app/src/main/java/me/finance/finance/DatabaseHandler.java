@@ -12,6 +12,7 @@ import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
+import me.finance.finance.Model.Payment;
 
 public class DatabaseHandler{
 
@@ -116,12 +117,15 @@ public class DatabaseHandler{
         return categories;
     }
 
-    public List<String> getPayment() {
-        List<String> payments = new ArrayList<>();
+    public List<Payment> getPayment() {
+        List<Payment> payments = new ArrayList<>();
+        Payment payment = null;
         Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            payments.add(cursor.getString(0));
+            payment.setId(cursor.getInt(0));
+            payment.setName(cursor.getString(1));
+            payments.add(payment);
             cursor.moveToNext();
         }
         cursor.close();

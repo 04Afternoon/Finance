@@ -13,6 +13,32 @@ public class Permanent{
     private int payment_opt_;
     private String next_exec_;
 
+    public Permanent(int id_, float value_, String start_date_, String iteration, String end_date_, String name_, String comment_, int category_, int payment_opt_, String next_exec_) {
+        this.id_ = id_;
+        this.value_ = value_;
+        this.start_date_ = start_date_;
+        this.iteration = iteration;
+        this.end_date_ = end_date_;
+        this.name_ = name_;
+        this.comment_ = comment_;
+        this.category_ = category_;
+        this.payment_opt_ = payment_opt_;
+        this.next_exec_ = next_exec_;
+    }
+
+    public Permanent(float value_, String start_date_, String iteration, String end_date_, String name_, String comment_, int category_, int payment_opt_, String next_exec_) {
+        this.value_ = value_;
+        this.start_date_ = start_date_;
+        this.iteration = iteration;
+        this.end_date_ = end_date_;
+        this.name_ = name_;
+        this.comment_ = comment_;
+        this.category_ = category_;
+        this.payment_opt_ = payment_opt_;
+        this.next_exec_ = next_exec_;
+    }
+
+
     public int getId() {
         return id_;
     }

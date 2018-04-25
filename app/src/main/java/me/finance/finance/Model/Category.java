@@ -4,6 +4,15 @@ public class Category {
     private int id_;
     private String name_;
 
+    public Category(int id_, String name_) {
+        this.id_ = id_;
+        this.name_ = name_;
+    }
+
+    public Category(String name_) {
+        this.name_ = name_;
+    }
+
     public int getId(){
         return id_;
     }

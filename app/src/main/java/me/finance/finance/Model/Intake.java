@@ -12,7 +12,6 @@ public class Intake {
     private int category_;
     private int payment_opt_;
 
-/*
     public Intake(int id_, double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
         this.id_ = id_;
         this.value_ = value_;
@@ -22,13 +21,15 @@ public class Intake {
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
     }
-    public Intake(double value_, String date_, String name_, String comment_) {
+    public Intake(double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
         this.value_ = value_;
         this.date_ = date_;
         this.name_ = name_;
         this.comment_ = comment_;
+        this.category_ = category_;
+        this.payment_opt_ = payment_opt_;
     }
-*/
+
     public int getId() {
         return id_;
     }
