@@ -7,12 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
+import me.finance.finance.Model.Permanent;
 
 public class DatabaseHandler{
 
@@ -102,8 +104,8 @@ public class DatabaseHandler{
                 ");");
     }
 
-    public ArrayList<Category> getCategories() {
-        ArrayList<Category> categories = new ArrayList<>();
+    public List<Category> getCategories() {
+        List<Category> categories = new ArrayList<>();
         Category category = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
@@ -117,7 +119,16 @@ public class DatabaseHandler{
         return categories;
     }
 
-    public List<Payment> getPayment() {
+    public Category getCategory(int id) {
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE _id = ?", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            category = new Category(cursor.getInt(0), cursor.getString(1));
+        }
+        return category;
+    }
+
+    public List<Payment> getPayments() {
         List<Payment> payments = new ArrayList<>();
         Payment payment = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
@@ -130,6 +141,15 @@ public class DatabaseHandler{
         }
         cursor.close();
         return payments;
+    }
+
+    public Payment getPayment(int id) {
+        Payment payment = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE _id = ?", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            payment = new Payment(cursor.getInt(0), cursor.getString(1));
+        }
+        return payment;
     }
 
 
@@ -147,8 +167,8 @@ public class DatabaseHandler{
             values.put("date",intake.getDate());
             values.put("name",intake.getName());
             values.put("comment",intake.getComment());
-            //values.put("category",(Byte)null);//TODO replace
-            //values.put("payment_opt",(Byte)null);//TODO replace
+            values.put("category",intake.getCategory());
+            values.put("payment_opt",intake.getPayment_opt());
 
             if(database.update("intakes",values,"_id = ?", new String[]{String.valueOf(intake.getId())}) != 1){
                 return false;
@@ -157,10 +177,64 @@ public class DatabaseHandler{
         return true;
     }
 
-    public void insertCategory(){
+    public boolean updateCategories(Category... categories){
+        for(Category category : categories){
+            ContentValues values = new ContentValues();
+            values.put("name",category.getName());
 
+            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(category.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
     }
 
+    public boolean updatePayment(Payment... payments){
+        for(Payment payment : payments){
+            ContentValues values = new ContentValues();
+            values.put("name",payment.getName());
+
+            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(payment.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean updatePermanent(Permanent... permanents){
+        for(Permanent permanent : permanents){
+            ContentValues values = new ContentValues();
+            values.put("value",permanent.getValue());
+            values.put("start_date",permanent.getStartDate());
+            values.put("iteration",permanent.getIteration());
+            values.put("end_date",permanent.getEndDate());
+            values.put("name",permanent.getName());
+            values.put("comment",permanent.getComment());
+            values.put("category",permanent.getCategory());
+            values.put("payment_opt",permanent.getPayment_opt());
+            values.put("next_exec",permanent.getNext_exec());
+
+            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+    public Intake getIntake(int id)
+    {
+        Intake intake = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE _id = ?", new String[]{String.valueOf(id)});
+        if(cursor.moveToFirst())
+        {
+            intake =  new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+        }
+        cursor.close();
+        return intake;
+    }
 
     public List<Intake> getIntakes()
     {
@@ -168,29 +242,27 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
         if(cursor.moveToFirst())
         {
-       do {
-            //intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), "Hallo"/*cursor.getString(5)*/));
-            cursor.moveToNext();
+          do {
+            intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
 
-        }while(cursor.moveToNext());
+          }while(cursor.moveToNext());
         }
         cursor.close();
         return intakes;
     }
 
-    public void addIntake(Intake intake)
+    public long addIntake(Intake intake)
     {
-        /*String sql = "INSERT INTO intakes (value, date, name, comment) VALUES (" + intake.getValue() + ", '" + intake.getDate() + "', '" +
-                intake.getName() + "', '" + intake.getComment() + "');";
-        database.execSQL(sql);*/
-
-        SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment) VALUES (NULL, ?, ?, ?,? )");
-        sql.bindDouble(1, intake.getValue());
+        SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment, category, payment_opt) VALUES (NULL, ?, ?, ?,?,?,? )");
+        sql.bindLong(1, intake.getId());
         sql.bindString(2, intake.getDate());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
-        sql.execute();
+        sql.bindLong(5,intake.getCategory());
+        sql.bindLong(6, intake.getPayment_opt());
+        long id = sql.executeInsert();
 
+        return id;
     }
 
 
