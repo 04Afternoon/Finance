@@ -102,8 +102,8 @@ public class DatabaseHandler{
                 ");");
     }
 
-    public List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
+    public ArrayList<Category> getCategories() {
+        ArrayList<Category> categories = new ArrayList<>();
         Category category = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
@@ -157,6 +157,10 @@ public class DatabaseHandler{
         return true;
     }
 
+    public void insertCategory(){
+
+    }
+
 
     public List<Intake> getIntakes()
     {
@@ -165,7 +169,7 @@ public class DatabaseHandler{
         if(cursor.moveToFirst())
         {
        do {
-            intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), "Hallo"/*cursor.getString(5)*/));
+            //intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), "Hallo"/*cursor.getString(5)*/));
             cursor.moveToNext();
 
         }while(cursor.moveToNext());

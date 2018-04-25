@@ -3,6 +3,7 @@ package me.finance.finance;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -42,8 +43,8 @@ public class FragmentSettings extends Fragment {
         categories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT CATEGORIES BUTTON", Toast.LENGTH_SHORT);
-                toast.show();
+               Intent intent = new Intent(getActivity(), CategoryActivity.class);
+               startActivity(intent);
             }
         });
 
