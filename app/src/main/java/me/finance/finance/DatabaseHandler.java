@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteStatement;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 
 public class DatabaseHandler{
@@ -53,7 +54,11 @@ public class DatabaseHandler{
 
      /*
      *
-     * Hard coded creation of a table in database, just for testing purposes
+     * Creation of tables for Database:
+     * intakes (_id (int), value(float), date(date), name(text), comment(text), category(int), payment_opt(int))
+     * permanents (_id(int), value(float), start_date(date), iteration(text), end_date(date), name(text), comment(text), category(int), payment_opt(int), next_exec(date))
+     * categories (_id(int), name(text))
+     * payment (_id(int), name(text))
      *
      */
     public void createTables() {
@@ -68,7 +73,6 @@ public class DatabaseHandler{
                 "FOREIGN KEY(category) REFERENCES categories(_id), " +
                 "FOREIGN KEY(payment_opt) REFERENCES payment(_id)" +
                 ");");
-
 
         database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -94,13 +98,37 @@ public class DatabaseHandler{
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT " +
                 ");");
+    }
 
+    public List<Category> getCategories() {
+        List<Category> categories = new ArrayList<>();
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            category.setId(cursor.getInt(0));
+            category.setName(cursor.getString(1));
+            categories.add(category);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return categories;
+    }
 
-        System.out.println(":)))");
+    public List<String> getPayment() {
+        List<String> payments = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            payments.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return payments;
     }
 
 
-       public List<Intake> getIntakes()
+    public List<Intake> getIntakes()
     {
         //String sql = "SELECT * FROM intakes";
         List<Intake> intakes = new ArrayList<>();
@@ -134,9 +162,11 @@ public class DatabaseHandler{
 
 
     /*
+     * ***TESTING***
      *
      * Inserts dummy values into test table, also shows how to query
      *
+     * ***TESTING***
      */
     public void insertDummyValues() {
         database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (200.5, '2017-12-17', 'Felix Auf', 'Lohn');");

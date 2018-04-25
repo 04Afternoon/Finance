@@ -1,6 +1,7 @@
 package me.finance.finance.Model;
 
 public class Permanent{
+
     private int id_;
     private float value_;
     private String start_date_;
@@ -8,11 +9,17 @@ public class Permanent{
     private String end_date_;
     private String name_;
     private String comment_;
+    private int category_;
+    private int payment_opt_;
+    private String next_exec_;
 
     public int getId() {
         return id_;
     }
 
+    public void setId(int id_){
+        this.id_ = id_;
+    }
 
     public float getValue() {
         return value_;
@@ -60,5 +67,29 @@ public class Permanent{
 
     public void setComment(String comment_) {
         this.comment_ = comment_;
+    }
+
+    public int getCategory(){
+        return category_;
+    }
+
+    public void setCategory(int category_){
+        this.category_ = category_;
+    }
+
+    public int getPayment_opt(){
+        return payment_opt_;
+    }
+
+    public void setPayment_opt(int payment_opt_){
+        this.payment_opt_ = payment_opt_;
+    }
+
+    public String  getNext_ecex(){
+        return next_exec_;
+    }
+
+    public void setNext_exec(String next_exec_){
+        this.next_exec_ = next_exec_;
     }
 }
