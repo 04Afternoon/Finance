@@ -104,8 +104,8 @@ public class DatabaseHandler{
                 ");");
     }
 
-    public List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
+    public ArrayList<Category> getCategories() {
+        ArrayList<Category> categories = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -125,15 +125,12 @@ public class DatabaseHandler{
         return category;
     }
 
-    public List<Payment> getPayments() {
-        List<Payment> payments = new ArrayList<>();
-        Payment payment = null;
+    public ArrayList<Payment> getPayments() {
+        ArrayList<Payment> payments = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            payment.setId(cursor.getInt(0));
-            payment.setName(cursor.getString(1));
-            payments.add(payment);
+            payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
             cursor.moveToNext();
         }
         cursor.close();
@@ -150,11 +147,11 @@ public class DatabaseHandler{
     }
 
     public void removeCategory(String name){
-        database.delete("categories", "name = " + name, null);
+        database.delete("categories", "name = '" + name + "'", null);
     }
 
     public void removePayment(String name){
-        database.delete("payment", "name = " + name, null);
+        database.delete("payment", "name = '" + name + "'", null);
     }
 
 
@@ -312,7 +309,14 @@ public class DatabaseHandler{
     //  ;)
     public void addCategoryBetter(String name_)
     {
-        String sql = "INSERT INTO TABLE categories (name) VALUES (" + name_+ ");";
+        String sql = "INSERT INTO categories (name) VALUES (\"" + name_+ "\");";
+        database.execSQL(sql);
+    }
+
+    //  ;)
+    public void addPaymentBetter(String name_)
+    {
+        String sql = "INSERT INTO payment (name) VALUES (\"" + name_+ "\");";
         database.execSQL(sql);
     }
 
@@ -332,11 +336,6 @@ public class DatabaseHandler{
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag');");
-
-        database.execSQL("INSERT INTO payment (name) VALUES ('Bar');");
-
-        database.execSQL("INSERT INTO categories (name) VALUES ('Bier');");
-
 
         List<String> intakes = new ArrayList<String>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
