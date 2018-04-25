@@ -251,12 +251,41 @@ public class DatabaseHandler{
     public long addIntake(Intake intake)
     {
         SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment, category, payment_opt) VALUES (NULL, ?, ?, ?,?,?,? )");
-        sql.bindLong(1, intake.getId());
+        sql.bindDouble(1, intake.getValue());
         sql.bindString(2, intake.getDate());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
         sql.bindLong(5,intake.getCategory());
         sql.bindLong(6, intake.getPayment_opt());
+        long id = sql.executeInsert();
+
+        return id;
+    }
+
+    public long addPayment(Payment payment)
+    {
+        SQLiteStatement sql = database.compileStatement("INSERT INTO payment (_id, name) VALUES (NULL, ?)");
+        sql.bindString(1,payment.getName());
+        long id = sql.executeInsert();
+
+        return id;
+    }
+
+    public long addPermanet(Permanent permanent)
+    {
+        SQLiteStatement sql = database.compileStatement("INSERT INTO permanents (_id, value, start_date, iteration, end_date, name, comment, category, payment_opt, next_exec) " +
+                "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        sql.bindDouble(1, permanent.getValue());
+        sql.bindString(2,permanent.getStartDate());
+        sql.bindString(3,permanent.getIteration());
+        sql.bindString(4,permanent.getEndDate());
+        sql.bindString(5,permanent.getName());
+        sql.bindString(6,permanent.getComment());
+        sql.bindLong(7,permanent.getCategory());
+        sql.bindLong(8,permanent.getPayment_opt());
+        sql.bindString(9,permanent.getNext_exec());
+
         long id = sql.executeInsert();
 
         return id;
