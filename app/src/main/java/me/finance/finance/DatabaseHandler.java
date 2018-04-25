@@ -153,6 +153,11 @@ public class DatabaseHandler{
         database.delete("categories", "name = " + name, null);
     }
 
+    public void removePayment(String name){
+        database.delete("payment", "name = " + name, null);
+    }
+
+
     public void deleteTableContents(){
         database.delete("intakes", null, null);
         database.delete("permanents", null, null);
