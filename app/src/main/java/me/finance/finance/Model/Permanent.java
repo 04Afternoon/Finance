@@ -111,7 +111,7 @@ public class Permanent{
         this.payment_opt_ = payment_opt_;
     }
 
-    public String  getNext_ecex(){
+    public String  getNext_exec(){
         return next_exec_;
     }
 

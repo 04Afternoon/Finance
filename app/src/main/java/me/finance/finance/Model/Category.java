@@ -1,6 +1,6 @@
 package me.finance.finance.Model;
 
-public class Category {
+public class Category{
     private int id_;
     private String name_;
 

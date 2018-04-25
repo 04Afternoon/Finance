@@ -13,6 +13,7 @@ import java.util.List;
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
+import me.finance.finance.Model.Permanent;
 
 public class DatabaseHandler{
 
@@ -146,8 +147,8 @@ public class DatabaseHandler{
             values.put("date",intake.getDate());
             values.put("name",intake.getName());
             values.put("comment",intake.getComment());
-            //values.put("category",(Byte)null);//TODO replace
-            //values.put("payment_opt",(Byte)null);//TODO replace
+            values.put("category",intake.getCategory());
+            values.put("payment_opt",intake.getPayment_opt());
 
             if(database.update("intakes",values,"_id = ?", new String[]{String.valueOf(intake.getId())}) != 1){
                 return false;
@@ -155,6 +156,52 @@ public class DatabaseHandler{
         }
         return true;
     }
+
+    public boolean updateCategories(Category... categories){
+        for(Category category : categories){
+            ContentValues values = new ContentValues();
+            values.put("name",category.getName());
+
+            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(category.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean updatePayment(Payment... payments){
+        for(Payment payment : payments){
+            ContentValues values = new ContentValues();
+            values.put("name",payment.getName());
+
+            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(payment.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean updatePermanent(Permanent... permanents){
+        for(Permanent permanent : permanents){
+            ContentValues values = new ContentValues();
+            values.put("value",permanent.getValue());
+            values.put("start_date",permanent.getStartDate());
+            values.put("iteration",permanent.getIteration());
+            values.put("end_date",permanent.getEndDate());
+            values.put("name",permanent.getName());
+            values.put("comment",permanent.getComment());
+            values.put("category",permanent.getCategory());
+            values.put("payment_opt",permanent.getPayment_opt());
+            values.put("next_exec",permanent.getNext_exec());
+
+            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 
 
     public List<Intake> getIntakes()
