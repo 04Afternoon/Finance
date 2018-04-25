@@ -52,9 +52,6 @@ public class CategoryActivity extends AppCompatActivity {
         ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
         Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
 
-        EditText categoryName = (EditText) findViewById(R.id.categoryName);
-        String name = categoryName.toString();
-
         create_category_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +66,7 @@ public class CategoryActivity extends AppCompatActivity {
                 {
                     databaseHandler.addPaymentBetter(name);
                     ArrayList<Payment> accounts = databaseHandler.getPayments();
+                    System.out.println("DEBUG :" + accounts);
                     populateAccountListView(accounts);
                 }
             }

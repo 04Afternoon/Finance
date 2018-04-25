@@ -127,13 +127,10 @@ public class DatabaseHandler{
 
     public ArrayList<Payment> getPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
-        Payment payment = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            payment.setId(cursor.getInt(0));
-            payment.setName(cursor.getString(1));
-            payments.add(payment);
+            payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
             cursor.moveToNext();
         }
         cursor.close();
