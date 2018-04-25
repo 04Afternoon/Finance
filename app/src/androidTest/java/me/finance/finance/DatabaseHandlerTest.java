@@ -73,20 +73,37 @@ public class DatabaseHandlerTest {
     public void addIntake(){
 
         List<Intake> intakes_before = databaseHandler.getIntakes();
+        int before = intakes_before.size();
 
-
-        // double value_, String date_, String name_, String comment_, int category_, int payment_opt_
         Intake intake_new = new Intake( 23,"12.2.18","Intake_test","Test",1,2);
 
-        databaseHandler.addIntake(intake_new);
+
+        long AddIntakeReturn = databaseHandler.addIntake(intake_new);
+
+        String string_print = Long.toString(AddIntakeReturn);
+        String string_before = Integer.toString(before);
+
+        String string_out_before = "Before: " + string_before;
+        String string_out = "Return from Add Intake: " + string_print;
+        System.out.println(string_out_before);
+        System.out.println(string_out);
 
 
         List<Intake> intakes_after = databaseHandler.getIntakes();
 
+        int after = intakes_after.size();
+
+        String string_after = Integer.toString(before);
+        String string_out_after = "After: " + string_after;
+
+        System.out.println(string_out_after);
+
+        assertEquals(before,after-1);
+
     }
 
     @Test
-    public void getIntake(){
+    public void getIntakes(){
 
         List<Intake> intakes = databaseHandler.getIntakes();
 

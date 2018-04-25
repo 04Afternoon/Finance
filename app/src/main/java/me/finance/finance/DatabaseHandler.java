@@ -244,7 +244,6 @@ public class DatabaseHandler{
         {
           do {
             intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
-            cursor.moveToNext();
 
           }while(cursor.moveToNext());
         }
