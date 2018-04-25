@@ -9,12 +9,12 @@
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="393dp"
+        android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="@drawable/border"
         android:gravity="center"
-        android:text="Einstellungen"
+        android:text="Settings"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="30sp"
@@ -31,9 +31,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="28dp"
         android:background="#bed4dc"
-        android:text="Konten verwalten"
+        android:text="manage accounts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintHorizontal_bias="0.46"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categories_settings_button" />
 
@@ -46,7 +46,7 @@
         android:layout_marginTop="52dp"
         android:background="#bed4dc"
         android:elevation="0dp"
-        android:text="Kategorien verwalten"
+        android:text="Manage categories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"

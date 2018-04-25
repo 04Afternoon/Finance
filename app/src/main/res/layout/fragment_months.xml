@@ -1,6 +1,7 @@
 <!-- TODO: Update blank fragment layout -->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -28,7 +29,7 @@
     <ListView
         android:id="@+id/monthly_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="451dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:drawable/screen_background_light_transparent"
@@ -43,9 +44,9 @@
 
     <ImageButton
         android:id="@+id/calender_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/calender"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,9 +54,10 @@
 
     <ImageButton
         android:id="@+id/months_search_button"
-        android:layout_width="44dp"
-        android:layout_height="43dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:background="@android:drawable/ic_search_category_default"
         android:backgroundTint="@android:color/black"
         android:tint="@android:color/black"

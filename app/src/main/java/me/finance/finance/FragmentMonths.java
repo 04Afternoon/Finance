@@ -76,6 +76,7 @@ public class FragmentMonths extends Fragment {
 
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
+
         List<Intake> intakes = databaseHandler.getIntakes();
 
         MonthAdapter adapter = new MonthAdapter(containerContext, intakes);

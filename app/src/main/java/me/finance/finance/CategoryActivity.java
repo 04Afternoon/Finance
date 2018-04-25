@@ -35,6 +35,14 @@ public class CategoryActivity extends AppCompatActivity {
         title = findViewById(R.id.settings_title);
         title.setText(getIntent().getStringExtra("settings"));
 
+        Button create_category_button = findViewById(R.id.create_category);
+        ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
+        Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
+
+        if(title.getText().toString().equals("manage accounts")){
+            create_category_button.setText("Add Account");
+        }
+
         databaseHandler.open();
 
         if(title.getText().toString().equals("manage categories"))
@@ -48,26 +56,27 @@ public class CategoryActivity extends AppCompatActivity {
             populateAccountListView(accounts);
         }
 
-        Button create_category_button = findViewById(R.id.create_category);
-        ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
-        Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
 
         create_category_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String name = ((EditText) findViewById(R.id.categoryName)).getText().toString();
-                if(title.getText().toString().equals("manage categories"))
+                if(title.getText().toString().equals("manage categories") && !name.isEmpty())
                 {
                     databaseHandler.addCategoryBetter(name);
                     ArrayList<Category> categories = databaseHandler.getCategories();
                     populateCategoryListView(categories);
+                    ((EditText) findViewById(R.id.categoryName)).setText("");
                 }
-                else if(title.getText().toString().equals("manage accounts"))
+                else if(title.getText().toString().equals("manage accounts") && !name.isEmpty())
                 {
                     databaseHandler.addPaymentBetter(name);
                     ArrayList<Payment> accounts = databaseHandler.getPayments();
-                    System.out.println("DEBUG :" + accounts);
                     populateAccountListView(accounts);
+                    ((EditText) findViewById(R.id.categoryName)).setText("");
+                } else {
+                    Toast toast = Toast.makeText(view.getContext(), "Empty name!", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         });
@@ -115,8 +124,6 @@ public class CategoryActivity extends AppCompatActivity {
         exit_categories_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                databaseHandler.close();
                 finish();
             }
         });

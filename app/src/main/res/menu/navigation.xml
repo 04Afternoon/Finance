@@ -4,26 +4,26 @@
     <item
         android:id="@+id/navigation_balance"
         android:icon="@drawable/home"
-        android:title="Bilanz" />
+        android:title="Balance" />
 
     <item
         android:id="@+id/navigation_months"
         android:icon="@drawable/months"
-        android:title="Monat" />
+        android:title="Months" />
 
     <item
         android:id="@+id/navigation_permanents"
         android:icon="@drawable/clock"
-        android:title="Daueraufträge" />
+        android:title="Permanents" />
 
     <item
         android:id="@+id/navigation_stats"
         android:icon="@drawable/stats"
-        android:title="Statistik" />
+        android:title="Stats" />
 
     <item
-    android:id="@+id/navigation_settings"
-    android:icon="@drawable/settings"
-    android:title="Einstellungen" />
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/settings"
+        android:title="Settings" />
 
 </menu>

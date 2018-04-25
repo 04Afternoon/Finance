@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteStatement;
 
 import java.sql.Array;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,12 +124,13 @@ public class DatabaseHandler{
         if (cursor.moveToFirst()) {
             category = new Category(cursor.getInt(0), cursor.getString(1));
         }
+        cursor.close();
         return category;
     }
 
     public ArrayList<Payment> getPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM payment", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
@@ -144,6 +146,7 @@ public class DatabaseHandler{
         if (cursor.moveToFirst()) {
             payment = new Payment(cursor.getInt(0), cursor.getString(1));
         }
+        cursor.close();
         return payment;
     }
 
@@ -274,15 +277,18 @@ public class DatabaseHandler{
     public ArrayList<Intake> getIntakes()
     {
         ArrayList<Intake> intakes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
-        if(cursor.moveToFirst())
-        {
-          do {
-            intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
-
-          }while(cursor.moveToNext());
+        try {
+            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes", null);
+            if (cursorIntakes.moveToFirst()) {
+                do {
+                    intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                            cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                } while (cursorIntakes.moveToNext());
+            }
+            cursorIntakes.close();
+        } catch(Exception e) {
+            System.out.println("");
         }
-        cursor.close();
         return intakes;
     }
 

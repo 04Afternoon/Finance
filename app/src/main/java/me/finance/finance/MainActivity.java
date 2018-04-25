@@ -22,7 +22,7 @@ public class MainActivity extends FragmentActivity implements BottomNavigationVi
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
         databaseHandler.open();
         databaseHandler.createTables();
-        databaseHandler.insertDummyValues();
+        //databaseHandler.insertDummyValues();
 
 
         mTextMessage = (TextView) findViewById(R.id.message);

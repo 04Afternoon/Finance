@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+//TODO http://www.android-graphview.org/ API EINBINDEN
 
 public class FragmentStats extends Fragment {
 

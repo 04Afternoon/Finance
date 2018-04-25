@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f7eff0"
     tools:context=".FragmentBalance">
-
-    <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -16,12 +15,12 @@
 
         <TextView
             android:id="@+id/bilanz_title"
-            android:layout_width="match_parent"
+            android:layout_width="222dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/border"
             android:gravity="center"
-            android:text="Bilanz"
+            android:text="Balance"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="30sp"
@@ -72,11 +71,12 @@
             android:layout_height="100dp"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/einnahmen_monat"
-            android:background="@drawable/border"
+            android:background="@android:drawable/progress_horizontal"
+            android:backgroundTint="@android:color/darker_gray"
             android:gravity="center"
             android:text="Ausgaben"
             android:textAlignment="center"
-            android:textColor="#000000"
+            android:textColor="@android:color/holo_red_light"
             android:textSize="30sp" />
 
         <TextView
@@ -86,11 +86,12 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/einnahmen"
             android:layout_marginTop="14dp"
-            android:background="@drawable/border"
+            android:background="@android:drawable/progress_horizontal"
+            android:backgroundTint="@android:color/darker_gray"
             android:gravity="center"
             android:text="Einnahmen"
             android:textAlignment="center"
-            android:textColor="#000000"
+            android:textColor="@android:color/holo_green_dark"
             android:textSize="30sp" />
 
         <TextView
@@ -100,9 +101,12 @@
             android:layout_above="@+id/progressBar"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
+            android:background="@android:drawable/progress_horizontal"
+            android:backgroundTint="@android:color/darker_gray"
             android:gravity="center"
-            android:textAlignment="center" />
+            android:text="placehodler"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView3"

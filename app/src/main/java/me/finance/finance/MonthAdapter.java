@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
+import me.finance.finance.Model.Payment;
 
 public class MonthAdapter extends BaseAdapter {
     private Context context; //context
@@ -50,6 +51,7 @@ public class MonthAdapter extends BaseAdapter {
         TextView textViewItemAmount = convertView.findViewById(R.id.monthAmount);
         TextView textViewItemDate = convertView.findViewById(R.id.monthDate);
         TextView textViewItemCategory = convertView.findViewById(R.id.monthCategory);
+        TextView textViewItemPayment = convertView.findViewById(R.id.payment_textfield_months);
 
         textViewItemName.setText(currentItem.getName());
 
@@ -66,6 +68,12 @@ public class MonthAdapter extends BaseAdapter {
             textViewItemCategory.setText(category.getName());
         } else {
             textViewItemCategory.setText(R.string.no_category);
+        }
+        Payment payment = DatabaseHandler.getInstance(context).getPayment(currentItem.getPayment_opt());
+        if (payment != null && payment.getName() != null) {
+            textViewItemPayment.setText(payment.getName());
+        } else {
+            textViewItemPayment.setText(R.string.cash);
         }
 
         return convertView;

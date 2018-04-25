@@ -2,17 +2,20 @@ package me.finance.finance;
 
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,8 @@ import me.finance.finance.Model.Intake;
 public class FragmentBalance extends Fragment {
 
     private Context context;
+    private ProgressBar progressBar;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -44,6 +49,7 @@ public class FragmentBalance extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_balance, container, false);
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(view.getContext());
@@ -92,6 +98,13 @@ public class FragmentBalance extends Fragment {
 
         TextView total = view.findViewById(R.id.textView2);
         total.setText(String.format("%.2f", (ausgaben_monat + einnahmen_monat)));
+
+        Integer allover = (int) (einnahmen_monat + ((-1)*ausgaben_monat));
+        Integer percentage = (int) ((einnahmen_monat / allover)*100);
+        System.out.println("TOTAL: " + percentage);
+
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setProgress(percentage);
 
         return view;
     }
