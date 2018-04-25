@@ -149,6 +149,15 @@ public class DatabaseHandler{
         return payment;
     }
 
+    public void removeCategory(String name){
+        database.delete("categories", "name = " + name, null);
+    }
+
+    public void addCategory(String name){
+        ContentValues values = new ContentValues();
+        String sql = "INSERT INTO TABLE categories (name) VALUES (" + name + ");";
+        database.execSQL(sql);
+    }
 
     public void deleteTableContents(){
         database.delete("intakes", null, null);
