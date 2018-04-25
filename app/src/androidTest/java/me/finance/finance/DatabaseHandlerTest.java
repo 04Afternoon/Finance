@@ -31,7 +31,7 @@ public class DatabaseHandlerTest {
         databaseHandler.open();
         databaseHandler.createTables();
         databaseHandler.deleteTableContents();
-        databaseHandler.insertDummyValues();
+        //databaseHandler.insertDummyValues();
     }
 
     @After
@@ -76,8 +76,21 @@ public class DatabaseHandlerTest {
     }
 
     @Test
-    public void testInValidGetCategory1() {
-        assertNull(databaseHandler.getIntake(-1));
+    public void testInvalidGetCategory1() {
+        assertNull(databaseHandler.getCategory(-1));
+    }
+
+    @Test
+    public void testValidGetCategories1() {
+        Category category = new Category("category");
+        int id = (int)databaseHandler.addCategory(category);
+        assertEquals(1, databaseHandler.getCategories().size());
+        assertEquals(id, databaseHandler.getCategories().get(0).getId());
+    }
+
+    @Test
+    public void testInvalidGetCategories1() {
+        assertEquals(0,databaseHandler.getCategories().size());
     }
 
 

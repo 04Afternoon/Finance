@@ -106,13 +106,10 @@ public class DatabaseHandler{
 
     public List<Category> getCategories() {
         List<Category> categories = new ArrayList<>();
-        Category category = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            category.setId(cursor.getInt(0));
-            category.setName(cursor.getString(1));
-            categories.add(category);
+            categories.add(new Category(cursor.getInt(0),cursor.getString(1)));
             cursor.moveToNext();
         }
         cursor.close();
