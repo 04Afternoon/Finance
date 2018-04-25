@@ -150,11 +150,11 @@ public class DatabaseHandler{
     }
 
     public void removeCategory(String name){
-        database.delete("categories", "name = " + name, null);
+        database.delete("categories", "name = '" + name + "'", null);
     }
 
     public void removePayment(String name){
-        database.delete("payment", "name = " + name, null);
+        database.delete("payment", "name = '" + name + "'", null);
     }
 
 
@@ -313,6 +313,13 @@ public class DatabaseHandler{
     public void addCategoryBetter(String name_)
     {
         String sql = "INSERT INTO categories (name) VALUES (\"" + name_+ "\");";
+        database.execSQL(sql);
+    }
+
+    //  ;)
+    public void addPaymentBetter(String name_)
+    {
+        String sql = "INSERT INTO payment (name) VALUES (\"" + name_+ "\");";
         database.execSQL(sql);
     }
 

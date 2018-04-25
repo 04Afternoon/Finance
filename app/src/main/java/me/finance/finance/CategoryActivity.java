@@ -86,13 +86,13 @@ public class CategoryActivity extends AppCompatActivity {
 
                             if(title.getText().toString().equals("manage categories"))
                             {
-                                //databaseHandler.removeCategory(name);
-                                //((BaseAdapter) categoryList.getAdapter()).notifyDataSetChanged();
+                                databaseHandler.removeCategory(name);
+                                ((BaseAdapter) categoryList.getAdapter()).notifyDataSetChanged();
                             }
                             else if(title.getText().toString().equals("manage accounts"))
                             {
-                                //databaseHandler.removePayment(name);
-                                //((BaseAdapter) categoryList.getAdapter()).notifyDataSetChanged();
+                                databaseHandler.removePayment(name);
+                                ((BaseAdapter) categoryList.getAdapter()).notifyDataSetChanged();
                             }
                             Intent intent = getIntent();
                             finish();
