@@ -105,7 +105,7 @@ public class DatabaseHandler{
     public List<Category> getCategories() {
         List<Category> categories = new ArrayList<>();
         Category category = null;
-        Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             category.setId(cursor.getInt(0));
@@ -120,7 +120,7 @@ public class DatabaseHandler{
     public List<Payment> getPayment() {
         List<Payment> payments = new ArrayList<>();
         Payment payment = null;
-        Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             payment.setId(cursor.getInt(0));
