@@ -265,6 +265,15 @@ public class DatabaseHandler{
         return id;
     }
 
+    public long addCategory(Category category)
+    {
+        SQLiteStatement sql = database.compileStatement("INSERT INTO categories (_id, name) VALUES (NULL, ?)");
+        sql.bindString(1, category.getName());
+        long id = sql.executeInsert();
+
+        return id;
+    }
+
 
     /*
      * ***TESTING***

@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 
 import static org.junit.Assert.*;
@@ -64,6 +65,18 @@ public class DatabaseHandlerTest {
 
     @Test
     public void testInValidGetIntake1() {
+        assertNull(databaseHandler.getIntake(-1));
+    }
+
+    @Test
+    public void testValidGetCategory1() {
+        Category category = new Category("category");
+        int id = (int)databaseHandler.addCategory(category);
+        assertEquals("category", databaseHandler.getCategory(id).getName());
+    }
+
+    @Test
+    public void testInValidGetCategory1() {
         assertNull(databaseHandler.getIntake(-1));
     }
 
