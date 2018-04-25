@@ -1,5 +1,6 @@
 package me.finance.finance;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -125,6 +126,30 @@ public class DatabaseHandler{
         }
         cursor.close();
         return payments;
+    }
+
+    public void deleteTableContents(){
+        database.delete("intakes", null, null);
+        database.delete("permanents", null, null);
+        database.delete("categories", null, null);
+        database.delete("payment", null, null);
+    }
+
+    public boolean updateIntakes(Intake... intakes){
+        for(Intake intake : intakes){
+            ContentValues values = new ContentValues();
+            values.put("value",intake.getValue());
+            values.put("date",intake.getDate());
+            values.put("name",intake.getName());
+            values.put("comment",intake.getComment());
+            //values.put("category",(Byte)null);//TODO replace
+            //values.put("payment_opt",(Byte)null);//TODO replace
+
+            if(database.update("intakes",values,"_id = ?", new String[]{String.valueOf(intake.getId())}) != 1){
+                return false;
+            }
+        }
+        return true;
     }
 
 
