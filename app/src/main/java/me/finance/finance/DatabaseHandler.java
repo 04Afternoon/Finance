@@ -132,6 +132,7 @@ public class DatabaseHandler{
         return payments;
     }
 
+
     public void deleteTableContents(){
         database.delete("intakes", null, null);
         database.delete("permanents", null, null);
@@ -159,7 +160,6 @@ public class DatabaseHandler{
 
     public List<Intake> getIntakes()
     {
-        //String sql = "SELECT * FROM intakes";
         List<Intake> intakes = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
         if(cursor.moveToFirst())
