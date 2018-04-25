@@ -1,27 +1,40 @@
 package me.finance.finance.Model;
 
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Intake {
 
     private int id_;
     private double value_;
-    private String date_;
+    private Date date_;
     private String name_;
     private String comment_;
     private int category_;
     private int payment_opt_;
 
     public Intake(int id_, double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
+        this(value_,date_,name_,comment_,category_,payment_opt_);
         this.id_ = id_;
+    }
+
+    public Intake(double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
         this.value_ = value_;
-        this.date_ = date_;
+        this.setDateFormatted(date_);
         this.name_ = name_;
         this.comment_ = comment_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
     }
-    public Intake(double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
+
+    public Intake(int id_, double value_, Date date_, String name_, String comment_, int category_, int payment_opt_) {
+        this(value_,date_,name_,comment_,category_,payment_opt_);
+        this.id_ = id_;
+    }
+
+    public Intake(double value_, Date date_, String name_, String comment_, int category_, int payment_opt_) {
         this.value_ = value_;
         this.date_ = date_;
         this.name_ = name_;
@@ -46,12 +59,26 @@ public class Intake {
         this.value_ = value_;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date_;
     }
 
-    public void setDate(String date_) {
+    public String getDateFormatted() {
+         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN);
+         return dateFormat.format(date_);
+    }
+
+    public void setDate(Date date_) {
         this.date_ = date_;
+    }
+
+    public void setDateFormatted(String date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN);
+        try {
+            date_ = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getName() {
