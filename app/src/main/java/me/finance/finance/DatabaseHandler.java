@@ -206,6 +206,18 @@ public class DatabaseHandler{
 
 
 
+    public Intake getIntake(int id)
+    {
+        Intake intake = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE _id = ?", new String[]{String.valueOf(id)});
+        if(cursor.moveToFirst())
+        {
+            intake =  new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+        }
+        cursor.close();
+        return intake;
+    }
+
     public List<Intake> getIntakes()
     {
         List<Intake> intakes = new ArrayList<>();

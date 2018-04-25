@@ -41,9 +41,33 @@ public class DatabaseHandlerTest {
 
 
     @Test
-    public void updateIntake() {
-        assertFalse(databaseHandler.updateIntakes(new Intake(-1,0,"","","")));
+    public void testInvalidUpdateIntake1() {
+        assertFalse(databaseHandler.updateIntakes(new Intake(-1,0,"","","",0,0)));
     }
+
+    @Test
+    public void testValidUpdateIntake1() {
+        Intake intake = new Intake(0,"","name","",0,0);
+        int id = (int)databaseHandler.addIntake(intake);
+        intake.setId(id);
+        intake.setName("new name");
+        assertTrue(databaseHandler.updateIntakes(intake));
+        assertEquals("new name", databaseHandler.getIntake(id).getName());
+    }
+
+    @Test
+    public void testValidGetIntake1() {
+        Intake intake = new Intake(0,"","name","",0,0);
+        int id = (int)databaseHandler.addIntake(intake);
+        assertEquals("name", databaseHandler.getIntake(id).getName());
+    }
+
+    @Test
+    public void testInValidGetIntake1() {
+        assertNull(databaseHandler.getIntake(-1));
+    }
+
+
 
     @Test
     public void addIntake(){
