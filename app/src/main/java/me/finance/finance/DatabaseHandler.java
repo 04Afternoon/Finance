@@ -167,7 +167,7 @@ public class DatabaseHandler{
         for(Intake intake : intakes){
             ContentValues values = new ContentValues();
             values.put("value",intake.getValue());
-            values.put("date",intake.getDate());
+            values.put("date",intake.getDateFormatted());
             values.put("name",intake.getName());
             values.put("comment",intake.getComment());
             values.put("category",intake.getCategory());
@@ -290,7 +290,7 @@ public class DatabaseHandler{
     {
         SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment, category, payment_opt) VALUES (NULL, ?, ?, ?,?,?,? )");
         sql.bindDouble(1, intake.getValue());
-        sql.bindString(2, intake.getDate());
+        sql.bindString(2, intake.getDateFormatted());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
         sql.bindLong(5,intake.getCategory());
