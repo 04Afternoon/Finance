@@ -3,6 +3,7 @@ package me.finance.finance;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,16 +49,18 @@ public class FragmentBalance extends Fragment {
         einnahmen_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT EINNAHMEN BUTTON", Toast.LENGTH_SHORT);
-                toast.show();
+                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
+                intent.putExtra("intake", true);
+                startActivity(intent);
             }
         });
 
         ausgaben_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT AUSGABEN BUTTON", Toast.LENGTH_SHORT);
-                toast.show();
+                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
+                intent.putExtra("intake", false);
+                startActivity(intent);
             }
         });
 

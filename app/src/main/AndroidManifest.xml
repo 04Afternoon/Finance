@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryActivity"></activity>
+        <activity android:name=".InOutPermsActivity"></activity>
     </application>
 
 </manifest>

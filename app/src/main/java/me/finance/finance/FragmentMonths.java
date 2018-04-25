@@ -76,7 +76,7 @@ public class FragmentMonths extends Fragment {
         ArrayList<Item> itemsArrayList = new ArrayList<>();
 
         for(Integer i = 0; i < 20; i++){
-            Item item = new Item("Test" + Integer.toString(i), Integer.toString(ThreadLocalRandom.current().nextInt(30, 150)));
+            Item item = new Item("Test" + Integer.toString(i), Integer.toString(ThreadLocalRandom.current().nextInt(-150, 150)));
             itemsArrayList.add(item);
         }
 
