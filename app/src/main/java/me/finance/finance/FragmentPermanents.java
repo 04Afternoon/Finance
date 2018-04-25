@@ -4,6 +4,7 @@ package me.finance.finance;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,8 +54,9 @@ public class FragmentPermanents extends Fragment {
         add_perms_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT ADD BUTTON", Toast.LENGTH_SHORT);
-                toast.show();
+                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
+                intent.putExtra("type", "Permanents");
+                startActivity(intent);
             }
         });
 

@@ -7,7 +7,7 @@
     tools:context="me.finance.finance.CategoryActivity">
 
     <TextView
-        android:id="@+id/monat"
+        android:id="@+id/auftrag_text"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/monat" />
+        app:layout_constraintTop_toBottomOf="@+id/auftrag_text" />
 
     <ListView
         android:id="@+id/categoryList"
