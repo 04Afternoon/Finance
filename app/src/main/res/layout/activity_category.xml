@@ -7,7 +7,7 @@
     tools:context="me.finance.finance.CategoryActivity">
 
     <TextView
-        android:id="@+id/auftrag_text"
+        android:id="@+id/settings_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
@@ -30,20 +30,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/auftrag_text" />
+        app:layout_constraintTop_toBottomOf="@+id/settings_title" />
 
     <ListView
         android:id="@+id/categoryList"
         android:layout_width="371dp"
-        android:layout_height="245dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="235dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="260dp"
         android:fadeScrollbars="false"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/categoryName"
@@ -53,8 +54,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="Name"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_category" />
@@ -74,5 +75,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categoryName"
         app:layout_constraintVertical_bias="0.978" />
+
+    <Button
+        android:id="@+id/exitCategoriesButton"
+        android:layout_width="42dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:drawable/ic_delete"
+        android:backgroundTint="@android:color/background_dark"
+        app:layout_constraintEnd_toEndOf="@+id/settings_title"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

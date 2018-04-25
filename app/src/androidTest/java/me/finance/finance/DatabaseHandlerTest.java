@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
@@ -43,12 +44,12 @@ public class DatabaseHandlerTest {
 
     @Test
     public void testInvalidUpdateIntake1() {
-        assertFalse(databaseHandler.updateIntakes(new Intake(-1,0,"","","",0,0)));
+        assertFalse(databaseHandler.updateIntakes(new Intake(-1,0, new Date(),"","",0,0)));
     }
 
     @Test
     public void testValidUpdateIntake1() {
-        Intake intake = new Intake(0,"","name","",0,0);
+        Intake intake = new Intake(0, new Date(),"name","",0,0);
         int id = (int)databaseHandler.addIntake(intake);
         intake.setId(id);
         intake.setName("new name");
@@ -58,7 +59,7 @@ public class DatabaseHandlerTest {
 
     @Test
     public void testValidGetIntake1() {
-        Intake intake = new Intake(0,"","name","",0,0);
+        Intake intake = new Intake(0,"2019-12-18","name","",0,0);
         int id = (int)databaseHandler.addIntake(intake);
         assertEquals("name", databaseHandler.getIntake(id).getName());
     }
@@ -101,7 +102,7 @@ public class DatabaseHandlerTest {
         List<Intake> intakes_before = databaseHandler.getIntakes();
         int before = intakes_before.size();
 
-        Intake intake_new = new Intake( 23,"12.2.18","Intake_test","Test",1,2);
+        Intake intake_new = new Intake( 23,"2018-02-12","Intake_test","Test",1,2);
 
 
         long AddIntakeReturn = databaseHandler.addIntake(intake_new);

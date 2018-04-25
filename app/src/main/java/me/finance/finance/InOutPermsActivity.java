@@ -9,6 +9,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import me.finance.finance.Model.Intake;
+
 public class InOutPermsActivity extends AppCompatActivity {
 
     private ImageButton exitButton;
@@ -21,7 +28,6 @@ public class InOutPermsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_in_out_perms);
         title = findViewById(R.id.auftrag_text);
         title.setText(getIntent().getStringExtra("type"));
-
 
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
@@ -47,33 +53,73 @@ public class InOutPermsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 EditText name_text_field = findViewById(R.id.name_text_field);
-                String name = name_text_field.getText().toString();
                 EditText value_text_field = findViewById(R.id.value_text_field);
-                String value = value_text_field.getText().toString();
                 EditText start_date_text_field = findViewById(R.id.start_text_field);
+                EditText payment_text_field = findViewById(R.id.payment_text_field);
+
+                String name = name_text_field.getText().toString();
+                String value_string = value_text_field.getText().toString();
                 String startDate = start_date_text_field.getText().toString();
                 String endDate = end_date_text_field.getText().toString();
                 String intervall = intervall_text_field.getText().toString();
-                EditText payment_text_field = findViewById(R.id.payment_text_field);
                 String payment = payment_text_field.getText().toString();
 
-                if(!name.isEmpty() && !value.isEmpty() && !startDate.isEmpty() && !payment.isEmpty() && intervall.isEmpty() && endDate.isEmpty()){
-                    Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
-                    toast.show();
-                    System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + "ONCE" + " " + "ONCE" + " " + payment);
-                    finish();
-                } else if(!name.isEmpty() && !value.isEmpty() && !startDate.isEmpty() && !payment.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()){
-                    Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
-                    toast.show();
-                    System.out.println("DEBUG: !Permanent! " + name + " " + value + " " + startDate + " " + endDate + " " + intervall + " " + payment);
-                    finish();
-                } else {
-                    Toast toastError = Toast.makeText(getApplicationContext(), "Fields with * are required", Toast.LENGTH_SHORT);
-                    toastError.show();
-                    System.out.println("DEBUG:" + getIntent().getBooleanExtra("intake", false));
+                String error = "";
 
+                double value = 0;
+                if (!value_string.isEmpty()) {
+                    value = Double.valueOf(value_string);
                 }
 
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                if (!startDate.isEmpty()) {
+                    try {
+                        dateFormat.parse(startDate);
+                    } catch(ParseException e) {
+                        error += "Invalid startDate";
+                    }
+                }
+                if (!endDate.isEmpty()) {
+                    try {
+                        dateFormat.parse(endDate);
+                    } catch(ParseException e) {
+                        if (!error.isEmpty()) {
+                            error += "\n";
+                        }
+                        error += "Invalid endDate";
+                    }
+                }
+
+                if (error.isEmpty()) {
+                    DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
+                    //database.open();
+                    if (!title.getText().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !payment.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
+                        if (title.getText().toString().equals("Expense")) {
+                            value *= -1;
+                        }
+                        database.addIntake(new Intake(value, startDate, name, "", 0, 0));
+                        toast.show();
+                        System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + "ONCE" + " " + "ONCE" + " " + payment);
+                        finish();
+                    } else if (title.getText().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !payment.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
+
+                        toast.show();
+                        System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + intervall + " " + payment);
+                        finish();
+                    } else {
+                        Toast toastError = Toast.makeText(getApplicationContext(), "Fields with * are required", Toast.LENGTH_SHORT);
+                        toastError.show();
+                        System.out.println("DEBUG:" + getIntent().getBooleanExtra("intake", false));
+
+                    }
+                    //database.close();
+                }
+                else {
+                    Toast toastError = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
+                    toastError.show();
+                }
             }
         });
 

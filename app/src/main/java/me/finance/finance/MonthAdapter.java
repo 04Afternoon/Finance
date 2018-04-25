@@ -60,7 +60,7 @@ public class MonthAdapter extends BaseAdapter {
             textViewItemAmount.setTextColor(Color.RED);
         }
         textViewItemAmount.setText(String.format(Locale.GERMAN,"%.2f€", value));
-        textViewItemDate.setText(currentItem.getDate());
+        textViewItemDate.setText(currentItem.getDateFormatted());
         Category category  = DatabaseHandler.getInstance(context).getCategory(currentItem.getCategory());
         if (category != null && category.getName() != null) {
             textViewItemCategory.setText(category.getName());

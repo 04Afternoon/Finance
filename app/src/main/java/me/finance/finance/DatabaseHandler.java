@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class DatabaseHandler{
     public void createTables() {
         database.execSQL("CREATE TABLE IF NOT EXISTS intakes (" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "value FLOAT, " +
+                "value DOUBLE, " +
                 "date DATE, " +
                 "name TEXT," +
                 "comment TEXT, " +
@@ -80,7 +81,7 @@ public class DatabaseHandler{
 
         database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "value FLOAT, " +
+                "value DOUBLE, " +
                 "start_date DATE, " +
                 "iteration TEXT, " +
                 "end_date DATE, " +
@@ -104,8 +105,8 @@ public class DatabaseHandler{
                 ");");
     }
 
-    public List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
+    public ArrayList<Category> getCategories() {
+        ArrayList<Category> categories = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -125,15 +126,12 @@ public class DatabaseHandler{
         return category;
     }
 
-    public List<Payment> getPayments() {
-        List<Payment> payments = new ArrayList<>();
-        Payment payment = null;
+    public ArrayList<Payment> getPayments() {
+        ArrayList<Payment> payments = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            payment.setId(cursor.getInt(0));
-            payment.setName(cursor.getString(1));
-            payments.add(payment);
+            payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
             cursor.moveToNext();
         }
         cursor.close();
@@ -150,11 +148,11 @@ public class DatabaseHandler{
     }
 
     public void removeCategory(String name){
-        database.delete("categories", "name = " + name, null);
+        database.delete("categories", "name = '" + name + "'", null);
     }
 
     public void removePayment(String name){
-        database.delete("payment", "name = " + name, null);
+        database.delete("payment", "name = '" + name + "'", null);
     }
 
 
@@ -169,7 +167,7 @@ public class DatabaseHandler{
         for(Intake intake : intakes){
             ContentValues values = new ContentValues();
             values.put("value",intake.getValue());
-            values.put("date",intake.getDate());
+            values.put("date",intake.getDateFormatted());
             values.put("name",intake.getName());
             values.put("comment",intake.getComment());
             values.put("category",intake.getCategory());
@@ -235,20 +233,52 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE _id = ?", new String[]{String.valueOf(id)});
         if(cursor.moveToFirst())
         {
-            intake =  new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+            intake =  new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
         }
         cursor.close();
         return intake;
     }
 
-    public List<Intake> getIntakes()
+    public ArrayList<Intake> getPositiveIntakes()
     {
-        List<Intake> intakes = new ArrayList<>();
+        ArrayList<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
+        if(cursor.moveToFirst())
+        {
+            do {
+                if(cursor.getFloat(1) > 0)
+                  intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
+
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return intakes;
+    }
+
+    public ArrayList<Intake> getNegativeIntakes()
+    {
+        ArrayList<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
+        if(cursor.moveToFirst())
+        {
+            do {
+                if(cursor.getFloat(1) < 0)
+                    intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
+
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return intakes;
+    }
+
+    public ArrayList<Intake> getIntakes()
+    {
+        ArrayList<Intake> intakes = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
         if(cursor.moveToFirst())
         {
           do {
-            intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
+            intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
 
           }while(cursor.moveToNext());
         }
@@ -260,7 +290,7 @@ public class DatabaseHandler{
     {
         SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment, category, payment_opt) VALUES (NULL, ?, ?, ?,?,?,? )");
         sql.bindDouble(1, intake.getValue());
-        sql.bindString(2, intake.getDate());
+        sql.bindString(2, intake.getDateFormatted());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
         sql.bindLong(5,intake.getCategory());
@@ -312,7 +342,14 @@ public class DatabaseHandler{
     //  ;)
     public void addCategoryBetter(String name_)
     {
-        String sql = "INSERT INTO TABLE categories (name) VALUES (" + name_+ ");";
+        String sql = "INSERT INTO categories (name) VALUES (\"" + name_+ "\");";
+        database.execSQL(sql);
+    }
+
+    //  ;)
+    public void addPaymentBetter(String name_)
+    {
+        String sql = "INSERT INTO payment (name) VALUES (\"" + name_+ "\");";
         database.execSQL(sql);
     }
 
@@ -332,11 +369,6 @@ public class DatabaseHandler{
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag');");
-
-        database.execSQL("INSERT INTO payment (name) VALUES ('Bar');");
-
-        database.execSQL("INSERT INTO categories (name) VALUES ('Bier');");
-
 
         List<String> intakes = new ArrayList<String>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
