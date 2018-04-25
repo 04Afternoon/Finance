@@ -340,11 +340,6 @@ public class DatabaseHandler{
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag');");
 
-        database.execSQL("INSERT INTO payment (name) VALUES ('Bar');");
-
-        database.execSQL("INSERT INTO categories (name) VALUES ('Bier');");
-
-
         List<String> intakes = new ArrayList<String>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
          cursor.moveToFirst();

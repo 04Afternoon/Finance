@@ -62,14 +62,15 @@ public class CategoryActivity extends AppCompatActivity {
                 if(title.getText().toString().equals("manage categories"))
                 {
                     databaseHandler.addCategoryBetter(name);
+                    ArrayList<Category> categories = databaseHandler.getCategories();
+                    populateCategoryListView(categories);
                 }
                 else if(title.getText().toString().equals("manage accounts"))
                 {
-                    //databaseHandler.addPaymentBetter(name);
+                    databaseHandler.addPaymentBetter(name);
+                    ArrayList<Payment> accounts = databaseHandler.getPayments();
+                    populateAccountListView(accounts);
                 }
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
             }
         });
 
@@ -87,16 +88,15 @@ public class CategoryActivity extends AppCompatActivity {
                             if(title.getText().toString().equals("manage categories"))
                             {
                                 databaseHandler.removeCategory(name);
-                                ((BaseAdapter) categoryList.getAdapter()).notifyDataSetChanged();
+                                ArrayList<Category> categories = databaseHandler.getCategories();
+                                populateCategoryListView(categories);
                             }
                             else if(title.getText().toString().equals("manage accounts"))
                             {
                                 databaseHandler.removePayment(name);
-                                ((BaseAdapter) categoryList.getAdapter()).notifyDataSetChanged();
+                                ArrayList<Payment> accounts = databaseHandler.getPayments();
+                                populateAccountListView(accounts);
                             }
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
                         }
                     });
                 }
