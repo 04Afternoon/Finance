@@ -1,6 +1,7 @@
 package me.finance.finance;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -22,15 +23,28 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
     private Date endDate;
 
     private CalendarPickerView calendar;
-    private Button button;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select date-range");
+        builder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }
+        )
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.date_picker_dialog, null);
-        button = v.findViewById(R.id.dateSelectedButton);
-        button.setOnClickListener(this);
 
         builder.setView(v);
 

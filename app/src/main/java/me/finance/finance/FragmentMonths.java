@@ -54,12 +54,8 @@ public class FragmentMonths extends Fragment {
         calender_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 DatePickerDialog newFragment = new DatePickerDialog();
                 newFragment.show(getFragmentManager(), "datePicker");
-
-                Toast toast = Toast.makeText(context, "TODO: IMPLEMENT CALENDER BUTTON", Toast.LENGTH_SHORT);
-                toast.show();
             }
         });
 
