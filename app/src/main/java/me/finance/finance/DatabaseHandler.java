@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -211,29 +212,28 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
         if(cursor.moveToFirst())
         {
-       do {
-            intakes.add(new Intake(cursor.getInt(1), cursor.getFloat(2), cursor.getString(3), cursor.getString(4), "Hallo"/*cursor.getString(5)*/));
+          do {
+            intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
             cursor.moveToNext();
 
-        }while(cursor.moveToNext());
+          }while(cursor.moveToNext());
         }
         cursor.close();
         return intakes;
     }
 
-    public void addIntake(Intake intake)
+    public long addIntake(Intake intake)
     {
-        /*String sql = "INSERT INTO intakes (value, date, name, comment) VALUES (" + intake.getValue() + ", '" + intake.getDate() + "', '" +
-                intake.getName() + "', '" + intake.getComment() + "');";
-        database.execSQL(sql);*/
-
-        SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment) VALUES (NULL, ?, ?, ?,? )");
-        sql.bindDouble(1, intake.getValue());
+        SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment, category, payment_opt) VALUES (NULL, ?, ?, ?,?,?,? )");
+        sql.bindLong(1, intake.getId());
         sql.bindString(2, intake.getDate());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
-        sql.execute();
+        sql.bindLong(5,intake.getCategory());
+        sql.bindLong(6, intake.getPayment_opt());
+        long id = sql.executeInsert();
 
+        return id;
     }
 
 

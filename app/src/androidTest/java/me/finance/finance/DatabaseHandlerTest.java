@@ -44,4 +44,27 @@ public class DatabaseHandlerTest {
     public void updateIntake() {
         assertFalse(databaseHandler.updateIntakes(new Intake(-1,0,"","","")));
     }
+
+    @Test
+    public void addIntake(){
+
+        List<Intake> intakes_before = databaseHandler.getIntakes();
+
+
+        // double value_, String date_, String name_, String comment_, int category_, int payment_opt_
+        Intake intake_new = new Intake( 23,"12.2.18","Intake_test","Test",1,2);
+
+        databaseHandler.addIntake(intake_new);
+
+
+        List<Intake> intakes_after = databaseHandler.getIntakes();
+
+    }
+
+    @Test
+    public void getIntake(){
+
+        List<Intake> intakes = databaseHandler.getIntakes();
+
+    }
 }
