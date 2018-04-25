@@ -304,6 +304,14 @@ public class DatabaseHandler{
     }
 
 
+    //  ;)
+    public void addCategoryBetter(String name_)
+    {
+        String sql = "INSERT INTO TABLE categories (name) VALUES (" + name_+ ");";
+        database.execSQL(sql);
+    }
+
+
     /*
      * ***TESTING***
      *
