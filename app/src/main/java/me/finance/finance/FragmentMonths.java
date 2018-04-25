@@ -16,7 +16,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import me.finance.finance.Model.Intake;
 
 
 /**
@@ -73,16 +76,11 @@ public class FragmentMonths extends Fragment {
 
     public void populateListView(){
 
-        ArrayList<Item> itemsArrayList = new ArrayList<>();
 
-        for(Integer i = 0; i < 20; i++){
-            Item item = new Item("Test" + Integer.toString(i), Integer.toString(ThreadLocalRandom.current().nextInt(-150, 150)));
-            itemsArrayList.add(item);
-        }
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
+        List<Intake> intakes = databaseHandler.getIntakes();
 
-        System.out.println("DEBUG:" + itemsArrayList);
-
-        CustomAdapter adapter = new CustomAdapter(containerContext, itemsArrayList);
+        MonthAdapter adapter = new MonthAdapter(containerContext, intakes);
 
         ListView itemsListView  = (ListView) view.findViewById(R.id.monthly_list);
         itemsListView.setAdapter(adapter);

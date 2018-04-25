@@ -309,7 +309,7 @@ public class DatabaseHandler{
      * ***TESTING***
      */
     public void insertDummyValues() {
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (200.5, '2017-12-17', 'Felix Auf', 'Lohn');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (-200.5, '2017-12-17', 'Felix Auf', 'Lohn');");
         database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2017-06-07', 'Harald Koinig', 'Biergeld');");
         database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-01-07', 'Harald Koinig', 'OEH Beitrag');");
 

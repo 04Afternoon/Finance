@@ -7,14 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class CustomAdapter extends BaseAdapter {
+import me.finance.finance.Model.Intake;
+
+public class MonthAdapter extends BaseAdapter {
     private Context context; //context
-    private List<Item> items; //data source of the list adapter
+    private List<Intake> items; //data source of the list adapter
 
-    public CustomAdapter(Context context, List<Item> items){
+    public MonthAdapter(Context context, List<Intake> items){
         this.context = context;
         this.items = items;
     }
@@ -42,7 +44,7 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         // get current item to be displayed
-        Item currentItem = (Item)getItem(i);
+        Intake currentItem = (Intake)getItem(i);
 
         // get the TextView for item name and item description
         TextView textViewItemName = (TextView)
@@ -51,8 +53,8 @@ public class CustomAdapter extends BaseAdapter {
                 convertView.findViewById(R.id.int_or_val);
 
         //sets the text for item name and item description from the current item object
-        textViewItemName.setText(currentItem.getItemZweck());
-        textViewItemDescription.setText(currentItem.getItemIntOrVal());
+        textViewItemName.setText(currentItem.getName());
+        textViewItemDescription.setText(String.format(Locale.GERMAN,"%.2f€", currentItem.getValue()));
 
         // returns the view for the current row
         return convertView;
