@@ -106,7 +106,7 @@ public class DatabaseHandler{
     public List<Category> getCategories() {
         List<Category> categories = new ArrayList<>();
         Category category = null;
-        Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             category.setId(cursor.getInt(0));
@@ -121,7 +121,7 @@ public class DatabaseHandler{
     public List<Payment> getPayment() {
         List<Payment> payments = new ArrayList<>();
         Payment payment = null;
-        Cursor cursor = database.rawQuery("SELECT name FROM categories", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             payment.setId(cursor.getInt(0));
@@ -132,6 +132,7 @@ public class DatabaseHandler{
         cursor.close();
         return payments;
     }
+
 
     public void deleteTableContents(){
         database.delete("intakes", null, null);
@@ -206,7 +207,6 @@ public class DatabaseHandler{
 
     public List<Intake> getIntakes()
     {
-        //String sql = "SELECT * FROM intakes";
         List<Intake> intakes = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
         if(cursor.moveToFirst())
