@@ -50,7 +50,7 @@ public class FragmentBalance extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
-                intent.putExtra("intake", true);
+                intent.putExtra("type", "Intake");
                 startActivity(intent);
             }
         });
@@ -59,7 +59,7 @@ public class FragmentBalance extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
-                intent.putExtra("intake", false);
+                intent.putExtra("type", "Expense");
                 startActivity(intent);
             }
         });
