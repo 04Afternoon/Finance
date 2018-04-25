@@ -69,7 +69,7 @@ public class DatabaseHandler{
     public void createTables() {
         database.execSQL("CREATE TABLE IF NOT EXISTS intakes (" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "value FLOAT, " +
+                "value DOUBLE, " +
                 "date DATE, " +
                 "name TEXT," +
                 "comment TEXT, " +
@@ -81,7 +81,7 @@ public class DatabaseHandler{
 
         database.execSQL("CREATE TABLE IF NOT EXISTS permanents(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "value FLOAT, " +
+                "value DOUBLE, " +
                 "start_date DATE, " +
                 "iteration TEXT, " +
                 "end_date DATE, " +
@@ -233,7 +233,7 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE _id = ?", new String[]{String.valueOf(id)});
         if(cursor.moveToFirst())
         {
-            intake =  new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+            intake =  new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
         }
         cursor.close();
         return intake;
@@ -278,7 +278,7 @@ public class DatabaseHandler{
         if(cursor.moveToFirst())
         {
           do {
-            intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
+            intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
 
           }while(cursor.moveToNext());
         }
