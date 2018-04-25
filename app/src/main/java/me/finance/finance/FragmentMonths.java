@@ -5,22 +5,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import me.finance.finance.Model.Intake;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +30,7 @@ public class FragmentMonths extends Fragment {
     public FragmentMonths() {
         // Required empty public constructor
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -44,7 +42,7 @@ public class FragmentMonths extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_months, container, false);
-        mListView = (ListView) view.findViewById(R.id.monthly_list);
+        mListView = view.findViewById(R.id.monthly_list);
         containerContext = container.getContext();
 
         ImageButton calender_button = view.findViewById(R.id.calender_button);
@@ -56,6 +54,10 @@ public class FragmentMonths extends Fragment {
         calender_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                DatePickerDialog newFragment = new DatePickerDialog();
+                newFragment.show(getFragmentManager(), "datePicker");
+
                 Toast toast = Toast.makeText(context, "TODO: IMPLEMENT CALENDER BUTTON", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -74,7 +76,7 @@ public class FragmentMonths extends Fragment {
         return view;
     }
 
-    public void populateListView(){
+    public void populateListView() {
 
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
@@ -82,13 +84,13 @@ public class FragmentMonths extends Fragment {
 
         MonthAdapter adapter = new MonthAdapter(containerContext, intakes);
 
-        ListView itemsListView  = (ListView) view.findViewById(R.id.monthly_list);
+        ListView itemsListView = (ListView) view.findViewById(R.id.monthly_list);
         itemsListView.setAdapter(adapter);
     }
 
 
     //copied from https://stackoverflow.com/questions/7175873/click-effect-on-button-in-android
-    public static void buttonEffect(View button){
+    public static void buttonEffect(View button) {
         button.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {

@@ -1,6 +1,7 @@
 package me.finance.finance;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 
 public class MonthAdapter extends BaseAdapter {
@@ -37,26 +39,35 @@ public class MonthAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View convertView, ViewGroup parent) {
-        // inflate the layout for each list row
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
-                    inflate(R.layout.list_layout, parent, false);
+                    inflate(R.layout.month_list_layout, parent, false);
         }
 
-        // get current item to be displayed
         Intake currentItem = (Intake)getItem(i);
 
-        // get the TextView for item name and item description
-        TextView textViewItemName = (TextView)
-                convertView.findViewById(R.id.zweck);
-        TextView textViewItemDescription = (TextView)
-                convertView.findViewById(R.id.int_or_val);
+        TextView textViewItemName = convertView.findViewById(R.id.monthName);
+        TextView textViewItemAmount = convertView.findViewById(R.id.monthAmount);
+        TextView textViewItemDate = convertView.findViewById(R.id.monthDate);
+        TextView textViewItemCategory = convertView.findViewById(R.id.monthCategory);
 
-        //sets the text for item name and item description from the current item object
         textViewItemName.setText(currentItem.getName());
-        textViewItemDescription.setText(String.format(Locale.GERMAN,"%.2f€", currentItem.getValue()));
 
-        // returns the view for the current row
+        double value = currentItem.getValue();
+        if (value >= 0) {
+            textViewItemAmount.setTextColor(Color.BLACK);
+        } else {
+            textViewItemAmount.setTextColor(Color.RED);
+        }
+        textViewItemAmount.setText(String.format(Locale.GERMAN,"%.2f€", value));
+        textViewItemDate.setText(currentItem.getDate());
+        Category category  = DatabaseHandler.getInstance(context).getCategory(currentItem.getCategory());
+        if (category != null && category.getName() != null) {
+            textViewItemCategory.setText(category.getName());
+        } else {
+            textViewItemCategory.setText(R.string.no_category);
+        }
+
         return convertView;
     }
 }
