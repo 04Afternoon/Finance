@@ -119,7 +119,16 @@ public class DatabaseHandler{
         return categories;
     }
 
-    public List<Payment> getPayment() {
+    public Category getCategory(int id) {
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE _id = ?", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            category = new Category(cursor.getInt(0), cursor.getString(1));
+        }
+        return category;
+    }
+
+    public List<Payment> getPayments() {
         List<Payment> payments = new ArrayList<>();
         Payment payment = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
@@ -132,6 +141,15 @@ public class DatabaseHandler{
         }
         cursor.close();
         return payments;
+    }
+
+    public Payment getPayment(int id) {
+        Payment payment = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE _id = ?", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            payment = new Payment(cursor.getInt(0), cursor.getString(1));
+        }
+        return payment;
     }
 
 
