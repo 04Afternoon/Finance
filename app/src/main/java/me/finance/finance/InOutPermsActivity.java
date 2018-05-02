@@ -30,7 +30,6 @@ public class InOutPermsActivity extends AppCompatActivity {
 
     private ImageButton exitButton;
     private Button finishButton;
-    private TextView title;
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
     private Spinner categorySpinner, paymentSpinner;
 
@@ -38,8 +37,7 @@ public class InOutPermsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_out_perms);
-        title = findViewById(R.id.auftrag_text);
-        title.setText(getIntent().getStringExtra("type"));
+        setTitle(getIntent().getStringExtra("type"));
 
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
@@ -68,7 +66,8 @@ public class InOutPermsActivity extends AppCompatActivity {
         paymentSpinner = findViewById(R.id.payment_opt_spinner);
         paymentSpinner.setAdapter(paymentAdapter);
 
-        if(title.getText().toString().equals("Expense") || title.getText().toString().equals("Intake")) {
+
+        if(getIntent().getStringExtra("type").equals("Expense") || getIntent().getStringExtra("type").equals("Intake")) {
             end_date_text_field.setFocusable(false);
             end_date_text_field.setClickable(true);
             intervall_text_field.setClickable(true);
@@ -127,9 +126,9 @@ public class InOutPermsActivity extends AppCompatActivity {
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!title.getText().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                    if (!getActionBar().getTitle().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
-                        if (title.getText().toString().equals("Expense")) {
+                        if (getActionBar().getTitle().toString().equals("Expense")) {
                             value *= -1;
                         }
                         String category = categorySpinner.getSelectedItem().toString();
@@ -155,7 +154,7 @@ public class InOutPermsActivity extends AppCompatActivity {
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if (title.getText().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                    } else if (getActionBar().getTitle().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
 
                         String category = categorySpinner.getSelectedItem().toString();

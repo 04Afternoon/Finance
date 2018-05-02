@@ -13,19 +13,6 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <TextView
-            android:id="@+id/bilanz_title"
-            android:layout_width="222dp"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/border"
-            android:gravity="center"
-            android:text="Balance"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/CustomProgressBarHorizontal"

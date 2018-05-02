@@ -32,25 +32,24 @@ public class CategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-        title = findViewById(R.id.settings_title);
-        title.setText(getIntent().getStringExtra("settings"));
+        setTitle(getIntent().getStringExtra("settings"));
 
         Button create_category_button = findViewById(R.id.create_category);
         ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
         Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
 
-        if(title.getText().toString().equals("manage accounts")){
+        if(getIntent().getStringExtra("settings").equals("manage accounts")){
             create_category_button.setText("Add Account");
         }
 
         databaseHandler.open();
 
-        if(title.getText().toString().equals("manage categories"))
+        if(getIntent().getStringExtra("settings").equals("manage categories"))
         {
           ArrayList<Category> categories = databaseHandler.getCategories();
           populateCategoryListView(categories);
         }
-        else if(title.getText().toString().equals("manage accounts"))
+        else if(getIntent().getStringExtra("settings").equals("manage accounts"))
         {
             ArrayList<Payment> accounts = databaseHandler.getPayments();
             populateAccountListView(accounts);

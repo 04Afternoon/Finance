@@ -7,25 +7,6 @@
     android:background="#f7eff0"
     tools:context="me.finance.finance.CategoryActivity">
 
-    <TextView
-        android:id="@+id/settings_title"
-        android:layout_width="279dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border"
-        android:gravity="center"
-        android:text="Manage categories"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/create_category"
         android:layout_width="375dp"
@@ -37,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/categoryList"
@@ -45,11 +26,11 @@
         android:layout_height="235dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="184dp"
         android:fadeScrollbars="false"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,6 +48,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_category" />
 
+    <Button
+        android:id="@+id/exitCategoriesButton"
+        android:layout_width="42dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/ic_delete"
+        android:backgroundTint="@android:color/background_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ToggleButton
         android:id="@+id/remove_category"
         android:layout_width="367dp"
@@ -81,20 +73,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categoryName"
-        app:layout_constraintVertical_bias="0.978" />
-
-    <Button
-        android:id="@+id/exitCategoriesButton"
-        android:layout_width="42dp"
-        android:layout_height="39dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:background="@android:drawable/ic_delete"
-        android:backgroundTint="@android:color/background_dark"
-        app:layout_constraintEnd_toEndOf="@+id/settings_title"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintVertical_bias="0.068" />
 
 </android.support.constraint.ConstraintLayout>
