@@ -369,9 +369,9 @@ public class DatabaseHandler{
      * ***TESTING***
      */
     public void insertDummyValues() {
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (-200.5, '2017-12-17', 'Felix Auf', 'Lohn');");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2017-06-07', 'Harald Koinig', 'Biergeld');");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-01-07', 'Harald Koinig', 'OEH Beitrag');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (-200.5, '2018-04-30', 'Felix Auf', 'Lohn');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2018-05-01', 'Harald Koinig', 'Biergeld');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-05-02', 'Harald Koinig', 'OEH Beitrag');");
 
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
