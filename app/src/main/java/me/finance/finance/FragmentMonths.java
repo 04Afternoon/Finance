@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -45,8 +46,8 @@ public class FragmentMonths extends Fragment {
         mListView = view.findViewById(R.id.monthly_list);
         containerContext = container.getContext();
 
-        ImageButton calender_button = view.findViewById(R.id.calender_button);
-        ImageButton search_button = view.findViewById(R.id.months_search_button);
+        Button calender_button = view.findViewById(R.id.calender_button);
+        Button search_button = view.findViewById(R.id.months_search_button);
 
         buttonEffect(calender_button);
         buttonEffect(search_button);
