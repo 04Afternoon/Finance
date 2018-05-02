@@ -426,7 +426,11 @@ public class DatabaseHandler{
 
         ArrayList<Intake> intakes = new ArrayList<>();
         try {
-            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes", null);
+            String[] selectionArgs = new String[]{
+                    Utils.convertDate(startDate),
+                    Utils.convertDate(endDate)
+            };
+            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ?", selectionArgs);
             if (cursorIntakes.moveToFirst()) {
                 do {
                     intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
@@ -438,7 +442,6 @@ public class DatabaseHandler{
             System.out.println("");
         }
         return intakes;
-
 
     }
 }
