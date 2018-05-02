@@ -11,6 +11,7 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
@@ -421,4 +422,23 @@ public class DatabaseHandler{
     }
 
 
+    public List<Intake> getIntakes(Date startDate, Date endDate) {
+
+        ArrayList<Intake> intakes = new ArrayList<>();
+        try {
+            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes", null);
+            if (cursorIntakes.moveToFirst()) {
+                do {
+                    intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                            cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                } while (cursorIntakes.moveToNext());
+            }
+            cursorIntakes.close();
+        } catch(Exception e) {
+            System.out.println("");
+        }
+        return intakes;
+
+
+    }
 }

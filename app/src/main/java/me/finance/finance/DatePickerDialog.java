@@ -21,8 +21,11 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
 
     private Date startDate;
     private Date endDate;
+    private DialogInterface.OnCancelListener okButtonListener;
+
 
     private CalendarPickerView calendar;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -95,5 +98,13 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public DialogInterface.OnCancelListener getOkButtonListener() {
+        return okButtonListener;
+    }
+
+    public void setOkButtonListener(View.OnClickListener okButtonListener) {
+        this.okButtonListener = okButtonListener;
     }
 }

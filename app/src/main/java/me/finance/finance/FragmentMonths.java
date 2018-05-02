@@ -2,7 +2,9 @@ package me.finance.finance;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -15,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Intake;
@@ -22,10 +25,12 @@ import me.finance.finance.Model.Intake;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentMonths extends Fragment {
+public class FragmentMonths extends Fragment implements DialogInterface.OnClickListener {
     private ListView mListView;
     private Context context, containerContext;
     private View view;
+    private DatePickerDialog dateDialog;
+    private MonthAdapter adapter;
 
     public FragmentMonths() {
         // Required empty public constructor
@@ -54,8 +59,9 @@ public class FragmentMonths extends Fragment {
         calender_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog newFragment = new DatePickerDialog();
-                newFragment.show(getFragmentManager(), "datePicker");
+                dateDialog = new DatePickerDialog();
+                dateDialog.setOkButtonListener(this);
+                dateDialog.show(getFragmentManager(), "datePicker");
             }
         });
 
@@ -79,7 +85,7 @@ public class FragmentMonths extends Fragment {
 
         List<Intake> intakes = databaseHandler.getIntakes();
 
-        MonthAdapter adapter = new MonthAdapter(containerContext, intakes);
+        adapter = new MonthAdapter(containerContext, intakes);
 
         ListView itemsListView = (ListView) view.findViewById(R.id.monthly_list);
         itemsListView.setAdapter(adapter);
@@ -108,4 +114,16 @@ public class FragmentMonths extends Fragment {
         });
     }
 
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+
+        Date startDate = dateDialog.getStartDate();
+        Date endDate = dateDialog.getEndDate();
+
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
+        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate);
+        adapter.setItems(intakes);
+        adapter.notifyDataSetChanged();
+
+    }
 }
