@@ -2,13 +2,12 @@ package me.finance.finance;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +16,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.savvi.rangedatepicker.CalendarPickerView;
+
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +33,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
     private ListView mListView;
     private Context context, containerContext;
     private View view;
-    private DatePickerDialog dateDialog;
+    private CalendarPickerView calendar;
     private MonthAdapter adapter;
 
     public FragmentMonths() {
@@ -56,12 +60,14 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         buttonEffect(calender_button);
         buttonEffect(search_button);
 
+
+
         calender_button.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                dateDialog = new DatePickerDialog();
-                dateDialog.setOkButtonListener(this);
-                dateDialog.show(getFragmentManager(), "datePicker");
+                AlertDialog dialog = createDialog();
+                dialog.show();
             }
         });
 
@@ -116,9 +122,9 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-
-        Date startDate = dateDialog.getStartDate();
-        Date endDate = dateDialog.getEndDate();
+        List<Date> dates = calendar.getSelectedDates();
+        Date startDate = dates.get(0);
+        Date endDate = dates.get(dates.size()-1);
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
         List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate);
@@ -126,4 +132,49 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         adapter.notifyDataSetChanged();
 
     }
+
+    public AlertDialog createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select date-range");
+        builder.setPositiveButton("OK",
+                FragmentMonths.this
+        )
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+        // Get the layout inflater
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View v = inflater.inflate(R.layout.date_picker_dialog, null);
+
+        builder.setView(v);
+
+        Calendar c2 = Calendar.getInstance();
+        c2.set(Calendar.YEAR, 2000);
+        c2.set(Calendar.MONTH, 0);
+        c2.set(Calendar.DATE, 1);
+        Date startDate = c2.getTime();
+
+        calendar = (CalendarPickerView) v.findViewById(R.id.calendar_view);
+
+        Calendar c3 = Calendar.getInstance();
+        int day = c3.get(Calendar.DAY_OF_MONTH);
+        c3.set(Calendar.DAY_OF_MONTH, day+1);
+
+        c2 = Calendar.getInstance();
+        c2.set(Calendar.DATE, 1);
+
+        calendar.init(startDate, c3.getTime(), new SimpleDateFormat("MMM yyyy")) //
+                .inMode(CalendarPickerView.SelectionMode.RANGE)
+                .withSelectedDates(Arrays.asList(
+                        c2.getTime(), new Date()
+                ));
+        return builder.create();
+    }
+
+
 }
