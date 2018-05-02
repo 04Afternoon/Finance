@@ -13,10 +13,12 @@
         <ListView
             android:id="@+id/perms_list"
             android:layout_width="wrap_content"
-            android:layout_height="424dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="88dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
