@@ -166,6 +166,10 @@ public class DatabaseHandler{
         database.delete("payment", null, null);
     }
 
+    public void deleteIntakes() {
+        database.delete("intakes", null, null);
+    }
+
     public boolean updateIntakes(Intake... intakes){
         for(Intake intake : intakes){
             ContentValues values = new ContentValues();
@@ -236,7 +240,11 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE _id = ?", new String[]{String.valueOf(id)});
         if(cursor.moveToFirst())
         {
-            intake =  new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+            if (cursor.isNull(5)) {
+                intake = new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4), null, cursor.getInt(6));
+            } else {
+                intake = new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6));
+            }
         }
         cursor.close();
         return intake;
@@ -281,8 +289,13 @@ public class DatabaseHandler{
             Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes", null);
             if (cursorIntakes.moveToFirst()) {
                 do {
-                    intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
-                            cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                    if (cursorIntakes.isNull(5)) {
+                        intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                                cursorIntakes.getString(4), null, cursorIntakes.getInt(6)));
+                    } else {
+                        intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                                cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                    }
                 } while (cursorIntakes.moveToNext());
             }
             cursorIntakes.close();
@@ -299,7 +312,11 @@ public class DatabaseHandler{
         sql.bindString(2, intake.getDateFormatted());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
-        sql.bindLong(5,intake.getCategory());
+        if (intake.getCategory() == null) {
+            sql.bindNull(5);
+        } else {
+            sql.bindLong(5, intake.getCategory());
+        }
         sql.bindLong(6, intake.getPayment_opt());
         long id = sql.executeInsert();
 

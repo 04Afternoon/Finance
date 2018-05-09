@@ -63,7 +63,12 @@ public class MonthAdapter extends BaseAdapter {
         }
         textViewItemAmount.setText(String.format(Locale.GERMAN,"%.2f€", value));
         textViewItemDate.setText(currentItem.getDateFormatted());
-        Category category  = DatabaseHandler.getInstance(context).getCategory(currentItem.getCategory());
+        Category category;
+        if (currentItem.getCategory() == null) {
+            category = null;
+        } else {
+            category = DatabaseHandler.getInstance(context).getCategory(currentItem.getCategory());
+        }
         if (category != null && category.getName() != null) {
             textViewItemCategory.setText(category.getName());
         } else {

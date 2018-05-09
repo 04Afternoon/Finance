@@ -15,6 +15,7 @@ import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
+import me.finance.finance.Model.Payment;
 
 import static org.junit.Assert.*;
 
@@ -134,5 +135,21 @@ public class DatabaseHandlerTest {
 
         List<Intake> intakes = databaseHandler.getIntakes();
 
+    }
+
+    @Test
+    public void testGetPayments() {
+        String name = "test payment method";
+        Payment payment = new Payment(name);
+        long id = databaseHandler.addPayment(payment);
+        List<Payment> payments = databaseHandler.getPayments();
+        boolean found = false;
+        for (Payment p : payments) {
+            if (p.getId() == id && p.getName().equals(name)) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
     }
 }
