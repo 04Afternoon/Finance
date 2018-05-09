@@ -30,6 +30,8 @@ public class FragmentSettings extends Fragment {
         // Required empty public constructor
     }
 
+    private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(getContext());
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,7 @@ public class FragmentSettings extends Fragment {
 
         Button categories = view.findViewById(R.id.categories_settings_button);
         Button accounts = view.findViewById(R.id.accounts_settings_button);
+        Button clear_database = view.findViewById(R.id.clear_database_button);
 
         final Intent intent = new Intent(getActivity(), CategoryActivity.class);
 
@@ -58,6 +61,17 @@ public class FragmentSettings extends Fragment {
             }
         });
 
+        clear_database.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseHandler.open();
+                databaseHandler.deleteTableContents();
+                databaseHandler.close();
+
+                Toast toast = Toast.makeText(view.getContext(), "Database cleared successfully!", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
         return view;
     }
 

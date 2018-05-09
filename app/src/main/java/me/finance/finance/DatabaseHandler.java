@@ -11,6 +11,7 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
@@ -292,6 +293,24 @@ public class DatabaseHandler{
         return intakes;
     }
 
+    public ArrayList<Permanent> getPermanents()
+    {
+        ArrayList<Permanent> standing_orders = new ArrayList<>();
+        try {
+            Cursor cursorIntakes = database.rawQuery("SELECT * FROM permanents", null);
+            if (cursorIntakes.moveToFirst()) {
+                do {
+                    standing_orders.add(new Permanent(cursorIntakes.getInt(0), cursorIntakes.getFloat(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                            cursorIntakes.getString(4), cursorIntakes.getString(5), cursorIntakes.getString(6), cursorIntakes.getInt(7), cursorIntakes.getInt(8), cursorIntakes.getString(9)));
+                } while (cursorIntakes.moveToNext());
+            }
+            cursorIntakes.close();
+        } catch(Exception e) {
+            System.out.println("");
+        }
+        return standing_orders;
+    }
+
     public long addIntake(Intake intake)
     {
         SQLiteStatement sql = database.compileStatement("INSERT INTO intakes (_id, value, date, name, comment, category, payment_opt) VALUES (NULL, ?, ?, ?,?,?,? )");
@@ -333,6 +352,11 @@ public class DatabaseHandler{
         long id = sql.executeInsert();
 
         return id;
+    }
+
+    public void removeStandingOrder(String name)
+    {
+      database.delete("permanents", "name = '" + name + "'", null);
     }
 
     public long addCategory(Category category)
