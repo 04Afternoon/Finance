@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,12 +33,17 @@ public class InOutPermsActivity extends AppCompatActivity {
     private Button finishButton;
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
     private Spinner categorySpinner, paymentSpinner;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_out_perms);
         setTitle(getIntent().getStringExtra("type"));
+
+        getSupportActionBar().hide();
+
+        myToolbar = (Toolbar) findViewById(R.id.toolbar_inoutperms);
 
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
@@ -126,9 +132,9 @@ public class InOutPermsActivity extends AppCompatActivity {
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!getActionBar().getTitle().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                    if (!getIntent().getStringExtra("type").equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
-                        if (getActionBar().getTitle().toString().equals("Expense")) {
+                        if (getIntent().getStringExtra("type").equals("Expense")) {
                             value *= -1;
                         }
                         String category = categorySpinner.getSelectedItem().toString();
@@ -154,7 +160,7 @@ public class InOutPermsActivity extends AppCompatActivity {
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if (getActionBar().getTitle().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                    } else if (getIntent().getStringExtra("type").equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
 
                         String category = categorySpinner.getSelectedItem().toString();

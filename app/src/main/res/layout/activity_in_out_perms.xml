@@ -8,18 +8,6 @@
     tools:context=".InOutPermsActivity">
 
 
-    <ImageButton
-        android:id="@+id/auftrag_exit_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:background="@android:color/black"
-        android:backgroundTint="@android:color/transparent"
-        android:tint="@android:color/background_dark"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_delete" />
 
     <EditText
         android:id="@+id/name_text_field"
@@ -199,4 +187,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/intervall_text_field" />
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_inoutperms"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="Order">
+
+
+        <ImageButton
+            android:id="@+id/auftrag_exit_button"
+            android:layout_width="42dp"
+            android:layout_height="39dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:drawable/ic_delete"
+            android:backgroundTint="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.v7.widget.Toolbar>
 </android.support.constraint.ConstraintLayout>

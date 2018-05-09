@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         navigation.setOnNavigationItemSelectedListener(this);
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
-        setSupportActionBar(myToolbar);
+        getSupportActionBar().hide();
+        //setSupportActionBar(myToolbar);
 
         //System.out.println("Database closed");
         //databaseHandler.close();
