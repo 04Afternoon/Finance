@@ -35,6 +35,7 @@ public class InOutPermsActivity extends AppCompatActivity {
     private Spinner categorySpinner, paymentSpinner;
     private Toolbar myToolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

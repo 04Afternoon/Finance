@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         databaseHandler.createTables();
         //databaseHandler.insertDummyValues();
 
-
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
