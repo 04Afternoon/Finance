@@ -71,8 +71,8 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         endDateLabel = findViewById(R.id.endDateLabel);
         intervallabel = findViewById(R.id.intervalLabel);
 
-        intakeRadioButton = findViewById(R.id.radioButton);
-        outgoingRadioButton = findViewById(R.id.radioButton2);
+        intakeRadioButton = findViewById(R.id.radioButtonIncome);
+        outgoingRadioButton = findViewById(R.id.radioButtonOutgoing);
         radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
 
@@ -216,7 +216,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         }
 
                         String category = categorySpinner.getSelectedItem().toString();
-                        Integer categoryId = 0;
+                        Integer categoryId = null;
                         for(int i = 0; i < categoryList.size(); i++){
                             if(categoryList.get(i).getName().equals(category)){
                                 categoryId = categoryList.get(i).getId();
@@ -225,7 +225,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         }
 
                         String payment = paymentSpinner.getSelectedItem().toString();
-                        Integer paymentId = 0;
+                        Integer paymentId = null;
                         for(int i = 0; i < paymentList.size(); i++){
                             if(paymentList.get(i).getName().equals(payment)){
                                 paymentId = paymentList.get(i).getId();
@@ -233,19 +233,22 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             }
                         }
 
-                        Date next_exec_date = convertDate(startDate);
                         Calendar next_exec = Calendar.getInstance();
-                        next_exec.setTime(next_exec_date);
+                        next_exec.setTime(convertDate(startDate));
+                        Calendar endCal = Calendar.getInstance();
+                        endCal.setTime(convertDate(endDate));
                         if (intervall.equals("M")) {
                             Calendar currentDate = Calendar.getInstance();
                             currentDate.set(Calendar.HOUR, 23);
                             currentDate.set(Calendar.MINUTE, 59);
                             currentDate.set(Calendar.SECOND, 59);
                             while (next_exec.before(currentDate)) {
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
                                 next_exec.add(Calendar.MONTH, 1);
 
-                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
-
+                                if (next_exec.after(endCal)) {
+                                    break;
+                                }
                             }
                         } else if (intervall.equals("W")) {
                             Calendar currentDate = Calendar.getInstance();
@@ -253,9 +256,12 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             currentDate.set(Calendar.MINUTE, 59);
                             currentDate.set(Calendar.SECOND, 59);
                             while (next_exec.before(currentDate)) {
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
                                 next_exec.add(Calendar.DAY_OF_YEAR, 7);
 
-                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+                                if (next_exec.after(endCal)) {
+                                    break;
+                                }
                             }
                         }
 
@@ -285,12 +291,12 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         switch (radioGroup.getCheckedRadioButtonId()) {
-            case R.id.radioButton:
+            case R.id.radioButtonIncome:
                 value_text_field.setTextColor(Color.BLACK);
                 value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
                 outGoing = false;
                 break;
-            case R.id.radioButton2:
+            case R.id.radioButtonOutgoing:
                 value_text_field.setTextColor(Color.RED);
                 value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
                 outGoing = true;

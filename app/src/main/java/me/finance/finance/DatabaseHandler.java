@@ -356,8 +356,16 @@ public class DatabaseHandler{
         sql.bindString(4,convertDate(permanent.getEndDate()));
         sql.bindString(5,permanent.getName());
         sql.bindString(6,permanent.getComment());
-        sql.bindLong(7,permanent.getCategory());
-        sql.bindLong(8,permanent.getPayment_opt());
+        if (permanent.getCategory() == null) {
+            sql.bindNull(7);
+        } else {
+            sql.bindLong(7, permanent.getCategory());
+        }
+        if (permanent.getPayment_opt() == null) {
+            sql.bindNull(8);
+        } else {
+            sql.bindLong(8, permanent.getPayment_opt());
+        }
         sql.bindString(9,convertDate(permanent.getNext_exec()));
 
         long id = sql.executeInsert();
@@ -478,11 +486,11 @@ public class DatabaseHandler{
         ArrayList<Permanent> permanents = new ArrayList<>();
         String[] columns = new String[] {
                 "_id", "value", "start_date", "iteration", "end_date",
-                "name", "comment", "category", "payment_o", "next_exec"
+                "name", "comment", "category", "payment_opt", "next_exec"
         };
 
         try {
-            Cursor cursor = database.query("permanents", columns, "", new String[]{}, "", "", "start_date");
+            Cursor cursor = database.query("permanents", columns, "", null, "", "", "start_date");
             if (cursor.moveToFirst()) {
                 do {
                     permanents.add(new Permanent(cursor.getInt(0),
@@ -492,11 +500,11 @@ public class DatabaseHandler{
                             cursor.isNull(7) ? null : cursor.getInt(7),
                             cursor.isNull(8) ? null : cursor.getInt(8),
                             cursor.getString(9)));
-                } while(cursor.moveToFirst());
+                } while(cursor.moveToNext());
             }
             cursor.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
 
         return permanents;

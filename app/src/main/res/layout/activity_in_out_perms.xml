@@ -239,13 +239,13 @@
         app:layout_constraintTop_toTopOf="@+id/textView6">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/radioButtonIncome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/income" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/radioButtonOutgoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
