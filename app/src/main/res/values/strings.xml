@@ -9,4 +9,7 @@
     <string name="no_category">no Category</string>
     <string name="cash">Cash</string>
     <string name="use_selected_dates">Use selected Dates</string>
+    <string name="income">Income</string>
+    <string name="outgoing">Outgoing</string>
+    <string name="in_out">*In/Out:</string>
 </resources>
