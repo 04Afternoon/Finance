@@ -3,6 +3,7 @@ package me.finance.finance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -27,30 +28,34 @@ public class CategoryActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
     private TextView title;
     private ListAdapter adapter;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-        title = findViewById(R.id.settings_title);
-        title.setText(getIntent().getStringExtra("settings"));
+        setTitle(getIntent().getStringExtra("settings"));
+
+        getSupportActionBar().hide();
+
+        myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
 
         Button create_category_button = findViewById(R.id.create_category);
         ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
         Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
 
-        if(title.getText().toString().equals("manage accounts")){
+        if(getIntent().getStringExtra("settings").equals("manage accounts")){
             create_category_button.setText("Add Account");
         }
 
         databaseHandler.open();
 
-        if(title.getText().toString().equals("manage categories"))
+        if(getIntent().getStringExtra("settings").equals("manage categories"))
         {
           ArrayList<Category> categories = databaseHandler.getCategories();
           populateCategoryListView(categories);
         }
-        else if(title.getText().toString().equals("manage accounts"))
+        else if(getIntent().getStringExtra("settings").equals("manage accounts"))
         {
             ArrayList<Payment> accounts = databaseHandler.getPayments();
             populateAccountListView(accounts);
@@ -61,14 +66,14 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String name = ((EditText) findViewById(R.id.categoryName)).getText().toString();
-                if(title.getText().toString().equals("manage categories") && !name.isEmpty())
+                if(getIntent().getStringExtra("settings").equals("manage categories") && !name.isEmpty())
                 {
                     databaseHandler.addCategoryBetter(name);
                     ArrayList<Category> categories = databaseHandler.getCategories();
                     populateCategoryListView(categories);
                     ((EditText) findViewById(R.id.categoryName)).setText("");
                 }
-                else if(title.getText().toString().equals("manage accounts") && !name.isEmpty())
+                else if(getIntent().getStringExtra("settings").equals("manage accounts") && !name.isEmpty())
                 {
                     databaseHandler.addPaymentBetter(name);
                     ArrayList<Payment> accounts = databaseHandler.getPayments();

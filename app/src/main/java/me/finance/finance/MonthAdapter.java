@@ -17,6 +17,7 @@ import me.finance.finance.Model.Payment;
 
 public class MonthAdapter extends BaseAdapter {
     private Context context; //context
+
     private List<Intake> items; //data source of the list adapter
 
     public MonthAdapter(Context context, List<Intake> items){
@@ -63,7 +64,12 @@ public class MonthAdapter extends BaseAdapter {
         }
         textViewItemAmount.setText(String.format(Locale.GERMAN,"%.2f€", value));
         textViewItemDate.setText(currentItem.getDateFormatted());
-        Category category  = DatabaseHandler.getInstance(context).getCategory(currentItem.getCategory());
+        Category category;
+        if (currentItem.getCategory() == null) {
+            category = null;
+        } else {
+            category = DatabaseHandler.getInstance(context).getCategory(currentItem.getCategory());
+        }
         if (category != null && category.getName() != null) {
             textViewItemCategory.setText(category.getName());
         } else {
@@ -78,4 +84,13 @@ public class MonthAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    public List<Intake> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Intake> items) {
+        this.items = items;
+    }
+
 }
