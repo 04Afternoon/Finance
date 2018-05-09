@@ -12,15 +12,15 @@ public class Intake {
     private Date date_;
     private String name_;
     private String comment_;
-    private int category_;
+    private Integer category_;
     private int payment_opt_;
 
-    public Intake(int id_, double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
+    public Intake(int id_, double value_, String date_, String name_, String comment_, Integer category_, int payment_opt_) {
         this(value_,date_,name_,comment_,category_,payment_opt_);
         this.id_ = id_;
     }
 
-    public Intake(double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
+    public Intake(double value_, String date_, String name_, String comment_, Integer category_, int payment_opt_) {
         this.value_ = value_;
         this.setDateFormatted(date_);
         this.name_ = name_;
@@ -29,12 +29,12 @@ public class Intake {
         this.payment_opt_ = payment_opt_;
     }
 
-    public Intake(int id_, double value_, Date date_, String name_, String comment_, int category_, int payment_opt_) {
+    public Intake(int id_, double value_, Date date_, String name_, String comment_, Integer category_, int payment_opt_) {
         this(value_,date_,name_,comment_,category_,payment_opt_);
         this.id_ = id_;
     }
 
-    public Intake(double value_, Date date_, String name_, String comment_, int category_, int payment_opt_) {
+    public Intake(double value_, Date date_, String name_, String comment_, Integer category_, int payment_opt_) {
         this.value_ = value_;
         this.date_ = date_;
         this.name_ = name_;
@@ -97,11 +97,11 @@ public class Intake {
         this.comment_ = comment_;
     }
 
-    public int getCategory(){
+    public Integer getCategory(){
         return category_;
     }
 
-    public void setCategory(int category_){
+    public void setCategory(Integer category_){
         this.category_ = category_;
     }
 

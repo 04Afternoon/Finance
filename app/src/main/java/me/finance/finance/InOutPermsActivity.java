@@ -31,8 +31,10 @@ public class InOutPermsActivity extends AppCompatActivity {
     private ImageButton exitButton;
     private Button finishButton;
     private TextView title;
-    private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
+    private DatabaseHandler databaseHandler;
     private Spinner categorySpinner, paymentSpinner;
+    private ArrayList<Category> categoryList;
+    private ArrayList<Payment> paymentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +42,12 @@ public class InOutPermsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_in_out_perms);
         title = findViewById(R.id.auftrag_text);
         title.setText(getIntent().getStringExtra("type"));
+        databaseHandler = DatabaseHandler.getInstance(this);
+        databaseHandler.open();
 
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
 
-        final ArrayList<Category> categoryList;
         ArrayList<String> categorySpinnerList = new ArrayList<String>();
         categoryList = databaseHandler.getCategories();
         categorySpinnerList.add("no category");
@@ -56,10 +59,8 @@ public class InOutPermsActivity extends AppCompatActivity {
         categorySpinner = findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(categoryAdapter);
 
-        final ArrayList<Payment> paymentList;
         ArrayList<String> paymentSpinnerList = new ArrayList<String>();
         paymentList = databaseHandler.getPayments();
-        paymentSpinnerList.add("Cash");
         for(int i = 0; i < paymentList.size(); i++)
         {
             paymentSpinnerList.add(paymentList.get(i).getName());
@@ -133,7 +134,7 @@ public class InOutPermsActivity extends AppCompatActivity {
                             value *= -1;
                         }
                         String category = categorySpinner.getSelectedItem().toString();
-                        Integer categoryId = 0;
+                        Integer categoryId = null;
                         for(int i = 0; i < categoryList.size(); i++){
                             if(categoryList.get(i).getName().equals(category)){
                                 categoryId = categoryList.get(i).getId();
