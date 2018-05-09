@@ -78,7 +78,6 @@ public class InOutPermsTest {
         onData(allOf(is(instanceOf(String.class)), is(payment.getName()))).perform(click());
         onView(withId(R.id.category_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("no category"))).perform(click());
-        List<Payment> payments = databaseHandler.getPayments();
         onView(withId(R.id.auftrag_finish_button)).perform(click());
 
         boolean found = false;

@@ -1,8 +1,7 @@
 package me.finance.finance;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,14 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,20 +28,64 @@ import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Permanent;
 
-public class InOutPermsActivity extends AppCompatActivity {
+import static me.finance.finance.Utils.convertDate;
+
+public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+
+    public static final String IS_OUT_GOING = "outgoing";
+    public static final String IS_STANDING_ORDER = "standingOrder";
 
     private ImageButton exitButton;
     private Button finishButton;
-    private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
+    private DatabaseHandler databaseHandler;
     private Spinner categorySpinner, paymentSpinner;
+    private ArrayList<Category> categoryList;
+    private ArrayList<Payment> paymentList;
     private Toolbar myToolbar;
 
+    private EditText name_text_field;
+    private EditText value_text_field;
+    private EditText start_date_text_field;
+
+    private RadioButton intakeRadioButton;
+    private RadioButton outgoingRadioButton;
+    private RadioGroup radioGroup;
+
+    private TextView endDateLabel;
+    private TextView intervallabel;
+
+
+    private boolean outGoing = false;
+    private boolean isPermanent = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_out_perms);
-        setTitle(getIntent().getStringExtra("type"));
+        outGoing = getIntent().getBooleanExtra(IS_OUT_GOING, false);
+        isPermanent = getIntent().getBooleanExtra(IS_STANDING_ORDER, false);
+
+        name_text_field = findViewById(R.id.name_text_field);
+        value_text_field = findViewById(R.id.value_text_field);
+        start_date_text_field = findViewById(R.id.start_text_field);
+        endDateLabel = findViewById(R.id.endDateLabel);
+        intervallabel = findViewById(R.id.intervalLabel);
+
+        intakeRadioButton = findViewById(R.id.radioButtonIncome);
+        outgoingRadioButton = findViewById(R.id.radioButtonOutgoing);
+        radioGroup = findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(this);
+
+        if (outGoing) {
+            outgoingRadioButton.setChecked(true);
+            value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
+        } else {
+            intakeRadioButton.setChecked(true);
+            value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
+        }
+
+        databaseHandler = DatabaseHandler.getInstance(this);
+        databaseHandler.open();
 
         getSupportActionBar().hide();
 
@@ -49,8 +94,7 @@ public class InOutPermsActivity extends AppCompatActivity {
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
 
-        final ArrayList<Category> categoryList;
-        ArrayList<String> categorySpinnerList = new ArrayList<String>();
+        List<String> categorySpinnerList = new ArrayList<String>();
         categoryList = databaseHandler.getCategories();
         categorySpinnerList.add("no category");
         for(int i = 0; i < categoryList.size(); i++)
@@ -61,10 +105,8 @@ public class InOutPermsActivity extends AppCompatActivity {
         categorySpinner = findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(categoryAdapter);
 
-        final ArrayList<Payment> paymentList;
         ArrayList<String> paymentSpinnerList = new ArrayList<String>();
         paymentList = databaseHandler.getPayments();
-        paymentSpinnerList.add("Cash");
         for(int i = 0; i < paymentList.size(); i++)
         {
             paymentSpinnerList.add(paymentList.get(i).getName());
@@ -73,12 +115,11 @@ public class InOutPermsActivity extends AppCompatActivity {
         paymentSpinner = findViewById(R.id.payment_opt_spinner);
         paymentSpinner.setAdapter(paymentAdapter);
 
-
-        if(getIntent().getStringExtra("type").equals("Expense") || getIntent().getStringExtra("type").equals("Intake")) {
-            end_date_text_field.setFocusable(false);
-            end_date_text_field.setClickable(true);
-            intervall_text_field.setClickable(true);
-            intervall_text_field.setFocusable(false);
+        if(!isPermanent) {
+            end_date_text_field.setVisibility(View.GONE);
+            intervall_text_field.setVisibility(View.GONE);
+            endDateLabel.setVisibility(View.GONE);
+            intervallabel.setVisibility(View.GONE);
         }
 
         exitButton = findViewById(R.id.auftrag_exit_button);
@@ -94,9 +135,6 @@ public class InOutPermsActivity extends AppCompatActivity {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText name_text_field = findViewById(R.id.name_text_field);
-                EditText value_text_field = findViewById(R.id.value_text_field);
-                EditText start_date_text_field = findViewById(R.id.start_text_field);
 
                 String name = name_text_field.getText().toString();
                 String value_string = value_text_field.getText().toString();
@@ -133,13 +171,14 @@ public class InOutPermsActivity extends AppCompatActivity {
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!getIntent().getStringExtra("type").equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
-                        if (getIntent().getStringExtra("type").equals("Expense")) {
+
+                        if (outGoing) {
                             value *= -1;
                         }
                         String category = categorySpinner.getSelectedItem().toString();
-                        Integer categoryId = 0;
+                        Integer categoryId = null;
                         for(int i = 0; i < categoryList.size(); i++){
                             if(categoryList.get(i).getName().equals(category)){
                                 categoryId = categoryList.get(i).getId();
@@ -161,11 +200,15 @@ public class InOutPermsActivity extends AppCompatActivity {
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if (getIntent().getStringExtra("type").equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
+                    } else if (isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Standing order saved!", Toast.LENGTH_SHORT);
+
+                        if (outGoing) {
+                            value *= -1;
+                        }
 
                         String category = categorySpinner.getSelectedItem().toString();
-                        Integer categoryId = 0;
+                        Integer categoryId = null;
                         for(int i = 0; i < categoryList.size(); i++){
                             if(categoryList.get(i).getName().equals(category)){
                                 categoryId = categoryList.get(i).getId();
@@ -174,13 +217,47 @@ public class InOutPermsActivity extends AppCompatActivity {
                         }
 
                         String payment = paymentSpinner.getSelectedItem().toString();
-                        Integer paymentId = 0;
+                        Integer paymentId = null;
                         for(int i = 0; i < paymentList.size(); i++){
                             if(paymentList.get(i).getName().equals(payment)){
                                 paymentId = paymentList.get(i).getId();
                                 break;
                             }
                         }
+
+                        Calendar next_exec = Calendar.getInstance();
+                        next_exec.setTime(convertDate(startDate));
+                        Calendar endCal = Calendar.getInstance();
+                        endCal.setTime(convertDate(endDate));
+                        if (intervall.equals("M")) {
+                            Calendar currentDate = Calendar.getInstance();
+                            currentDate.set(Calendar.HOUR, 23);
+                            currentDate.set(Calendar.MINUTE, 59);
+                            currentDate.set(Calendar.SECOND, 59);
+                            while (next_exec.before(currentDate)) {
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+                                next_exec.add(Calendar.MONTH, 1);
+
+                                if (next_exec.after(endCal)) {
+                                    break;
+                                }
+                            }
+                        } else if (intervall.equals("W")) {
+                            Calendar currentDate = Calendar.getInstance();
+                            currentDate.set(Calendar.HOUR, 23);
+                            currentDate.set(Calendar.MINUTE, 59);
+                            currentDate.set(Calendar.SECOND, 59);
+                            while (next_exec.before(currentDate)) {
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+                                next_exec.add(Calendar.DAY_OF_YEAR, 7);
+
+                                if (next_exec.after(endCal)) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        database.addPermanet(new Permanent(value, convertDate(startDate), intervall, convertDate(endDate), name, "", categoryId, paymentId, next_exec.getTime()));
 
                         toast.show();
                         System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + intervall + " " + 0);
@@ -202,4 +279,23 @@ public class InOutPermsActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        switch (radioGroup.getCheckedRadioButtonId()) {
+            case R.id.radioButtonIncome:
+                value_text_field.setTextColor(Color.BLACK);
+                value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
+                outGoing = false;
+                break;
+            case R.id.radioButtonOutgoing:
+                value_text_field.setTextColor(Color.RED);
+                value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
+                outGoing = true;
+                break;
+        }
+    }
+
+
+
 }

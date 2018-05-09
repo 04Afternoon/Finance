@@ -123,6 +123,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
+
         List<Date> dates = calendar.getSelectedDates();
         Date startDate = dates.get(0);
         Date endDate = dates.get(dates.size()-1);

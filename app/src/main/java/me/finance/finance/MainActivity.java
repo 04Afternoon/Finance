@@ -38,12 +38,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //System.out.println("Database closed");
         //databaseHandler.close();
+
+        switchFragment(R.id.navigation_balance);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        switchFragment(R.id.navigation_balance);
 
     }
 
