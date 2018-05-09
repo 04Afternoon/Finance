@@ -3,7 +3,9 @@ package me.finance.finance;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -12,12 +14,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
+import me.finance.finance.Model.Permanent;
 
 
 /**
@@ -26,6 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class FragmentPermanents extends Fragment {
     private ListView mListView;
     private Context context, containerContext;
+    private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(getContext());
     private View view;
 
     public FragmentPermanents() {
@@ -47,6 +54,8 @@ public class FragmentPermanents extends Fragment {
         view = inflater.inflate(R.layout.fragment_permanents, container, false);
         mListView = (ListView) view.findViewById(R.id.perms_list);
         containerContext = container.getContext();
+        databaseHandler.open();
+        final AlertDialog dialog = createDialog();
 
         ImageButton add_perms_button = view.findViewById(R.id.add_perms_button);
         buttonEffect(add_perms_button);
@@ -60,6 +69,13 @@ public class FragmentPermanents extends Fragment {
             }
         });
 
+        //mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                dialog.show();
+            }
+        });
         populateListView();
 
         return view;
@@ -84,12 +100,6 @@ public class FragmentPermanents extends Fragment {
         }
 
         System.out.println("DEBUG:" + itemsArrayList);
-
-
-        CustomAdapter adapter = new CustomAdapter(containerContext, itemsArrayList);
-
-        ListView itemsListView  = (ListView) view.findViewById(R.id.perms_list);
-        itemsListView.setAdapter(adapter);
     }
 
 
@@ -114,5 +124,29 @@ public class FragmentPermanents extends Fragment {
                 return false;
             }
         });
+    }
+
+    public void deleteStandingOrder()
+    {
+      databaseHandler.removeStandingOrder((String) mListView.getItemAtPosition(mListView.getSelectedItemPosition()));
+    }
+
+    public AlertDialog createDialog()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Do you really want to delete the standing order?");
+        builder.setTitle("DELETE");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteStandingOrder();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        return builder.create();
     }
 }
