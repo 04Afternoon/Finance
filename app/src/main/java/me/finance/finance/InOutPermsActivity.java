@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,24 +31,24 @@ public class InOutPermsActivity extends AppCompatActivity {
 
     private ImageButton exitButton;
     private Button finishButton;
-    private TextView title;
-    private DatabaseHandler databaseHandler;
+    private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
     private Spinner categorySpinner, paymentSpinner;
-    private ArrayList<Category> categoryList;
-    private ArrayList<Payment> paymentList;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_out_perms);
-        title = findViewById(R.id.auftrag_text);
-        title.setText(getIntent().getStringExtra("type"));
-        databaseHandler = DatabaseHandler.getInstance(this);
-        databaseHandler.open();
+        setTitle(getIntent().getStringExtra("type"));
+
+        getSupportActionBar().hide();
+
+        myToolbar = (Toolbar) findViewById(R.id.toolbar_inoutperms);
 
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
 
+        final ArrayList<Category> categoryList;
         ArrayList<String> categorySpinnerList = new ArrayList<String>();
         categoryList = databaseHandler.getCategories();
         categorySpinnerList.add("no category");
@@ -59,8 +60,10 @@ public class InOutPermsActivity extends AppCompatActivity {
         categorySpinner = findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(categoryAdapter);
 
+        final ArrayList<Payment> paymentList;
         ArrayList<String> paymentSpinnerList = new ArrayList<String>();
         paymentList = databaseHandler.getPayments();
+        paymentSpinnerList.add("Cash");
         for(int i = 0; i < paymentList.size(); i++)
         {
             paymentSpinnerList.add(paymentList.get(i).getName());
@@ -69,7 +72,8 @@ public class InOutPermsActivity extends AppCompatActivity {
         paymentSpinner = findViewById(R.id.payment_opt_spinner);
         paymentSpinner.setAdapter(paymentAdapter);
 
-        if(title.getText().toString().equals("Expense") || title.getText().toString().equals("Intake")) {
+
+        if(getIntent().getStringExtra("type").equals("Expense") || getIntent().getStringExtra("type").equals("Intake")) {
             end_date_text_field.setFocusable(false);
             end_date_text_field.setClickable(true);
             intervall_text_field.setClickable(true);
@@ -128,13 +132,13 @@ public class InOutPermsActivity extends AppCompatActivity {
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!title.getText().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                    if (!getIntent().getStringExtra("type").equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
-                        if (title.getText().toString().equals("Expense")) {
+                        if (getIntent().getStringExtra("type").equals("Expense")) {
                             value *= -1;
                         }
                         String category = categorySpinner.getSelectedItem().toString();
-                        Integer categoryId = null;
+                        Integer categoryId = 0;
                         for(int i = 0; i < categoryList.size(); i++){
                             if(categoryList.get(i).getName().equals(category)){
                                 categoryId = categoryList.get(i).getId();
@@ -156,7 +160,7 @@ public class InOutPermsActivity extends AppCompatActivity {
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if (title.getText().toString().equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                    } else if (getIntent().getStringExtra("type").equals("Permanents") && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
 
                         String category = categorySpinner.getSelectedItem().toString();
