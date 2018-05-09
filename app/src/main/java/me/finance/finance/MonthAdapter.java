@@ -17,6 +17,7 @@ import me.finance.finance.Model.Payment;
 
 public class MonthAdapter extends BaseAdapter {
     private Context context; //context
+
     private List<Intake> items; //data source of the list adapter
 
     public MonthAdapter(Context context, List<Intake> items){
@@ -83,4 +84,13 @@ public class MonthAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    public List<Intake> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Intake> items) {
+        this.items = items;
+    }
+
 }

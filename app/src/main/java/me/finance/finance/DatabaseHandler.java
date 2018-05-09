@@ -11,6 +11,7 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
@@ -385,9 +386,9 @@ public class DatabaseHandler{
      * ***TESTING***
      */
     public void insertDummyValues() {
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (-200.5, '2017-12-17', 'Felix Auf', 'Lohn');");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2017-06-07', 'Harald Koinig', 'Biergeld');");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-01-07', 'Harald Koinig', 'OEH Beitrag');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (-200.5, '2018-04-30', 'Felix Auf', 'Lohn');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2018-05-01', 'Harald Koinig', 'Biergeld');");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-05-02', 'Harald Koinig', 'OEH Beitrag');");
 
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
@@ -438,4 +439,26 @@ public class DatabaseHandler{
     }
 
 
+    public List<Intake> getIntakes(Date startDate, Date endDate) {
+
+        ArrayList<Intake> intakes = new ArrayList<>();
+        try {
+            String[] selectionArgs = new String[]{
+                    Utils.convertDate(startDate),
+                    Utils.convertDate(endDate)
+            };
+            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ?", selectionArgs);
+            if (cursorIntakes.moveToFirst()) {
+                do {
+                    intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                            cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                } while (cursorIntakes.moveToNext());
+            }
+            cursorIntakes.close();
+        } catch(Exception e) {
+            System.out.println("");
+        }
+        return intakes;
+
+    }
 }
