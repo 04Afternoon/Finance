@@ -55,7 +55,7 @@ public class FragmentPermanents extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
-                intent.putExtra("type", "Permanents");
+                intent.putExtra(InOutPermsActivity.IS_STANDING_ORDER, true);
                 startActivity(intent);
             }
         });

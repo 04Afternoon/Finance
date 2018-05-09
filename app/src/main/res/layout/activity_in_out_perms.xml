@@ -87,9 +87,9 @@
         android:ems="10"
         android:hint="YYYY-MM-DD"
         android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="@+id/textView11"
+        app:layout_constraintBottom_toBottomOf="@+id/endDateLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView11" />
+        app:layout_constraintTop_toTopOf="@+id/endDateLabel" />
 
     <EditText
         android:id="@+id/intervall_text_field"
@@ -100,9 +100,9 @@
         android:ems="10"
         android:hint="W (weekly) / M (monthly)"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintBottom_toBottomOf="@+id/intervalLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView12" />
+        app:layout_constraintTop_toTopOf="@+id/intervalLabel" />
 
     <Button
         android:id="@+id/auftrag_finish_button"
@@ -138,10 +138,10 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/intervalLabel" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/intervalLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -151,10 +151,10 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/endDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -226,6 +226,7 @@
 
 
     <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

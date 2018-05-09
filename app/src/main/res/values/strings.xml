@@ -12,4 +12,7 @@
     <string name="income">Income</string>
     <string name="outgoing">Outgoing</string>
     <string name="in_out">*In/Out:</string>
+    <string name="expense">Expense</string>
+    <string name="intake">Intake</string>
+    <string name="standingOrder">Standing Order</string>
 </resources>
