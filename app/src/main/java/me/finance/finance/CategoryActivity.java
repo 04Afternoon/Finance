@@ -97,13 +97,13 @@ public class CategoryActivity extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         String name = (String) categoryList.getItemAtPosition(i);
 
-                            if(title.getText().toString().equals("manage categories"))
+                            if(getIntent().getStringExtra("settings").equals("manage categories"))
                             {
                                 databaseHandler.removeCategory(name);
                                 ArrayList<Category> categories = databaseHandler.getCategories();
                                 populateCategoryListView(categories);
                             }
-                            else if(title.getText().toString().equals("manage accounts"))
+                            else if(getIntent().getStringExtra("settings").equals("manage accounts"))
                             {
                                 databaseHandler.removePayment(name);
                                 ArrayList<Payment> accounts = databaseHandler.getPayments();
