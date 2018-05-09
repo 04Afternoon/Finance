@@ -18,11 +18,16 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
+import me.finance.finance.Model.Permanent;
+
+import static me.finance.finance.Utils.convertDate;
 
 public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
@@ -204,7 +209,11 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         setResult(Activity.RESULT_OK);
                         finish();
                     } else if (isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "TODO -> push to DB", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Standing order saved!", Toast.LENGTH_SHORT);
+
+                        if (outGoing) {
+                            value *= -1;
+                        }
 
                         String category = categorySpinner.getSelectedItem().toString();
                         Integer categoryId = 0;
@@ -223,6 +232,34 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                                 break;
                             }
                         }
+
+                        Date next_exec_date = convertDate(startDate);
+                        Calendar next_exec = Calendar.getInstance();
+                        next_exec.setTime(next_exec_date);
+                        if (intervall.equals("M")) {
+                            Calendar currentDate = Calendar.getInstance();
+                            currentDate.set(Calendar.HOUR, 23);
+                            currentDate.set(Calendar.MINUTE, 59);
+                            currentDate.set(Calendar.SECOND, 59);
+                            while (next_exec.before(currentDate)) {
+                                next_exec.add(Calendar.MONTH, 1);
+
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+
+                            }
+                        } else if (intervall.equals("W")) {
+                            Calendar currentDate = Calendar.getInstance();
+                            currentDate.set(Calendar.HOUR, 23);
+                            currentDate.set(Calendar.MINUTE, 59);
+                            currentDate.set(Calendar.SECOND, 59);
+                            while (next_exec.before(currentDate)) {
+                                next_exec.add(Calendar.DAY_OF_YEAR, 7);
+
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+                            }
+                        }
+
+                        database.addPermanet(new Permanent(value, convertDate(startDate), intervall, convertDate(endDate), name, "", categoryId, paymentId, next_exec.getTime()));
 
                         toast.show();
                         System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + intervall + " " + 0);
@@ -251,10 +288,12 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             case R.id.radioButton:
                 value_text_field.setTextColor(Color.BLACK);
                 value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
+                outGoing = false;
                 break;
             case R.id.radioButton2:
                 value_text_field.setTextColor(Color.RED);
                 value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
+                outGoing = true;
                 break;
         }
     }
