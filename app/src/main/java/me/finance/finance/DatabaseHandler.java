@@ -18,6 +18,7 @@ import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Permanent;
+import me.finance.finance.Model.Sort;
 
 import static me.finance.finance.Utils.convertDate;
 
@@ -488,7 +489,7 @@ public class DatabaseHandler{
     }
 
 
-    public List<Intake> getIntakes(Date startDate, Date endDate) {
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort) {
 
         ArrayList<Intake> intakes = new ArrayList<>();
         try {
@@ -496,7 +497,8 @@ public class DatabaseHandler{
                     Utils.convertDate(startDate),
                     Utils.convertDate(endDate)
             };
-            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ?", selectionArgs);
+            String sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
+            Cursor cursorIntakes = database.rawQuery(sql, selectionArgs);
             if (cursorIntakes.moveToFirst()) {
                 do {
                     intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
@@ -509,6 +511,10 @@ public class DatabaseHandler{
         }
         return intakes;
 
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate) {
+        return getIntakes(startDate,endDate,new Sort(Sort.Column.DATE,Sort.Order.ASC));
     }
 
     public List<Permanent> getPermanents() {
