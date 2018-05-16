@@ -127,6 +127,18 @@ public class DatabaseHandler{
         return categories;
     }
 
+    public ArrayList<Category> getCategories(String name) {
+        ArrayList<Category> categories = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[] {name});
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            categories.add(new Category(cursor.getInt(0),cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return categories;
+    }
+
     public Category getCategory(int id) {
         Category category = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE _id = ?", new String[]{String.valueOf(id)});
@@ -140,6 +152,18 @@ public class DatabaseHandler{
     public ArrayList<Payment> getPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM payment", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return payments;
+    }
+
+    public ArrayList<Payment> getPayments(String name) {
+        ArrayList<Payment> payments = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[] {name});
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import me.finance.finance.Model.Payment;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +68,7 @@ public class FragmentSettings extends Fragment {
             public void onClick(View view) {
                 databaseHandler.open();
                 databaseHandler.deleteTableContents();
+                databaseHandler.addPayment(new Payment("Cash"));
                 databaseHandler.close();
 
                 Toast toast = Toast.makeText(view.getContext(), "Database cleared successfully!", Toast.LENGTH_SHORT);
