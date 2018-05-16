@@ -143,8 +143,6 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
                 return;
             }
             sort = (Sort) spinner.getSelectedItem();
-            Toast toast = Toast.makeText(context, sort.toString(), Toast.LENGTH_SHORT);
-            toast.show();
         }
         else{
             List<Date> dates = calendar.getSelectedDates();
