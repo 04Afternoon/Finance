@@ -73,7 +73,7 @@ public class FragmentMonthsTest {
     @Test
     public void testAllMonthItems() {
         onView(withId(R.id.navigation_months)).perform(click());
-        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(3)));
+        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class FragmentMonthsTest {
         onView(withId(R.id.navigation_months)).perform(click());
         onView(withId(R.id.calender_button)).perform(click());
         onView(withText("Cancel")).perform(click());
-        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(3)));
+        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
     }
     @Test
     @Ignore //TODO: fix tests
