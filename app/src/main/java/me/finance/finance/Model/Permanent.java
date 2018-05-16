@@ -1,19 +1,23 @@
 package me.finance.finance.Model;
 
+import java.util.Date;
+
+import static me.finance.finance.Utils.convertDate;
+
 public class Permanent{
 
     private int id_;
-    private float value_;
-    private String start_date_;
+    private double value_;
+    private Date start_date_;
     private String iteration;
-    private String end_date_;
+    private Date end_date_;
     private String name_;
     private String comment_;
-    private int category_;
-    private int payment_opt_;
-    private String next_exec_;
+    private Integer category_;
+    private Integer payment_opt_;
+    private Date next_exec_;
 
-    public Permanent(int id_, float value_, String start_date_, String iteration, String end_date_, String name_, String comment_, int category_, int payment_opt_, String next_exec_) {
+    public Permanent(int id_, double value_, Date start_date_, String iteration, Date end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, Date next_exec_) {
         this.id_ = id_;
         this.value_ = value_;
         this.start_date_ = start_date_;
@@ -26,7 +30,7 @@ public class Permanent{
         this.next_exec_ = next_exec_;
     }
 
-    public Permanent(float value_, String start_date_, String iteration, String end_date_, String name_, String comment_, int category_, int payment_opt_, String next_exec_) {
+    public Permanent(double value_, Date start_date_, String iteration, Date end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, Date next_exec_) {
         this.value_ = value_;
         this.start_date_ = start_date_;
         this.iteration = iteration;
@@ -36,6 +40,31 @@ public class Permanent{
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
         this.next_exec_ = next_exec_;
+    }
+
+    public Permanent(int id_, double value_, String start_date_, String iteration, String end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, String next_exec_) {
+        this.id_ = id_;
+        this.value_ = value_;
+        this.start_date_ = convertDate(start_date_);
+        this.iteration = iteration;
+        this.end_date_ = convertDate(end_date_);
+        this.name_ = name_;
+        this.comment_ = comment_;
+        this.category_ = category_;
+        this.payment_opt_ = payment_opt_;
+        this.next_exec_ = convertDate(next_exec_);
+    }
+
+    public Permanent(double value_, String start_date_, String iteration, String end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, String next_exec_) {
+        this.value_ = value_;
+        this.start_date_ = convertDate(start_date_);
+        this.iteration = iteration;
+        this.end_date_ = convertDate(end_date_);
+        this.name_ = name_;
+        this.comment_ = comment_;
+        this.category_ = category_;
+        this.payment_opt_ = payment_opt_;
+        this.next_exec_ = convertDate(next_exec_);
     }
 
 
@@ -47,19 +76,19 @@ public class Permanent{
         this.id_ = id_;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value_;
     }
 
-    public void setValue(float value_) {
+    public void setValue(double value_) {
         this.value_ = value_;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return start_date_;
     }
 
-    public void setStartDate(String start_date_) {
+    public void setStartDate(Date start_date_) {
         this.start_date_ = start_date_;
     }
 
@@ -71,11 +100,11 @@ public class Permanent{
         this.iteration = iteration;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return end_date_;
     }
 
-    public void setEndDate(String end_date_) {
+    public void setEndDate(Date end_date_) {
         this.end_date_ = end_date_;
     }
 
@@ -95,27 +124,27 @@ public class Permanent{
         this.comment_ = comment_;
     }
 
-    public int getCategory(){
+    public Integer getCategory(){
         return category_;
     }
 
-    public void setCategory(int category_){
+    public void setCategory(Integer category_){
         this.category_ = category_;
     }
 
-    public int getPayment_opt(){
+    public Integer getPayment_opt(){
         return payment_opt_;
     }
 
-    public void setPayment_opt(int payment_opt_){
+    public void setPayment_opt(Integer payment_opt_){
         this.payment_opt_ = payment_opt_;
     }
 
-    public String  getNext_exec(){
+    public Date  getNext_exec(){
         return next_exec_;
     }
 
-    public void setNext_exec(String next_exec_){
+    public void setNext_exec(Date next_exec_){
         this.next_exec_ = next_exec_;
     }
 }
