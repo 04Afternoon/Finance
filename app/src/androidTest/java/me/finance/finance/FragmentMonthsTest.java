@@ -123,15 +123,6 @@ public class FragmentMonthsTest {
         onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
     }
 
-    private static FeatureMatcher<Sort, String> withFullName(final String productName) {
-        return new FeatureMatcher<Sort, String>(equalTo(productName), "with fullName", "fullName") {
-            @Override
-            protected String featureValueOf(Sort actual) {
-                return actual.toString();
-            }
-        };
-    }
-
     static class FinanceMatchers {
 
         public static Matcher<Object> withSort(final Sort actual) {
@@ -144,11 +135,6 @@ public class FragmentMonthsTest {
                 @Override
                 public boolean matches(Object item) {
                     return actual.equals(item);
-                }
-
-                @Override
-                public String toString() {
-                    return "";
                 }
             };
         }
