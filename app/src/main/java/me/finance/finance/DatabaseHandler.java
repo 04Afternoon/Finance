@@ -514,4 +514,32 @@ public class DatabaseHandler{
 
         return permanents;
     }
+
+    public List<Permanent> getDuePermanents(Date next_exec) {
+        ArrayList<Permanent> permanents = new ArrayList<>();
+        String[] columns = new String[] {
+                "_id", "value", "start_date", "iteration", "end_date",
+                "name", "comment", "category", "payment_opt", "next_exec"
+        };
+
+        try {
+            Cursor cursor = database.query("permanents", columns, "next_exec before ?", new String[] {convertDate(next_exec)}, "", "", "start_date");
+            if (cursor.moveToFirst()) {
+                do {
+                    permanents.add(new Permanent(cursor.getInt(0),
+                            cursor.getDouble(1), cursor.getString(2),
+                            cursor.getString(3), cursor.getString(4),
+                            cursor.getString(5), cursor.getString(6),
+                            cursor.isNull(7) ? null : cursor.getInt(7),
+                            cursor.isNull(8) ? null : cursor.getInt(8),
+                            cursor.getString(9)));
+                } while(cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return permanents;
+    }
 }

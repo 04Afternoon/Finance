@@ -22,9 +22,14 @@ import android.widget.Toast;
 import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Date;
 
 import me.finance.finance.Model.Intake;
+import me.finance.finance.Model.Permanent;
 
+import static me.finance.finance.Utils.convertDate;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +83,45 @@ public class FragmentBalance extends Fragment {
                 startActivity(intent);
             }
         });
+
+        List<Permanent> permanents = databaseHandler.getDuePermanents(new Date());
+        for (Permanent permanent : permanents) {
+
+            Calendar next_exec = Calendar.getInstance();
+            next_exec.setTime(permanent.getNext_exec());
+            Calendar endCal = Calendar.getInstance();
+            endCal.setTime(permanent.getEndDate());
+            if (permanent.getIteration().equals("M")) {
+                Calendar currentDate = Calendar.getInstance();
+                currentDate.set(Calendar.HOUR, 23);
+                currentDate.set(Calendar.MINUTE, 59);
+                currentDate.set(Calendar.SECOND, 59);
+                while (next_exec.before(currentDate)) {
+                    databaseHandler.addIntake(new Intake(permanent.getValue(), next_exec.getTime(), permanent.getName(), "", permanent.getCategory(), permanent.getPayment_opt()));
+                    next_exec.add(Calendar.MONTH, 1);
+
+                    if (next_exec.after(endCal)) {
+                        break;
+                    }
+                }
+            } else if (permanent.getIteration().equals("W")) {
+                Calendar currentDate = Calendar.getInstance();
+                currentDate.set(Calendar.HOUR, 23);
+                currentDate.set(Calendar.MINUTE, 59);
+                currentDate.set(Calendar.SECOND, 59);
+                while (next_exec.before(currentDate)) {
+                    databaseHandler.addIntake(new Intake(permanent.getValue(), next_exec.getTime(), permanent.getName(), "", permanent.getCategory(), permanent.getPayment_opt()));
+                    next_exec.add(Calendar.DAY_OF_YEAR, 7);
+
+                    if (next_exec.after(endCal)) {
+                        break;
+                    }
+                }
+            }
+
+            permanent.setNext_exec(next_exec.getTime());
+            databaseHandler.updatePermanent(permanent);
+        }
 
         TextView intake = view.findViewById(R.id.einnahmen_monat);
         ArrayList<Intake> intakes = databaseHandler.getIntakes();
