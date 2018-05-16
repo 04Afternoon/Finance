@@ -18,6 +18,7 @@ import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Permanent;
+import me.finance.finance.Model.Sort;
 
 import static me.finance.finance.Utils.convertDate;
 
@@ -127,6 +128,18 @@ public class DatabaseHandler{
         return categories;
     }
 
+    public ArrayList<Category> getCategories(String name) {
+        ArrayList<Category> categories = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[] {name});
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            categories.add(new Category(cursor.getInt(0),cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return categories;
+    }
+
     public Category getCategory(int id) {
         Category category = null;
         Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE _id = ?", new String[]{String.valueOf(id)});
@@ -140,6 +153,18 @@ public class DatabaseHandler{
     public ArrayList<Payment> getPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM payment", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return payments;
+    }
+
+    public ArrayList<Payment> getPayments(String name) {
+        ArrayList<Payment> payments = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[] {name});
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
@@ -237,7 +262,7 @@ public class DatabaseHandler{
             values.put("payment_opt",permanent.getPayment_opt());
             values.put("next_exec",convertDate(permanent.getNext_exec()));
 
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
+            if(database.update("permanents",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
                 return false;
             }
         }
@@ -464,7 +489,7 @@ public class DatabaseHandler{
     }
 
 
-    public List<Intake> getIntakes(Date startDate, Date endDate) {
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort) {
 
         ArrayList<Intake> intakes = new ArrayList<>();
         try {
@@ -472,7 +497,8 @@ public class DatabaseHandler{
                     Utils.convertDate(startDate),
                     Utils.convertDate(endDate)
             };
-            Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ?", selectionArgs);
+            String sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
+            Cursor cursorIntakes = database.rawQuery(sql, selectionArgs);
             if (cursorIntakes.moveToFirst()) {
                 do {
                     intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
@@ -487,6 +513,10 @@ public class DatabaseHandler{
 
     }
 
+    public List<Intake> getIntakes(Date startDate, Date endDate) {
+        return getIntakes(startDate,endDate,new Sort(Sort.Column.DATE,Sort.Order.ASC));
+    }
+
     public List<Permanent> getPermanents() {
         ArrayList<Permanent> permanents = new ArrayList<>();
         String[] columns = new String[] {
@@ -496,6 +526,34 @@ public class DatabaseHandler{
 
         try {
             Cursor cursor = database.query("permanents", columns, "", null, "", "", "start_date");
+            if (cursor.moveToFirst()) {
+                do {
+                    permanents.add(new Permanent(cursor.getInt(0),
+                            cursor.getDouble(1), cursor.getString(2),
+                            cursor.getString(3), cursor.getString(4),
+                            cursor.getString(5), cursor.getString(6),
+                            cursor.isNull(7) ? null : cursor.getInt(7),
+                            cursor.isNull(8) ? null : cursor.getInt(8),
+                            cursor.getString(9)));
+                } while(cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return permanents;
+    }
+
+    public List<Permanent> getDuePermanents() {
+        ArrayList<Permanent> permanents = new ArrayList<>();
+        String[] columns = new String[] {
+                "_id", "value", "start_date", "iteration", "end_date",
+                "name", "comment", "category", "payment_opt", "next_exec"
+        };
+
+        try {
+            Cursor cursor = database.query("permanents", columns, "next_exec < date('now') and end_date > date('now')", null, "", "", "start_date");
             if (cursor.moveToFirst()) {
                 do {
                     permanents.add(new Permanent(cursor.getInt(0),
