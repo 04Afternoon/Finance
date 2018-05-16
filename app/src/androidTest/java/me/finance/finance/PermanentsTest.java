@@ -10,6 +10,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -191,6 +192,47 @@ public class PermanentsTest {
         onView(withId(R.id.einnahmen_monat)).check(matches(withText("0.00")));
         onView(withId(R.id.ausgaben_monat)).check(matches(withText("-50.00")));
     }
+
+    @Test
+    public void testGetDuePermanents() {
+        database.deletePermanents();
+        Calendar startDate = Calendar.getInstance();
+        startDate.set(2000, 1, 1);
+        Calendar endDate = Calendar.getInstance();
+        endDate.set(2020, 12, 31);
+        Calendar nextExecDate = Calendar.getInstance();
+        nextExecDate.set(2010, 10, 10);
+        Calendar queryDate = Calendar.getInstance();
+        queryDate.set(2015, 10, 10);
+
+        Permanent permanent = new Permanent(1, startDate.getTime(), "M", endDate.getTime(), "name", "comment", 1, 1, nextExecDate.getTime());
+
+        database.addPermanet(permanent);
+        List<Permanent> perms = database.getDuePermanents();
+
+        assertEquals(perms.size(), 1);
+    }
+
+
+    @Test
+    public void testGetDuePermanentsEmpty() {
+        database.deletePermanents();
+        Calendar startDate = Calendar.getInstance();
+        startDate.set(2000, 1, 1);
+        Calendar endDate = Calendar.getInstance();
+        endDate.set(2020, 12, 31);
+        Calendar nextExecDate = Calendar.getInstance();
+        nextExecDate.set(2019, 10, 10);
+
+        Permanent permanent = new Permanent(1, startDate.getTime(), "M", endDate.getTime(), "name", "comment", 1, 1, nextExecDate.getTime());
+
+        database.addPermanet(permanent);
+        List<Permanent> perms = database.getDuePermanents();
+
+        assertEquals(0, perms.size());
+    }
+
+
 
     @After
     public void closeDb() {
