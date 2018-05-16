@@ -261,7 +261,7 @@ public class DatabaseHandler{
             values.put("payment_opt",permanent.getPayment_opt());
             values.put("next_exec",convertDate(permanent.getNext_exec()));
 
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
+            if(database.update("permanents",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
                 return false;
             }
         }
@@ -539,7 +539,7 @@ public class DatabaseHandler{
         return permanents;
     }
 
-    public List<Permanent> getDuePermanents(Date next_exec) {
+    public List<Permanent> getDuePermanents() {
         ArrayList<Permanent> permanents = new ArrayList<>();
         String[] columns = new String[] {
                 "_id", "value", "start_date", "iteration", "end_date",
@@ -547,7 +547,7 @@ public class DatabaseHandler{
         };
 
         try {
-            Cursor cursor = database.query("permanents", columns, "next_exec before ?", new String[] {convertDate(next_exec)}, "", "", "start_date");
+            Cursor cursor = database.query("permanents", columns, "next_exec < date('now') and end_date > date('now')", null, "", "", "start_date");
             if (cursor.moveToFirst()) {
                 do {
                     permanents.add(new Permanent(cursor.getInt(0),

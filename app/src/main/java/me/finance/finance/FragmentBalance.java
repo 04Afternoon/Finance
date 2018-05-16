@@ -50,41 +50,15 @@ public class FragmentBalance extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+        executeStandingOrders();
+    }
 
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_balance, container, false);
-        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(view.getContext());
-        databaseHandler.open();
-
-        Button einnahmen_button = view.findViewById(R.id.einnahmen);
-        Button ausgaben_button = view.findViewById(R.id.ausgaben);
-
-        buttonEffect(einnahmen_button);
-        buttonEffect(ausgaben_button);
-
-        einnahmen_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
-                intent.putExtra(InOutPermsActivity.IS_OUT_GOING, false);
-                startActivity(intent);
-            }
-        });
-
-        ausgaben_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
-                intent.putExtra(InOutPermsActivity.IS_OUT_GOING, true);
-                startActivity(intent);
-            }
-        });
-
-        List<Permanent> permanents = databaseHandler.getDuePermanents(new Date());
+    public void executeStandingOrders() {
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(getContext());
+        List<Permanent> permanents = databaseHandler.getDuePermanents();
         for (Permanent permanent : permanents) {
 
             Calendar next_exec = Calendar.getInstance();
@@ -122,6 +96,42 @@ public class FragmentBalance extends Fragment {
             permanent.setNext_exec(next_exec.getTime());
             databaseHandler.updatePermanent(permanent);
         }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_balance, container, false);
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(view.getContext());
+        databaseHandler.open();
+
+        Button einnahmen_button = view.findViewById(R.id.einnahmen);
+        Button ausgaben_button = view.findViewById(R.id.ausgaben);
+
+        buttonEffect(einnahmen_button);
+        buttonEffect(ausgaben_button);
+
+        einnahmen_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
+                intent.putExtra(InOutPermsActivity.IS_OUT_GOING, false);
+                startActivity(intent);
+            }
+        });
+
+        ausgaben_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
+                intent.putExtra(InOutPermsActivity.IS_OUT_GOING, true);
+                startActivity(intent);
+            }
+        });
+
 
         TextView intake = view.findViewById(R.id.einnahmen_monat);
         ArrayList<Intake> intakes = databaseHandler.getIntakes();
