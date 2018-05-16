@@ -86,6 +86,7 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
+        final Intent intent = new Intent(this, EditAccounts.class);
         remove_category_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -118,8 +119,9 @@ public class CategoryActivity extends AppCompatActivity {
                     categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Toast toast = Toast.makeText(view.getContext(), "Jesus Christ what are you doing??", Toast.LENGTH_SHORT);
-                            toast.show();
+                            //Toast toast = Toast.makeText(view.getContext(), "Jesus Christ what are you doing??", Toast.LENGTH_SHORT);
+                            startActivity(intent);
+                            //toast.show();
                         }
                     });
                 }
