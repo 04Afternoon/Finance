@@ -27,6 +27,7 @@ import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
+import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Sort;
 
 /**
@@ -45,6 +46,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
     private Date endDate;
     private Sort sort;
     private Category category;
+    private Payment payment;
 
     public FragmentMonths() {
         Calendar firstOfMonth = Calendar.getInstance();
@@ -53,6 +55,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         endDate = new Date();
         sort = new Sort(Sort.Column.values()[0], Sort.Order.values()[0]);
         category = null;
+        payment = null;
     }
 
     @Override
@@ -104,7 +107,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
 
-        List<Intake> intakes = databaseHandler.getIntakes(startDate,endDate,sort,category);
+        List<Intake> intakes = databaseHandler.getIntakes(startDate,endDate,sort,category,payment);
 
         adapter = new MonthAdapter(containerContext, intakes);
 
@@ -153,6 +156,16 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
                     category = adapter.getCategories().get(categorieSpinner.getSelectedItemPosition() - 1);
                 }
             }
+
+            Spinner paymentSpinner = dialog.findViewById(R.id.filterPaymentOptionSpinner);
+            if(paymentSpinner != null && paymentSpinner.getSelectedItem() != null){
+                if(paymentSpinner.getSelectedItemPosition() == 0){
+                    payment = null;
+                }else {
+                    PaymentAdapter adapter = (PaymentAdapter) paymentSpinner.getAdapter();
+                    payment = adapter.getPayments().get(paymentSpinner.getSelectedItemPosition() - 1);
+                }
+            }
         }
         else{
             List<Date> dates = calendar.getSelectedDates();
@@ -160,7 +173,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
             endDate = dates.get(dates.size()-1);
         }
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
-        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate, sort,category);
+        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate, sort, category, payment);
         adapter.setItems(intakes);
         adapter.notifyDataSetChanged();
     }
@@ -254,6 +267,26 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
                 }
                 if(element.equals(category.getName())){
                     categorySpinner.setSelection(i);
+                }
+            }
+
+        }
+
+        Spinner paymentSpinner = v.findViewById(R.id.filterPaymentOptionSpinner);
+        PaymentAdapter paymentAdapter = new PaymentAdapter(this.getContext());
+
+        paymentSpinner.setAdapter(paymentAdapter);
+
+        if(payment == null){
+            paymentSpinner.setSelection(0);
+        }else{
+            for(int i = 0; i < paymentAdapter.getCount(); i++){
+                String element = paymentAdapter.getItem(i);
+                if(element == null){
+                    continue;
+                }
+                if(element.equals(payment.getName())){
+                    paymentSpinner.setSelection(i);
                 }
             }
 

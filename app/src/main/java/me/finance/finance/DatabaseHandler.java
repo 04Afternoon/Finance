@@ -11,6 +11,7 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -489,28 +490,36 @@ public class DatabaseHandler{
     }
 
 
-    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category) {
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category, Payment payment) {
 
         ArrayList<Intake> intakes = new ArrayList<>();
         try {
-            String[] selectionArgs;
-            String sql;
-            if(category == null) {
-                sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
-                 selectionArgs = new String[]{
-                        Utils.convertDate(startDate),
-                        Utils.convertDate(endDate)
-                };
-            }else{
-                sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND category = ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
-                selectionArgs= new String[]{
-                        Utils.convertDate(startDate),
-                        Utils.convertDate(endDate),
-                        Integer.toString(category.getId())
-                };
+            List<String> selectionArgs = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
+
+
+            selectionArgs.add(Utils.convertDate(startDate));
+            selectionArgs.add(Utils.convertDate(endDate));
+            stringBuilder.append("SELECT * FROM intakes WHERE date BETWEEN ? AND ?");
+
+            if(category != null){
+                selectionArgs.add(Integer.toString(category.getId()));
+                stringBuilder.append(" AND category = ?");
             }
 
-            Cursor cursorIntakes = database.rawQuery(sql, selectionArgs);
+            if(payment != null){
+                selectionArgs.add(Integer.toString(payment.getId()));
+                stringBuilder.append(" AND payment_opt = ?");
+            }
+
+
+
+
+            stringBuilder.append(String.format(" ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename()));
+
+
+
+            Cursor cursorIntakes = database.rawQuery(stringBuilder.toString(), selectionArgs.toArray(new String[0]));
             if (cursorIntakes.moveToFirst()) {
                 do {
                     intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
@@ -523,6 +532,10 @@ public class DatabaseHandler{
         }
         return intakes;
 
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category) {
+        return getIntakes(startDate,endDate,sort,category,null);
     }
 
     public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort) {

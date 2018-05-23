@@ -8,29 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
-import me.finance.finance.Model.Sort;
+import me.finance.finance.Model.Payment;
 
-public class CategoryAdapter extends ArrayAdapter<String>{
+public class PaymentAdapter extends ArrayAdapter<String>{
 
 
-    private List<Category> categories;
+    private List<Payment> payments;
 
-    public CategoryAdapter(@NonNull Context context) {
+    public PaymentAdapter(@NonNull Context context) {
         super(context, android.R.layout.simple_spinner_item);
         this.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
-        categories = databaseHandler.getCategories();
+        payments = databaseHandler.getPayments();
 
         List<String> spinnerArray =  new ArrayList<>();
-        spinnerArray.add("All categories");
-        for (int i = 0; i < categories.size(); i++){
-            spinnerArray.add(categories.get(i).getName());
+        spinnerArray.add("All payment options");
+        for (int i = 0; i < payments.size(); i++){
+            spinnerArray.add(payments.get(i).getName());
         }
         this.addAll(spinnerArray);
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public List<Payment> getPayments() {
+        return payments;
     }
 }
