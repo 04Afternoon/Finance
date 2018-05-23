@@ -128,6 +128,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             @Override
             public void onClick(View view) {
                 finish();
+
             }
         });
 
