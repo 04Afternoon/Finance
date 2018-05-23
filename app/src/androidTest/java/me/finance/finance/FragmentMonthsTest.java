@@ -123,6 +123,36 @@ public class FragmentMonthsTest {
         onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
     }
 
+    @Test
+    public void testFilterDialogOKWithoutChange() {
+        onView(withId(R.id.navigation_months)).perform(click());
+        onView(withId(R.id.months_search_button)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
+    }
+
+    @Test
+    public void testFilterDialogOKWithoutChangeCancel() {
+        onView(withId(R.id.navigation_months)).perform(click());
+        onView(withId(R.id.months_search_button)).perform(click());
+        onView(withText("Cancel")).perform(click());
+        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
+    }
+
+    @Test
+    @Ignore
+    public void testFilterDialogOKWithChange() {
+        onView(withId(R.id.navigation_months)).perform(click());
+        onView(withId(R.id.months_search_button)).perform(click());
+
+        onView(withId(R.id.filterCategorieSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("All"))).perform(click());
+
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
+    }
+
+
     static class FinanceMatchers {
 
         public static Matcher<Object> withSort(final Sort actual) {
