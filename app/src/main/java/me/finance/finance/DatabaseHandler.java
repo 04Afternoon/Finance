@@ -489,15 +489,27 @@ public class DatabaseHandler{
     }
 
 
-    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort) {
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category) {
 
         ArrayList<Intake> intakes = new ArrayList<>();
         try {
-            String[] selectionArgs = new String[]{
-                    Utils.convertDate(startDate),
-                    Utils.convertDate(endDate)
-            };
-            String sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
+            String[] selectionArgs;
+            String sql;
+            if(category == null) {
+                sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
+                 selectionArgs = new String[]{
+                        Utils.convertDate(startDate),
+                        Utils.convertDate(endDate)
+                };
+            }else{
+                sql = String.format("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND category = ? ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename());
+                selectionArgs= new String[]{
+                        Utils.convertDate(startDate),
+                        Utils.convertDate(endDate),
+                        Integer.toString(category.getId())
+                };
+            }
+
             Cursor cursorIntakes = database.rawQuery(sql, selectionArgs);
             if (cursorIntakes.moveToFirst()) {
                 do {
@@ -511,6 +523,10 @@ public class DatabaseHandler{
         }
         return intakes;
 
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort) {
+        return getIntakes(startDate,endDate,sort,null);
     }
 
     public List<Intake> getIntakes(Date startDate, Date endDate) {
