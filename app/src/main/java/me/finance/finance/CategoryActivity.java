@@ -109,6 +109,7 @@ public class CategoryActivity extends AppCompatActivity {
 
                             if(getIntent().getStringExtra("settings").equals("manage categories"))
                             {
+                                System.out.println(name);
                                 databaseHandler.removeCategory(name);
                                 ArrayList<Category> categories = databaseHandler.getCategories();
                                 populateCategoryListView(categories);
