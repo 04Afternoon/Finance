@@ -65,16 +65,26 @@ public class CategoryActivity extends AppCompatActivity {
                 String name = ((EditText) findViewById(R.id.categoryName)).getText().toString();
                 if(getIntent().getStringExtra("settings").equals("manage categories") && !name.isEmpty())
                 {
-                    databaseHandler.addCategoryBetter(name);
-                    ArrayList<Category> categories = databaseHandler.getCategories();
-                    populateCategoryListView(categories);
+                    if (databaseHandler.getCategories(name).isEmpty()) {
+                        databaseHandler.addCategoryBetter(name);
+                        ArrayList<Category> categories = databaseHandler.getCategories();
+                        populateCategoryListView(categories);
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Category already exists!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     ((EditText) findViewById(R.id.categoryName)).setText("");
                 }
                 else if(getIntent().getStringExtra("settings").equals("manage accounts") && !name.isEmpty())
                 {
-                    databaseHandler.addPaymentBetter(name);
-                    ArrayList<Payment> accounts = databaseHandler.getPayments();
-                    populateAccountListView(accounts);
+                    if (databaseHandler.getPayments(name).isEmpty()) {
+                        databaseHandler.addPaymentBetter(name);
+                        ArrayList<Payment> accounts = databaseHandler.getPayments();
+                        populateAccountListView(accounts);
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Account already exists!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     ((EditText) findViewById(R.id.categoryName)).setText("");
                 } else {
                     Toast toast = Toast.makeText(view.getContext(), "Empty name!", Toast.LENGTH_SHORT);

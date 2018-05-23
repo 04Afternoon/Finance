@@ -12,42 +12,14 @@
 
         <ListView
             android:id="@+id/perms_list"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="64dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="56dp"
-            android:fontFamily="monospace"
-            android:text="Use:"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="163dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="56dp"
-            android:fontFamily="monospace"
-            android:text="Interval:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
@@ -67,9 +39,9 @@
             android:id="@+id/add_perms_button"
             android:layout_width="44dp"
             android:layout_height="43dp"
-            android:layout_marginTop="8dp"
             android:layout_gravity="end"
             android:layout_marginEnd="30dp"
+            android:layout_marginTop="8dp"
             android:background="@android:drawable/ic_menu_add"
             android:backgroundTint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"

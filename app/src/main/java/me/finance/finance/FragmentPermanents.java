@@ -21,8 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
-
+import java.util.List;
 import me.finance.finance.Model.Permanent;
 
 
@@ -34,6 +33,7 @@ public class FragmentPermanents extends Fragment {
     private Context context, containerContext;
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(getContext());
     private View view;
+    private StandingOrdersAdapter adapter;
 
     public FragmentPermanents() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class FragmentPermanents extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
-                intent.putExtra("type", "Permanents");
+                intent.putExtra(InOutPermsActivity.IS_STANDING_ORDER, true);
                 startActivity(intent);
             }
         });
@@ -83,6 +83,15 @@ public class FragmentPermanents extends Fragment {
 
     public void populateListView(){
 
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
+
+        List<Permanent> perms = databaseHandler.getPermanents();
+
+        adapter = new StandingOrdersAdapter(containerContext, perms);
+
+        ListView itemsListView = (ListView) view.findViewById(R.id.perms_list);
+        itemsListView.setAdapter(adapter);
+        /*
         ArrayList<Item> itemsArrayList = new ArrayList<>();
 
         for(Integer i = 0; i < 20; i++){
@@ -100,6 +109,7 @@ public class FragmentPermanents extends Fragment {
         }
 
         System.out.println("DEBUG:" + itemsArrayList);
+        */
     }
 
 
