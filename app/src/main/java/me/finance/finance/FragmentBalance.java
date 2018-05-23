@@ -38,13 +38,15 @@ public class FragmentBalance extends Fragment {
 
     private Context context;
     private ProgressBar progressBar;
+    private Integer percentage;
+    private Double ausgaben_monat, einnahmen_monat;
+    TextView intake, outgoing, total;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = getContext();
     }
-
 
     public FragmentBalance() {
         // Required empty public constructor
@@ -54,6 +56,21 @@ public class FragmentBalance extends Fragment {
     public void onResume() {
         super.onResume();
         executeStandingOrders();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==0xaffe)
+        {
+            final android.support.v4.app.FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+            ft.detach(this);
+            ft.attach(this);
+            ft.commit();
+
+        }
     }
 
     public void executeStandingOrders() {
@@ -119,7 +136,7 @@ public class FragmentBalance extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
                 intent.putExtra(InOutPermsActivity.IS_OUT_GOING, false);
-                startActivity(intent);
+                startActivityForResult(intent, 0xaffe);
             }
         });
 
@@ -128,16 +145,16 @@ public class FragmentBalance extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
                 intent.putExtra(InOutPermsActivity.IS_OUT_GOING, true);
-                startActivity(intent);
+                startActivityForResult(intent, 0xaffe);
             }
         });
 
 
-        TextView intake = view.findViewById(R.id.einnahmen_monat);
+        intake = view.findViewById(R.id.einnahmen_monat);
         ArrayList<Intake> intakes = databaseHandler.getIntakes();
-        TextView outgoing = view.findViewById(R.id.ausgaben_monat);
-        Double ausgaben_monat = 0.0;
-        Double einnahmen_monat = 0.0;
+        outgoing = view.findViewById(R.id.ausgaben_monat);
+        ausgaben_monat = 0.0;
+        einnahmen_monat = 0.0;
         for(int i = 0; i < intakes.size(); i++)
         {
             if(intakes.get(i).getValue() > 0)
@@ -150,12 +167,11 @@ public class FragmentBalance extends Fragment {
         NumberFormat string_out = NumberFormat.getNumberInstance();
         outgoing.setText(String.format("%.2f", ausgaben_monat));
 
-        TextView total = view.findViewById(R.id.textView2);
+        total = view.findViewById(R.id.textView2);
         total.setText(String.format("%.2f", (ausgaben_monat + einnahmen_monat)));
 
         Integer allover = (int) (einnahmen_monat + ((-1)*ausgaben_monat));
-        Integer percentage = (int) ((einnahmen_monat / allover)*100);
-        System.out.println("TOTAL: " + percentage);
+        percentage = (int) ((einnahmen_monat / allover)*100);
 
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setProgress(percentage);
