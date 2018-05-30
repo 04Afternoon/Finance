@@ -1,6 +1,8 @@
 package me.finance.finance.Model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static me.finance.finance.Utils.convertDate;
 
@@ -88,6 +90,11 @@ public class Permanent{
         return start_date_;
     }
 
+    public String getStartDateFormatted() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN);
+        return dateFormat.format(start_date_);
+    }
+
     public void setStartDate(Date start_date_) {
         this.start_date_ = start_date_;
     }
@@ -102,6 +109,11 @@ public class Permanent{
 
     public Date getEndDate() {
         return end_date_;
+    }
+
+    public String getEndDateFormatted() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN);
+        return dateFormat.format(end_date_);
     }
 
     public void setEndDate(Date end_date_) {

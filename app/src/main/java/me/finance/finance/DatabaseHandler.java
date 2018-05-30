@@ -122,7 +122,7 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            categories.add(new Category(cursor.getInt(0),cursor.getString(1)));
+            categories.add(new Category(cursor.getInt(0), cursor.getString(1)));
             cursor.moveToNext();
         }
         cursor.close();
@@ -247,6 +247,20 @@ public class DatabaseHandler{
                 return false;
             }
         }
+        return true;
+    }
+
+    public boolean updatePayment(String new_name, String old_name){
+        ContentValues values = new ContentValues();
+        values.put("name", new_name);
+        database.update("payment", values, "name = ?", new String[] { old_name });
+        return true;
+    }
+
+    public boolean updateCategories(String new_name, String old_name){
+        ContentValues values = new ContentValues();
+        values.put("name", new_name);
+        database.update("categories", values, "name = ?", new String[] { old_name });
         return true;
     }
 

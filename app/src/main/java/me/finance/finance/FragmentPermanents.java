@@ -18,11 +18,14 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import org.w3c.dom.Text;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import me.finance.finance.Model.Permanent;
 
 
@@ -34,6 +37,9 @@ public class FragmentPermanents extends Fragment {
     private Context context, containerContext;
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(getContext());
     private View view;
+    private StandingOrdersAdapter adapter;
+    private TextView selected;
+    private String selectedName;
 
     public FragmentPermanents() {
         // Required empty public constructor
@@ -43,6 +49,17 @@ public class FragmentPermanents extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = getContext();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==0xcafe)
+        {
+            populateListView();
+        }
     }
 
 
@@ -57,6 +74,8 @@ public class FragmentPermanents extends Fragment {
         databaseHandler.open();
         final AlertDialog dialog = createDialog();
 
+        populateListView();
+
         ImageButton add_perms_button = view.findViewById(R.id.add_perms_button);
         buttonEffect(add_perms_button);
 
@@ -65,41 +84,34 @@ public class FragmentPermanents extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InOutPermsActivity.class);
                 intent.putExtra(InOutPermsActivity.IS_STANDING_ORDER, true);
-                startActivity(intent);
+
+                startActivityForResult(intent,0xcafe);
             }
         });
 
-        //mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                TextView clickedField = (TextView) mListView.getChildAt(i).findViewById(R.id.permsName);
+                selectedName = (String) clickedField.getText();
                 dialog.show();
             }
         });
-        populateListView();
 
         return view;
     }
 
     public void populateListView(){
 
-        ArrayList<Item> itemsArrayList = new ArrayList<>();
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
 
-        for(Integer i = 0; i < 20; i++){
-            String string;
-            Integer rand = ThreadLocalRandom.current().nextInt(0, 3);
-            if(rand == 1){
-                   string = "MONTHLY";
-            } else if(rand  == 2){
-                string = "WEEKLY";
-            } else {
-                string = "YEARLY";
-            }
-            Item item = new Item("Test" + i, string);
-            itemsArrayList.add(item);
-        }
+        List<Permanent> perms = databaseHandler.getPermanents();
 
-        System.out.println("DEBUG:" + itemsArrayList);
+        adapter = new StandingOrdersAdapter(containerContext, perms);
+
+        ListView itemsListView = (ListView) view.findViewById(R.id.perms_list);
+        itemsListView.setAdapter(adapter);
     }
 
 
@@ -126,9 +138,10 @@ public class FragmentPermanents extends Fragment {
         });
     }
 
-    public void deleteStandingOrder()
+    public void deleteStandingOrder(String StandingOrderName)
     {
-      databaseHandler.removeStandingOrder((String) mListView.getItemAtPosition(mListView.getSelectedItemPosition()));
+      System.out.println();
+      databaseHandler.removeStandingOrder(StandingOrderName);
     }
 
     public AlertDialog createDialog()
@@ -139,7 +152,13 @@ public class FragmentPermanents extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                deleteStandingOrder();
+                System.out.println("Clicked on OK button\n");
+                deleteStandingOrder(selectedName);
+                Toast toast = Toast.makeText(context, selectedName + " deleted!", Toast.LENGTH_SHORT);
+                toast.show();
+
+                populateListView();
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

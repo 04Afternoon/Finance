@@ -5,10 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -41,7 +39,6 @@ public class CategoryActivity extends AppCompatActivity {
         myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
 
         Button create_category_button = findViewById(R.id.create_category);
-        ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
         Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
 
         if(getIntent().getStringExtra("settings").equals("manage accounts")){
@@ -96,47 +93,26 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
-        remove_category_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                {
-                    final ListView categoryList = (ListView) findViewById(R.id.categoryList);
-                    categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String name = (String) categoryList.getItemAtPosition(i);
+        final Intent intent = new Intent(this, EditAccounts.class);
 
-                            if(getIntent().getStringExtra("settings").equals("manage categories"))
-                            {
-                                databaseHandler.removeCategory(name);
-                                ArrayList<Category> categories = databaseHandler.getCategories();
-                                populateCategoryListView(categories);
-                            }
-                            else if(getIntent().getStringExtra("settings").equals("manage accounts"))
-                            {
-                                if (name.equals("Cash")) {
-                                    Toast toast = Toast.makeText(getApplicationContext(), "Cannot delete Cash!", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                } else {
-                                    databaseHandler.removePayment(name);
-                                    ArrayList<Payment> accounts = databaseHandler.getPayments();
-                                    populateAccountListView(accounts);
-                                }
-                            }
-                        }
-                    });
-                }
-                else
+
+        final ListView categoryList = (ListView) findViewById(R.id.categoryList);
+        categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = (String) categoryList.getItemAtPosition(i);
+                intent.putExtra("name", name);
+                if(getIntent().getStringExtra("settings").equals("manage categories"))
                 {
-                    ListView categoryList = (ListView) findViewById(R.id.categoryList);
-                    categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Toast toast = Toast.makeText(view.getContext(), "Jesus Christ what are you doing??", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    });
+                    intent.putExtra("status", "categories");
+                    finish();
+                    startActivity(intent);
+                }
+                else if(getIntent().getStringExtra("settings").equals("manage accounts"))
+                {
+                    intent.putExtra("status", "payments");
+                    finish();
+                    startActivity(intent);
                 }
             }
         });
