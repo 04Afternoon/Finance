@@ -1,11 +1,16 @@
 package me.finance.finance;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -20,10 +25,11 @@ public class MonthAdapter extends BaseAdapter {
 
     private List<Intake> items; //data source of the list adapter
 
-    public MonthAdapter(Context context, List<Intake> items){
+    public MonthAdapter(Context context, List<Intake> items) {
         this.context = context;
         this.items = items;
     }
+
     @Override
     public int getCount() {
         return items.size();
@@ -46,7 +52,7 @@ public class MonthAdapter extends BaseAdapter {
                     inflate(R.layout.month_list_layout, parent, false);
         }
 
-        Intake currentItem = (Intake)getItem(i);
+        Intake currentItem = (Intake) getItem(i);
 
         TextView textViewItemName = convertView.findViewById(R.id.monthName);
         TextView textViewItemAmount = convertView.findViewById(R.id.monthAmount);
@@ -62,7 +68,7 @@ public class MonthAdapter extends BaseAdapter {
         } else {
             textViewItemAmount.setTextColor(Color.RED);
         }
-        textViewItemAmount.setText(String.format(Locale.GERMAN,"%.2f€", value));
+        textViewItemAmount.setText(String.format(Locale.GERMAN, "%.2f€", value));
         textViewItemDate.setText(currentItem.getDateFormatted());
         Category category;
         if (currentItem.getCategory() == null) {
@@ -81,6 +87,24 @@ public class MonthAdapter extends BaseAdapter {
         } else {
             textViewItemPayment.setText(R.string.cash);
         }
+        convertView.setOnLongClickListener(view -> {
+
+
+        });
+        convertView.setOnClickListener(view -> {
+            if (currentItem.getComment() != null && !currentItem.getComment().isEmpty()) {
+
+                Dialog settingsDialog = new Dialog(context);
+                settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                View v = LayoutInflater.from(context).inflate(R.layout.image_dialog, null);
+                settingsDialog.setContentView(v);
+                settingsDialog.show();
+                ImageView view1 = v.findViewById(R.id.dialogReceipeImage);
+                Bitmap myBitmap = BitmapFactory.decodeFile(currentItem.getComment());
+                view1.setImageBitmap(myBitmap);
+            }
+
+        });
 
         return convertView;
     }

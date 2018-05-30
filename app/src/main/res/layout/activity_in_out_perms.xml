@@ -75,10 +75,10 @@
 
     <Button
         android:id="@+id/auftrag_finish_button"
-        android:layout_width="123dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="8dp"
         android:text="confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -194,6 +194,20 @@
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
 
+    <ImageView
+        android:id="@+id/receiptImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/takePictureButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/takePictureButton"
+        app:layout_constraintBottom_toBottomOf="@id/auftrag_finish_button"
+        />
+
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
@@ -260,4 +274,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.v7.widget.Toolbar>
+
+    <Button
+        android:id="@+id/takePictureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/take_a_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
 </android.support.constraint.ConstraintLayout>

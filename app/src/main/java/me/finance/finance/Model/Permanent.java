@@ -14,56 +14,56 @@ public class Permanent{
     private String iteration;
     private Date end_date_;
     private String name_;
-    private String comment_;
+    private String filePath_;
     private Integer category_;
     private Integer payment_opt_;
     private Date next_exec_;
 
-    public Permanent(int id_, double value_, Date start_date_, String iteration, Date end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, Date next_exec_) {
+    public Permanent(int id_, double value_, Date start_date_, String iteration, Date end_date_, String name_, String filePath_, Integer category_, Integer payment_opt_, Date next_exec_) {
         this.id_ = id_;
         this.value_ = value_;
         this.start_date_ = start_date_;
         this.iteration = iteration;
         this.end_date_ = end_date_;
         this.name_ = name_;
-        this.comment_ = comment_;
+        this.filePath_ = filePath_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
         this.next_exec_ = next_exec_;
     }
 
-    public Permanent(double value_, Date start_date_, String iteration, Date end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, Date next_exec_) {
+    public Permanent(double value_, Date start_date_, String iteration, Date end_date_, String name_, String filePath_, Integer category_, Integer payment_opt_, Date next_exec_) {
         this.value_ = value_;
         this.start_date_ = start_date_;
         this.iteration = iteration;
         this.end_date_ = end_date_;
         this.name_ = name_;
-        this.comment_ = comment_;
+        this.filePath_ = filePath_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
         this.next_exec_ = next_exec_;
     }
 
-    public Permanent(int id_, double value_, String start_date_, String iteration, String end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, String next_exec_) {
+    public Permanent(int id_, double value_, String start_date_, String iteration, String end_date_, String name_, String filePath_, Integer category_, Integer payment_opt_, String next_exec_) {
         this.id_ = id_;
         this.value_ = value_;
         this.start_date_ = convertDate(start_date_);
         this.iteration = iteration;
         this.end_date_ = convertDate(end_date_);
         this.name_ = name_;
-        this.comment_ = comment_;
+        this.filePath_ = filePath_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
         this.next_exec_ = convertDate(next_exec_);
     }
 
-    public Permanent(double value_, String start_date_, String iteration, String end_date_, String name_, String comment_, Integer category_, Integer payment_opt_, String next_exec_) {
+    public Permanent(double value_, String start_date_, String iteration, String end_date_, String name_, String filePath_, Integer category_, Integer payment_opt_, String next_exec_) {
         this.value_ = value_;
         this.start_date_ = convertDate(start_date_);
         this.iteration = iteration;
         this.end_date_ = convertDate(end_date_);
         this.name_ = name_;
-        this.comment_ = comment_;
+        this.filePath_ = filePath_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
         this.next_exec_ = convertDate(next_exec_);
@@ -129,11 +129,11 @@ public class Permanent{
     }
 
     public String getComment() {
-        return comment_;
+        return filePath_;
     }
 
     public void setComment(String comment_) {
-        this.comment_ = comment_;
+        this.filePath_ = comment_;
     }
 
     public Integer getCategory(){
