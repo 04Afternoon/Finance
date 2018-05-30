@@ -112,6 +112,41 @@ public class FragmentMonthsTest {
         onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
     }
 
+
+    @Test
+    public void testSortDialogOK2WithChange() {
+        onView(withId(R.id.navigation_months)).perform(click());
+        onView(withId(R.id.months_search_button)).perform(click());
+
+
+
+        onView(withId(R.id.sort_spinner)).perform(click());
+        onData(allOf(is(instanceOf(Sort.class)),
+                is(new Sort(Sort.Column.VALUE, Sort.Order.ASC))))
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+
+
+        onView(withId(R.id.filterCategorieSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)),
+                is("All categories")))
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+
+        onView(withId(R.id.filterPaymentOptionSpinner)).perform(click());
+
+        onData(allOf(is(instanceOf(String.class)),
+                is("All payment options")))
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
+    }
+
     @Test
     public void testFilterDialogOKWithoutChange() {
         onView(withId(R.id.navigation_months)).perform(click());
@@ -129,13 +164,14 @@ public class FragmentMonthsTest {
     }
 
     @Test
-    @Ignore
     public void testFilterDialogOKWithChange() {
         onView(withId(R.id.navigation_months)).perform(click());
         onView(withId(R.id.months_search_button)).perform(click());
 
         onView(withId(R.id.filterCategorieSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("All"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)),
+        (is("All categories")))).inRoot(isPlatformPopup())
+                .perform(click());
 
         onView(withText("OK")).perform(click());
         onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
