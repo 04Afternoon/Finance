@@ -13,8 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,13 +21,14 @@ import android.widget.Toast;
 import com.savvi.rangedatepicker.CalendarPickerView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
+import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Sort;
 
 /**
@@ -46,6 +46,10 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
     private Date startDate;
     private Date endDate;
     private Sort sort;
+    private Category category;
+    private Payment payment;
+    private double valueFrom;
+    private double valueTo;
 
     public FragmentMonths() {
         Calendar firstOfMonth = Calendar.getInstance();
@@ -53,6 +57,10 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         startDate = firstOfMonth.getTime();
         endDate = new Date();
         sort = new Sort(Sort.Column.values()[0], Sort.Order.values()[0]);
+        category = null;
+        payment = null;
+        valueFrom = Double.NaN;
+        valueTo = Double.NaN;
     }
 
     @Override
@@ -104,7 +112,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
 
-        List<Intake> intakes = databaseHandler.getIntakes(startDate,endDate,sort);
+        List<Intake> intakes = databaseHandler.getIntakes(startDate,endDate,sort,category,payment,valueFrom,valueTo);
 
         adapter = new MonthAdapter(containerContext, intakes);
 
@@ -139,11 +147,64 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
     public void onClick(DialogInterface dialogInterface, int i) {
         AlertDialog dialog = (AlertDialog) dialogInterface;
         if(dialog.equals(sortFilterDialog)){
-            Spinner spinner = dialog.findViewById(R.id.sort_spinner);
-            if(spinner.getSelectedItem() == null){
+
+            EditText valueFromTextField =  dialog.findViewById(R.id.valueFromTextField);
+            String valueFromString = valueFromTextField.getText().toString();
+
+            double tmpValueFrom = Double.NaN;
+
+            if (!valueFromString.isEmpty()) {
+                tmpValueFrom = Double.valueOf(valueFromString);
+            }
+
+
+            EditText valeuToTextField =  dialog.findViewById(R.id.valueToTextField);
+            String valueToString = valeuToTextField.getText().toString();
+
+
+            double tmpValueTo = Double.NaN;
+
+            if (!valueToString.isEmpty()) {
+                tmpValueTo = Double.valueOf(valueToString);
+            }
+
+
+            if(!Double.isNaN(tmpValueTo) && !Double.isNaN(tmpValueFrom) && tmpValueFrom>tmpValueTo){
+                Toast toastError = Toast.makeText(this.getContext(), "\"To\" must be equal or greater than \"From\"", Toast.LENGTH_SHORT);
+                toastError.show();
                 return;
             }
-            sort = (Sort) spinner.getSelectedItem();
+
+            valueFrom = tmpValueFrom;
+            valueTo = tmpValueTo;
+
+            Spinner sortSpinner = dialog.findViewById(R.id.sort_spinner);
+            if(sortSpinner != null && sortSpinner.getSelectedItem() != null){
+                sort = (Sort) sortSpinner.getSelectedItem();
+            }
+
+            Spinner categorieSpinner = dialog.findViewById(R.id.filterCategorieSpinner);
+            if(categorieSpinner != null && categorieSpinner.getSelectedItem() != null){
+                if(categorieSpinner.getSelectedItemPosition() == 0){
+                    category = null;
+                }else {
+                    CategoryAdapter adapter = (CategoryAdapter) categorieSpinner.getAdapter();
+                    category = adapter.getCategories().get(categorieSpinner.getSelectedItemPosition() - 1);
+                }
+            }
+
+            Spinner paymentSpinner = dialog.findViewById(R.id.filterPaymentOptionSpinner);
+            if(paymentSpinner != null && paymentSpinner.getSelectedItem() != null){
+                if(paymentSpinner.getSelectedItemPosition() == 0){
+                    payment = null;
+                }else {
+                    PaymentAdapter adapter = (PaymentAdapter) paymentSpinner.getAdapter();
+                    payment = adapter.getPayments().get(paymentSpinner.getSelectedItemPosition() - 1);
+                }
+            }
+
+
+
         }
         else{
             List<Date> dates = calendar.getSelectedDates();
@@ -151,9 +212,11 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
             endDate = dates.get(dates.size()-1);
         }
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
-        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate, sort);
+        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate, sort, category, payment,valueFrom,valueTo);
         adapter.setItems(intakes);
         adapter.notifyDataSetChanged();
+
+        dialog.dismiss();
     }
 
     public AlertDialog createDialog() {
@@ -216,28 +279,96 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         builder.setView(v);
 
 
-        Spinner spinner = v.findViewById(R.id.sort_spinner);
-        List<Sort> spinnerArray =  new ArrayList<>();
-        for (Sort.Column column : Sort.Column.values()) {
-            for (Sort.Order order: Sort.Order.values()) {
-                spinnerArray.add(new Sort(column, order));
+        Spinner sortSpinner = v.findViewById(R.id.sort_spinner);
+        SortAdapter sortAdapter = new SortAdapter(this.getContext());
+
+        sortSpinner.setAdapter(sortAdapter);
+        for(int i = 0; i < sortAdapter.getCount();i++){
+            Sort element = sortAdapter.getItem(i);
+            if(element == null){
+                continue;
             }
-        }
-
-        ArrayAdapter<Sort> adapter = new ArrayAdapter<>(
-                this.getContext(), android.R.layout.simple_spinner_item, spinnerArray);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter);
-
-        for(int i = 0; i < spinnerArray.size();i++){
-            Sort element = spinnerArray.get(i);
             if(element.equals(sort)){
-                spinner.setSelection(i);
+                sortSpinner.setSelection(i);
             }
         }
-        return builder.create();
+
+        Spinner categorySpinner = v.findViewById(R.id.filterCategorieSpinner);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this.getContext());
+
+        categorySpinner.setAdapter(categoryAdapter);
+
+        if(category == null){
+            categorySpinner.setSelection(0);
+        }else{
+            for(int i = 0; i < categoryAdapter.getCount(); i++){
+                String element = categoryAdapter.getItem(i);
+                if(element == null){
+                    continue;
+                }
+                if(element.equals(category.getName())){
+                    categorySpinner.setSelection(i);
+                }
+            }
+
+        }
+
+        Spinner paymentSpinner = v.findViewById(R.id.filterPaymentOptionSpinner);
+        PaymentAdapter paymentAdapter = new PaymentAdapter(this.getContext());
+
+        paymentSpinner.setAdapter(paymentAdapter);
+
+        if(payment == null){
+            paymentSpinner.setSelection(0);
+        }else{
+            for(int i = 0; i < paymentAdapter.getCount(); i++){
+                String element = paymentAdapter.getItem(i);
+                if(element == null){
+                    continue;
+                }
+                if(element.equals(payment.getName())){
+                    paymentSpinner.setSelection(i);
+                }
+            }
+
+        }
+
+        EditText valueFromTextField =  v.findViewById(R.id.valueFromTextField);
+
+        if(!Double.isNaN(valueFrom)){
+
+            valueFromTextField.setText(String.format("%.2f", valueFrom));
+        }
+
+        EditText valueToTextField =  v.findViewById(R.id.valueToTextField);
+
+        if(!Double.isNaN(valueTo)){
+
+            valueToTextField.setText(String.format("%.2f", valueTo));
+        }
+
+
+        AlertDialog alertDialog = builder.create();
+
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        FragmentMonths.this.onClick(dialog,DialogInterface.BUTTON_POSITIVE);
+                    }
+                });
+            }
+        });
+
+
+        return alertDialog;
     }
 
 

@@ -15,4 +15,5 @@
     <string name="expense">Expense</string>
     <string name="intake">Intake</string>
     <string name="standingOrder">Standing Order</string>
+    <string name="take_a_picture">Add a picture</string>
 </resources>
