@@ -23,7 +23,9 @@ import me.finance.finance.Model.Sort;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -146,6 +148,47 @@ public class FragmentMonthsTest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.monthly_list)).check(matches(FinanceMatchers.withListSize(2)));
     }
+
+
+    @Test
+    public void testSortDialogWithChange() {
+
+        onView(withId(R.id.navigation_months)).perform(click());
+        onView(withId(R.id.months_search_button)).perform(click());
+
+
+        onView(withId(R.id.sort_spinner)).perform(click());
+        onData(allOf(is(instanceOf(Sort.class)),
+                is(new Sort(Sort.Column.VALUE, Sort.Order.ASC))))
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+
+        onView(withId(R.id.filterCategorieSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)),
+                is("All categories")))
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+
+        onView(withId(R.id.filterPaymentOptionSpinner)).perform(click());
+
+        onData(allOf(is(instanceOf(String.class)),
+                is("All payment options")))
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+
+        onView(withId(R.id.valueFromTextField)).perform(typeText("10"), closeSoftKeyboard());
+
+
+        onView(withId(R.id.valueToTextField)).perform(typeText("100"), closeSoftKeyboard());
+
+
+        onView(withText("OK")).perform(click());
+    }
+
+
 
     @Test
     public void testFilterDialogOKWithoutChange() {
