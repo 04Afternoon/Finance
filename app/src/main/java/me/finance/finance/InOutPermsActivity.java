@@ -1,32 +1,38 @@
 package me.finance.finance;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Permanent;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 import static me.finance.finance.Utils.convertDate;
 
@@ -43,6 +49,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
     private ArrayList<Payment> paymentList;
     private Toolbar myToolbar;
 
+
     private EditText name_text_field;
     private EditText value_text_field;
     private EditText start_date_text_field;
@@ -53,6 +60,10 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
     private TextView endDateLabel;
     private TextView intervallabel;
+
+    private Button takePicture;
+    private ImageView imageView;
+    private String filePath = "";
 
 
     private boolean outGoing = false;
@@ -70,6 +81,12 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         start_date_text_field = findViewById(R.id.start_text_field);
         endDateLabel = findViewById(R.id.endDateLabel);
         intervallabel = findViewById(R.id.intervalLabel);
+        takePicture = findViewById(R.id.takePictureButton);
+        imageView = findViewById(R.id.receiptImage);
+        takePicture.setOnClickListener((view) -> {
+            EasyImage.openChooserWithGallery(InOutPermsActivity.this, "Choose your receipt", 0);
+        });
+
 
         intakeRadioButton = findViewById(R.id.radioButtonIncome);
         outgoingRadioButton = findViewById(R.id.radioButtonOutgoing);
@@ -97,8 +114,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         List<String> categorySpinnerList = new ArrayList<String>();
         categoryList = databaseHandler.getCategories();
         categorySpinnerList.add("no category");
-        for(int i = 0; i < categoryList.size(); i++)
-        {
+        for (int i = 0; i < categoryList.size(); i++) {
             categorySpinnerList.add(categoryList.get(i).getName());
         }
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorySpinnerList);
@@ -107,15 +123,14 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
         ArrayList<String> paymentSpinnerList = new ArrayList<String>();
         paymentList = databaseHandler.getPayments();
-        for(int i = 0; i < paymentList.size(); i++)
-        {
+        for (int i = 0; i < paymentList.size(); i++) {
             paymentSpinnerList.add(paymentList.get(i).getName());
         }
         ArrayAdapter<String> paymentAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentSpinnerList);
         paymentSpinner = findViewById(R.id.payment_opt_spinner);
         paymentSpinner.setAdapter(paymentAdapter);
 
-        if(!isPermanent) {
+        if (!isPermanent) {
             end_date_text_field.setVisibility(View.GONE);
             intervall_text_field.setVisibility(View.GONE);
             endDateLabel.setVisibility(View.GONE);
@@ -124,13 +139,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
         exitButton = findViewById(R.id.auftrag_exit_button);
         FragmentBalance.buttonEffect(exitButton);
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-
-            }
-        });
+        exitButton.setOnClickListener(view -> finish());
 
         finishButton = findViewById(R.id.auftrag_finish_button);
         finishButton.setOnClickListener(new View.OnClickListener() {
@@ -154,14 +163,14 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                 if (!startDate.isEmpty()) {
                     try {
                         dateFormat.parse(startDate);
-                    } catch(ParseException e) {
+                    } catch (ParseException e) {
                         error += "Invalid startDate";
                     }
                 }
                 if (!endDate.isEmpty()) {
                     try {
                         dateFormat.parse(endDate);
-                    } catch(ParseException e) {
+                    } catch (ParseException e) {
                         if (!error.isEmpty()) {
                             error += "\n";
                         }
@@ -180,8 +189,8 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         }
                         String category = categorySpinner.getSelectedItem().toString();
                         Integer categoryId = null;
-                        for(int i = 0; i < categoryList.size(); i++){
-                            if(categoryList.get(i).getName().equals(category)){
+                        for (int i = 0; i < categoryList.size(); i++) {
+                            if (categoryList.get(i).getName().equals(category)) {
                                 categoryId = categoryList.get(i).getId();
                                 break;
                             }
@@ -189,14 +198,14 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
                         String payment = paymentSpinner.getSelectedItem().toString();
                         Integer paymentId = 0;
-                        for(int i = 0; i < paymentList.size(); i++){
-                            if(paymentList.get(i).getName().equals(payment)){
+                        for (int i = 0; i < paymentList.size(); i++) {
+                            if (paymentList.get(i).getName().equals(payment)) {
                                 paymentId = paymentList.get(i).getId();
                                 break;
                             }
                         }
 
-                        database.addIntake(new Intake(value, startDate, name, "", categoryId, paymentId));
+                        database.addIntake(new Intake(value, startDate, name, filePath, categoryId, paymentId));
                         toast.show();
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
@@ -210,8 +219,8 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
                         String category = categorySpinner.getSelectedItem().toString();
                         Integer categoryId = null;
-                        for(int i = 0; i < categoryList.size(); i++){
-                            if(categoryList.get(i).getName().equals(category)){
+                        for (int i = 0; i < categoryList.size(); i++) {
+                            if (categoryList.get(i).getName().equals(category)) {
                                 categoryId = categoryList.get(i).getId();
                                 break;
                             }
@@ -219,8 +228,8 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
                         String payment = paymentSpinner.getSelectedItem().toString();
                         Integer paymentId = null;
-                        for(int i = 0; i < paymentList.size(); i++){
-                            if(paymentList.get(i).getName().equals(payment)){
+                        for (int i = 0; i < paymentList.size(); i++) {
+                            if (paymentList.get(i).getName().equals(payment)) {
                                 paymentId = paymentList.get(i).getId();
                                 break;
                             }
@@ -236,7 +245,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             currentDate.set(Calendar.MINUTE, 59);
                             currentDate.set(Calendar.SECOND, 59);
                             while (next_exec.before(currentDate)) {
-                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, filePath, categoryId, paymentId));
                                 next_exec.add(Calendar.MONTH, 1);
 
                                 if (next_exec.after(endCal)) {
@@ -249,7 +258,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             currentDate.set(Calendar.MINUTE, 59);
                             currentDate.set(Calendar.SECOND, 59);
                             while (next_exec.before(currentDate)) {
-                                database.addIntake(new Intake(value, next_exec.getTime(), name, "", categoryId, paymentId));
+                                database.addIntake(new Intake(value, next_exec.getTime(), name, filePath, categoryId, paymentId));
                                 next_exec.add(Calendar.DAY_OF_YEAR, 7);
 
                                 if (next_exec.after(endCal)) {
@@ -258,7 +267,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             }
                         }
 
-                        database.addPermanet(new Permanent(value, convertDate(startDate), intervall, convertDate(endDate), name, "", categoryId, paymentId, next_exec.getTime()));
+                        database.addPermanet(new Permanent(value, convertDate(startDate), intervall, convertDate(endDate), name, filePath, categoryId, paymentId, next_exec.getTime()));
 
                         toast.show();
                         System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + intervall + " " + 0);
@@ -271,8 +280,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
                     }
                     //database.close();
-                }
-                else {
+                } else {
                     Toast toastError = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
                     toastError.show();
                 }
@@ -298,5 +306,24 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                //Some error handling
+            }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                filePath = imageFile.getAbsolutePath();
+                imageView.setVisibility(View.VISIBLE);
+                Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                imageView.setImageBitmap(myBitmap);
+            }
+        });
+    }
 
 }
