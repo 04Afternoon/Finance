@@ -479,23 +479,24 @@ public class DatabaseHandler{
         database.execSQL("INSERT INTO payment (name) VALUES ('Visa')");
         database.execSQL("INSERT INTO payment (name) VALUES ('Mastercard')");
         database.execSQL("INSERT INTO payment (name) VALUES ('American Express')");
-        database.execSQL("INSERT INTO payment (name) VALUES ('Apple pay')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('Apple Pay')");
         database.execSQL("INSERT INTO payment (name) VALUES ('PayPal')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('VPay')");
 
         int cash_id = getPayments("Cash").get(0).getId();
         int visa_id = getPayments("Visa").get(0).getId();
         int mastercard_id = getPayments("Mastercard").get(0).getId();
         int american_id = getPayments("American Express").get(0).getId();
-        int apple_id = getPayments("Apple pay").get(0).getId();
+        int apple_id = getPayments("Apple Pay").get(0).getId();
         int paypal_id = getPayments("PayPal").get(0).getId();
+        int Vpay_id = getPayments("PayPal").get(0).getId();
 
 
         database.execSQL("INSERT INTO categories (name) VALUES ('Home')");
         database.execSQL("INSERT INTO categories (name) VALUES ('Pet')");
         database.execSQL("INSERT INTO categories (name) VALUES ('Foods')");
         database.execSQL("INSERT INTO categories (name) VALUES ('Car')");
-
-
+        database.execSQL("INSERT INTO categories (name) VALUES ('Books')");
 
 
         int home_id = getCategories("Home").get(0).getId();
@@ -504,18 +505,17 @@ public class DatabaseHandler{
         int car_id = getCategories("Car").get(0).getId();
 
 
-
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-200.5, '2018-04-30', 'Felix Auf', 'Lohn' , " + home_id + "," + visa_id + ");");
+        //database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-200.5, '2018-04-30', 'Felix Auf', 'Lohn' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-95.5, '2018-04-30', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (95.5, '2018-05-01', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (19.80, '2018-05-02', 'Harald Koinig', 'OEH Beitrag'," + car_id + "," + american_id + ");");
-
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (15.5, '2018-05-01', '1', 'Netflix' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-05-02', '2', 'Amazon'," + foods_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-05-02', '2', 'Amazon'," + foods_id + "," + apple_id + ");");
+
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (5.51, '2018-05-01', '3', 'Taxi' , " + home_id + "," + visa_id + ");");
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (399.99, '2018-05-02', '4', 'David'," + car_id + "," + american_id + ");");
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (101.05, '2018-05-01', '5', 'Party' , " + foods_id + "," + apple_id + ");");
         database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (33.10, '2018-05-02', '6', 'Car'," + car_id + "," + paypal_id + ");");
-
 
 
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment, category, payment_opt) " +
