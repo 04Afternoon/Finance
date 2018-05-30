@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,15 +18,17 @@ import android.widget.ImageButton;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.savvi.rangedatepicker.CalendarPickerView;
 
@@ -215,7 +220,7 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
         String[] months = new String[] {"January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"};
         Calendar cal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
+        final Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(startDate);
@@ -268,6 +273,41 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
         inOutChart.setExtraLeftOffset(10f);
         inOutChart.getDescription().setEnabled(false);
         inOutChart.setVisibleXRangeMaximum(4f);
+
+        inOutChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentMonths fragment = new FragmentMonths();
+                //fragment.setStartDate();
+                float x = e.getX() - 0.29f;
+                boolean outgoing = false;
+                if ((int)x != x) {
+                    outgoing = true;
+                    x -= 0.42f;
+                }
+                Calendar selectedMonth = Calendar.getInstance();
+                selectedMonth.setTime(startDate);
+                selectedMonth.add(Calendar.MONTH, (int)x);
+                Calendar endOfMonth = Calendar.getInstance();
+                endOfMonth.setTime(selectedMonth.getTime());
+                endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+                fragment.setStartDate(selectedMonth.getTime());
+                fragment.setEndDate(endOfMonth.getTime());
+                if (outgoing) {
+                    fragment.setValueTo(0);
+                } else {
+                    fragment.setValueFrom(0);
+                }
+                fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
         inOutChart.invalidate();
     }
