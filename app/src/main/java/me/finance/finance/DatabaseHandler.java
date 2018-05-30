@@ -490,7 +490,7 @@ public class DatabaseHandler{
     }
 
 
-    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category, Payment payment) {
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category, Payment payment, double valueFrom, double valueTo) {
 
         ArrayList<Intake> intakes = new ArrayList<>();
         try {
@@ -512,6 +512,16 @@ public class DatabaseHandler{
                 stringBuilder.append(" AND payment_opt = ?");
             }
 
+            if(!Double.isNaN(valueFrom)){
+                selectionArgs.add(String.format("%.2f", valueFrom));
+                stringBuilder.append(" AND value >= ?");
+            }
+
+            if(!Double.isNaN(valueTo)){
+                selectionArgs.add(String.format("%.2f", valueTo));
+                stringBuilder.append(" AND value <= ?");
+            }
+
 
 
 
@@ -531,6 +541,10 @@ public class DatabaseHandler{
             System.out.println("");
         }
         return intakes;
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category, Payment payment) {
+        return getIntakes(startDate,endDate,sort,category,payment,Double.NaN,Double.NaN);
 
     }
 
@@ -601,4 +615,6 @@ public class DatabaseHandler{
 
         return permanents;
     }
+
+
 }

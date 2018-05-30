@@ -102,12 +102,11 @@
         android:layout_marginStart="8dp"
         android:ems="10"
         android:hint="from"
-        android:inputType="number|numberDecimal"
+        android:inputType="number|numberSigned|numberDecimal"
         app:layout_constraintBottom_toBottomOf="@+id/textView11"
         app:layout_constraintEnd_toStartOf="@+id/valueToTextField"
         app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-         />
+        app:layout_constraintTop_toTopOf="@+id/textView11" />
 
     <EditText
         android:id="@+id/valueToTextField"
@@ -117,11 +116,10 @@
         android:layout_marginStart="8dp"
         android:ems="10"
         android:hint="to"
-        android:inputType="number|numberDecimal"
+        android:inputType="number|numberSigned|numberDecimal"
         app:layout_constraintBottom_toBottomOf="@+id/textView11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/valueFromTextField"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-         />
+        app:layout_constraintTop_toTopOf="@+id/textView11" />
 
 </android.support.constraint.ConstraintLayout>

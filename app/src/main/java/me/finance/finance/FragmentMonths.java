@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -47,6 +48,8 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
     private Sort sort;
     private Category category;
     private Payment payment;
+    private double valueFrom;
+    private double valueTo;
 
     public FragmentMonths() {
         Calendar firstOfMonth = Calendar.getInstance();
@@ -56,6 +59,8 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         sort = new Sort(Sort.Column.values()[0], Sort.Order.values()[0]);
         category = null;
         payment = null;
+        valueFrom = Double.NaN;
+        valueTo = Double.NaN;
     }
 
     @Override
@@ -107,7 +112,7 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
 
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
 
-        List<Intake> intakes = databaseHandler.getIntakes(startDate,endDate,sort,category,payment);
+        List<Intake> intakes = databaseHandler.getIntakes(startDate,endDate,sort,category,payment,valueFrom,valueTo);
 
         adapter = new MonthAdapter(containerContext, intakes);
 
@@ -142,6 +147,37 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
     public void onClick(DialogInterface dialogInterface, int i) {
         AlertDialog dialog = (AlertDialog) dialogInterface;
         if(dialog.equals(sortFilterDialog)){
+
+            EditText valueFromTextField =  dialog.findViewById(R.id.valueFromTextField);
+            String valueFromString = valueFromTextField.getText().toString();
+
+            double tmpValueFrom = Double.NaN;
+
+            if (!valueFromString.isEmpty()) {
+                tmpValueFrom = Double.valueOf(valueFromString);
+            }
+
+
+            EditText valeuToTextField =  dialog.findViewById(R.id.valueToTextField);
+            String valueToString = valeuToTextField.getText().toString();
+
+
+            double tmpValueTo = Double.NaN;
+
+            if (!valueToString.isEmpty()) {
+                tmpValueTo = Double.valueOf(valueToString);
+            }
+
+
+            if(!Double.isNaN(tmpValueTo) && !Double.isNaN(tmpValueFrom) && tmpValueFrom>tmpValueTo){
+                Toast toastError = Toast.makeText(this.getContext(), "\"To\" must be equal or greater than \"From\"", Toast.LENGTH_SHORT);
+                toastError.show();
+                return;
+            }
+
+            valueFrom = tmpValueFrom;
+            valueTo = tmpValueTo;
+
             Spinner sortSpinner = dialog.findViewById(R.id.sort_spinner);
             if(sortSpinner != null && sortSpinner.getSelectedItem() != null){
                 sort = (Sort) sortSpinner.getSelectedItem();
@@ -166,6 +202,9 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
                     payment = adapter.getPayments().get(paymentSpinner.getSelectedItemPosition() - 1);
                 }
             }
+
+
+
         }
         else{
             List<Date> dates = calendar.getSelectedDates();
@@ -173,9 +212,11 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
             endDate = dates.get(dates.size()-1);
         }
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this.getContext());
-        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate, sort, category, payment);
+        List<Intake> intakes = databaseHandler.getIntakes(startDate, endDate, sort, category, payment,valueFrom,valueTo);
         adapter.setItems(intakes);
         adapter.notifyDataSetChanged();
+
+        dialog.dismiss();
     }
 
     public AlertDialog createDialog() {
@@ -292,8 +333,42 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
 
         }
 
+        EditText valueFromTextField =  v.findViewById(R.id.valueFromTextField);
 
-        return builder.create();
+        if(!Double.isNaN(valueFrom)){
+
+            valueFromTextField.setText(String.format("%.2f", valueFrom));
+        }
+
+        EditText valueToTextField =  v.findViewById(R.id.valueToTextField);
+
+        if(!Double.isNaN(valueTo)){
+
+            valueToTextField.setText(String.format("%.2f", valueTo));
+        }
+
+
+        AlertDialog alertDialog = builder.create();
+
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        FragmentMonths.this.onClick(dialog,DialogInterface.BUTTON_POSITIVE);
+                    }
+                });
+            }
+        });
+
+
+        return alertDialog;
     }
 
 
