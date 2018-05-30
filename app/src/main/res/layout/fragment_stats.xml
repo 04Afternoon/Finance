@@ -23,15 +23,30 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp" />
 
+
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/category_chart"
+                android:id="@+id/category_chart_in"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp" />
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/payment_opt_chart"
+                android:id="@+id/category_chart_out"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/payment_opt_chart_in"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/payment_opt_chart_out"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginStart="8dp"
