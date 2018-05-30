@@ -87,10 +87,6 @@ public class MonthAdapter extends BaseAdapter {
         } else {
             textViewItemPayment.setText(R.string.cash);
         }
-        convertView.setOnLongClickListener(view -> {
-
-
-        });
         convertView.setOnClickListener(view -> {
             if (currentItem.getComment() != null && !currentItem.getComment().isEmpty()) {
 
