@@ -151,6 +151,26 @@ public class DatabaseHandler{
         return category;
     }
 
+    public Category getCategory(String name) {
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            category = new Category(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return category;
+    }
+
+    public Payment getPayment(String name) {
+        Payment payment = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            payment = new Payment(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return payment;
+    }
+
     public int getCategoryId(String name)
     {
         Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{String.valueOf(name)});

@@ -65,7 +65,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Manage">
+        app:title="Stats">
 
         <ImageButton
             android:id="@+id/stats_calender_button"

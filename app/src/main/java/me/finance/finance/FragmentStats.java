@@ -106,7 +106,7 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
     }
 
     private void calculateAndShowPaymentOptions() {
-        DatabaseHandler database = DatabaseHandler.getInstance(this.getContext());
+        final DatabaseHandler database = DatabaseHandler.getInstance(this.getContext());
 
         PieData pieDataIn = new PieData();
         pieDataIn.setValueFormatter(new PercentFormatter());
@@ -154,11 +154,50 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
         paymentOptionsChartIn.setData(pieDataIn);
         paymentOptionsChartOut.setData(pieDataOut);
 
+        paymentOptionsChartIn.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentMonths fragment = new FragmentMonths();
+
+
+                fragment.setPayment(database.getPayment(((PieEntry)e).getLabel()));
+                fragment.setStartDate(startDate);
+                fragment.setEndDate(endDate);
+                fragment.setValueFrom(0);
+                fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+        paymentOptionsChartOut.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentMonths fragment = new FragmentMonths();
+
+
+                fragment.setPayment(database.getPayment(((PieEntry)e).getLabel()));
+                fragment.setStartDate(startDate);
+                fragment.setEndDate(endDate);
+                fragment.setValueTo(0);
+                fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
         paymentOptionsChartIn.invalidate();
         paymentOptionsChartOut.invalidate();
     }
     private void calculateAndShowCategory() {
-        DatabaseHandler database = DatabaseHandler.getInstance(this.getContext());
+        final DatabaseHandler database = DatabaseHandler.getInstance(this.getContext());
 
         PieData pieDataIn = new PieData();
         pieDataIn.setValueFormatter(new PercentFormatter());
@@ -205,6 +244,45 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
 
         categoryChartIn.setData(pieDataIn);
         categoryChartOut.setData(pieDataOut);
+
+        categoryChartIn.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentMonths fragment = new FragmentMonths();
+
+
+                fragment.setCategory(database.getCategory(((PieEntry)e).getLabel()));
+                fragment.setStartDate(startDate);
+                fragment.setEndDate(endDate);
+                fragment.setValueFrom(0);
+                fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+        categoryChartOut.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentMonths fragment = new FragmentMonths();
+
+
+                fragment.setCategory(database.getCategory(((PieEntry)e).getLabel()));
+                fragment.setStartDate(startDate);
+                fragment.setEndDate(endDate);
+                fragment.setValueTo(0);
+                fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
         categoryChartIn.invalidate();
         categoryChartOut.invalidate();
@@ -279,7 +357,7 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
             public void onValueSelected(Entry e, Highlight h) {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentMonths fragment = new FragmentMonths();
-                //fragment.setStartDate();
+
                 float x = e.getX() - 0.29f;
                 boolean outgoing = false;
                 if ((int)x != x) {
