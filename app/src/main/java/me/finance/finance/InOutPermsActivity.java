@@ -3,9 +3,12 @@ package me.finance.finance;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,7 +23,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,6 +90,9 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         takePicture = findViewById(R.id.takePictureButton);
         imageView = findViewById(R.id.receiptImage);
         takePicture.setOnClickListener((view) -> {
+//            ImagePicker
+//                    .create(this)
+//                    .start();
             EasyImage.openChooserWithGallery(InOutPermsActivity.this, "Choose your receipt", 0);
         });
 
@@ -317,13 +326,34 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             }
 
             @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
-                filePath = imageFile.getAbsolutePath();
-                imageView.setVisibility(View.VISIBLE);
-                Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-                imageView.setImageBitmap(myBitmap);
+            public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
+                File imageFile = imageFiles.get(0);
+                Picasso
+                        .get()
+                        .load(imageFile)
+                        .fit()
+                        .centerInside()
+                        .into(imageView);
             }
         });
     }
 
+    public int getOrientation(String image_absolute_path) throws IOException {
+        ExifInterface ei = new ExifInterface(image_absolute_path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+
+            default:
+                return 0;
+        }
+    }
 }
