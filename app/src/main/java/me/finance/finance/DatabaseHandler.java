@@ -151,6 +151,26 @@ public class DatabaseHandler{
         return category;
     }
 
+    public Category getCategory(String name) {
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            category = new Category(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return category;
+    }
+
+    public Payment getPayment(String name) {
+        Payment payment = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            payment = new Payment(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return payment;
+    }
+
     public int getCategoryId(String name)
     {
         Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{String.valueOf(name)});
@@ -322,6 +342,36 @@ public class DatabaseHandler{
         }
         cursor.close();
         return intake;
+    }
+
+    public List<Intake> getIntakes(Payment payment_opt, Date startDate, Date endDate)
+    {
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND payment_opt = ?", new String[]{convertDate(startDate), convertDate(endDate), String.valueOf(payment_opt.getId())});
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(5)) {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, cursor.getInt(6)));
+            } else {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
+            }
+        }
+        cursor.close();
+        return intakes;
+    }
+
+    public List<Intake> getIntakes(Category category, Date startDate, Date endDate)
+    {
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND  category = ?", new String[]{convertDate(startDate), convertDate(endDate), String.valueOf(category.getId())});
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(5)) {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, cursor.getInt(6)));
+            } else {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
+            }
+        }
+        cursor.close();
+        return intakes;
     }
 
     public ArrayList<Intake> getPositiveIntakes()
@@ -505,17 +555,17 @@ public class DatabaseHandler{
         int car_id = getCategories("Car").get(0).getId();
 
 
-        //database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-200.5, '2018-04-30', 'Felix Auf', 'Lohn' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-95.5, '2018-04-30', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (95.5, '2018-05-01', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (19.80, '2018-05-02', 'Harald Koinig', 'OEH Beitrag'," + car_id + "," + american_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (15.5, '2018-05-01', '1', 'Netflix' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-05-02', '2', 'Amazon'," + foods_id + "," + apple_id + ");");
+        //database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-200.5, '2018-05-30', 'Felix Auf', 'Lohn' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-95.5, '2018-05-30', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (95.5, '2018-06-01', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (19.80, '2018-06-02', 'Harald Koinig', 'OEH Beitrag'," + car_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (15.5, '2018-06-01', '1', 'Netflix' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-06-02', '2', 'Amazon'," + foods_id + "," + apple_id + ");");
 
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (5.51, '2018-05-01', '3', 'Taxi' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (399.99, '2018-05-02', '4', 'David'," + car_id + "," + american_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (101.05, '2018-05-01', '5', 'Party' , " + foods_id + "," + apple_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (33.10, '2018-05-02', '6', 'Car'," + car_id + "," + paypal_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (5.51, '2018-06-01', '3', 'Taxi' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (399.99, '2018-06-02', '4', 'David'," + car_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (101.05, '2018-06-01', '5', 'Party' , " + foods_id + "," + apple_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (33.10, '2018-06-02', '6', 'Car'," + car_id + "," + paypal_id + ");");
 
 
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment, category, payment_opt) " +
