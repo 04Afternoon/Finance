@@ -162,9 +162,7 @@ public class FragmentBalance extends Fragment {
             else if(intakes.get(i).getValue() < 0)
                 ausgaben_monat += intakes.get(i).getValue();
         }
-        NumberFormat string_in = NumberFormat.getNumberInstance();
         intake.setText(String.format("%.2f", einnahmen_monat));
-        NumberFormat string_out = NumberFormat.getNumberInstance();
         outgoing.setText(String.format("%.2f", ausgaben_monat));
 
         total = view.findViewById(R.id.textView2);
