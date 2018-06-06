@@ -66,10 +66,8 @@ public class FragmentSettings extends Fragment {
         clear_database.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseHandler.open();
                 databaseHandler.deleteTableContents();
                 databaseHandler.addPayment(new Payment("Cash"));
-                databaseHandler.close();
 
                 Toast toast = Toast.makeText(view.getContext(), "Database cleared successfully!", Toast.LENGTH_SHORT);
                 toast.show();
