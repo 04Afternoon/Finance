@@ -29,9 +29,6 @@ public class DatabaseHandler{
     private SQLiteDatabase database;
     private static DatabaseHandler instance;
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "finances.db";
-
     private DatabaseHandler(Context context) {
         this.openHelper = new DatabaseHelper(context);
     }
@@ -171,26 +168,6 @@ public class DatabaseHandler{
         return payment;
     }
 
-    public int getCategoryId(String name)
-    {
-        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{String.valueOf(name)});
-        if (cursor.moveToFirst()) {
-            return cursor.getInt(0);
-        }
-        return 0;
-    }
-
-    public int getpaymentId(String name)
-    {
-        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[]{String.valueOf(name)});
-        if (cursor.moveToFirst()) {
-            return cursor.getInt(0);
-        }
-        return 0;
-    }
-
-
-
 
     public ArrayList<Payment> getPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
@@ -261,30 +238,6 @@ public class DatabaseHandler{
             values.put("payment_opt",intake.getPayment_opt());
 
             if(database.update("intakes",values,"_id = ?", new String[]{String.valueOf(intake.getId())}) != 1){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean updateCategories(Category... categories){
-        for(Category category : categories){
-            ContentValues values = new ContentValues();
-            values.put("name",category.getName());
-
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(category.getId())}) != 1){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean updatePayment(Payment... payments){
-        for(Payment payment : payments){
-            ContentValues values = new ContentValues();
-            values.put("name",payment.getName());
-
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(payment.getId())}) != 1){
                 return false;
             }
         }
@@ -369,38 +322,6 @@ public class DatabaseHandler{
             } else {
                 intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
             }
-        }
-        cursor.close();
-        return intakes;
-    }
-
-    public ArrayList<Intake> getPositiveIntakes()
-    {
-        ArrayList<Intake> intakes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
-        if(cursor.moveToFirst())
-        {
-            do {
-                if(cursor.getFloat(1) > 0)
-                  intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
-
-            }while(cursor.moveToNext());
-        }
-        cursor.close();
-        return intakes;
-    }
-
-    public ArrayList<Intake> getNegativeIntakes()
-    {
-        ArrayList<Intake> intakes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
-        if(cursor.moveToFirst())
-        {
-            do {
-                if(cursor.getFloat(1) < 0)
-                    intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
-
-            }while(cursor.moveToNext());
         }
         cursor.close();
         return intakes;

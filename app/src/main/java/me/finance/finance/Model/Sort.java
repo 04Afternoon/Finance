@@ -30,9 +30,7 @@ public class Sort {
         if(!(obj instanceof Sort))
             return false;
         Sort element = (Sort) obj;
-        if(!column.equals(element.column) || !order.equals(element.order))
-            return false;
-        return true;
+        return column.equals(element.column) && order.equals(element.order);
     }
 
     public enum Order {

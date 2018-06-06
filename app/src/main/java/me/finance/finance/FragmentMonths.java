@@ -379,10 +379,6 @@ public class FragmentMonths extends Fragment implements DialogInterface.OnClickL
         this.endDate = endDate;
     }
 
-    public void setSort(Sort sort) {
-        this.sort = sort;
-    }
-
     public void setCategory(Category category) {
         this.category = category;
     }
