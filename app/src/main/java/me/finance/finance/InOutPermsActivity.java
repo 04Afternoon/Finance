@@ -1,6 +1,7 @@
 package me.finance.finance;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -85,6 +86,21 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         imageView = findViewById(R.id.receiptImage);
         takePicture.setOnClickListener((view) -> {
             EasyImage.openChooserWithGallery(InOutPermsActivity.this, "Choose your receipt", 0);
+        });
+
+
+        Calendar calendar = Calendar.getInstance();
+        start_date_text_field.setText(Utils.convertDate(calendar.getTime()));
+        start_date_text_field.setOnClickListener(view -> {
+            calendar.setTime(Utils.convertDate(start_date_text_field.getText().toString()));
+            DatePickerDialog datePickerDialog = new DatePickerDialog(InOutPermsActivity.this);
+            datePickerDialog.getDatePicker().init(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),null);
+            datePickerDialog.setOnDateSetListener((datePicker, year, month, day) -> {
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.set(year,month,day);
+                start_date_text_field.setText(Utils.convertDate(calendar1.getTime()));
+            });
+            datePickerDialog.show();
         });
 
 
