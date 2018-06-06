@@ -1,5 +1,6 @@
 package me.finance.finance;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -10,9 +11,12 @@ import org.junit.runner.RunWith;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.DatePicker;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -20,8 +24,10 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
@@ -39,7 +45,7 @@ public class InOutPermsTest {
     private String name = "test intake";
     private String value_string = "12.34";
     private double value = Double.valueOf(value_string);
-    private String startDate = "2000-01-01";
+    private String startDate = Utils.convertDate(Calendar.getInstance().getTime());
     private String paymentMethod = "Bar";
     private String invalidStartDate = "2000-25-05";
     private static Payment payment;
@@ -73,7 +79,11 @@ public class InOutPermsTest {
     public void testValidAddIntakeGUI1() {
         onView(withId(R.id.name_text_field)).perform(typeText(name), closeSoftKeyboard());
         onView(withId(R.id.value_text_field)).perform(typeText(value_string), closeSoftKeyboard());
-        onView(withId(R.id.start_text_field)).perform(typeText(startDate), closeSoftKeyboard());
+        onView(withId(R.id.start_text_field)).perform(click());
+        Calendar validCalendar = Calendar.getInstance();
+        validCalendar.setTime(Utils.convertDate(startDate));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(validCalendar.get(Calendar.YEAR),validCalendar.get(Calendar.MONTH)+1,validCalendar.get(Calendar.DAY_OF_MONTH)));
+        onView(withText("OK")).perform(click());
         onView(withId(R.id.payment_opt_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(payment.getName()))).perform(click());
         onView(withId(R.id.category_spinner)).perform(click());
@@ -95,7 +105,11 @@ public class InOutPermsTest {
     public void testInvalidAddIntakeGUI1() {
         onView(withId(R.id.name_text_field)).perform(typeText(""), closeSoftKeyboard());
         onView(withId(R.id.value_text_field)).perform(typeText(value_string), closeSoftKeyboard());
-        onView(withId(R.id.start_text_field)).perform(typeText(startDate), closeSoftKeyboard());
+        onView(withId(R.id.start_text_field)).perform(click());
+        Calendar validCalendar = Calendar.getInstance();
+        validCalendar.setTime(Utils.convertDate(startDate));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(validCalendar.get(Calendar.YEAR),validCalendar.get(Calendar.MONTH)+1,validCalendar.get(Calendar.DAY_OF_MONTH)));
+        onView(withText("OK")).perform(click());
         onView(withId(R.id.payment_opt_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(payment.getName()))).perform(click());
         onView(withId(R.id.category_spinner)).perform(click());
@@ -116,7 +130,11 @@ public class InOutPermsTest {
     public void testInvalidAddIntakeGUI2() {
         onView(withId(R.id.name_text_field)).perform(typeText(name), closeSoftKeyboard());
         onView(withId(R.id.value_text_field)).perform(typeText(""), closeSoftKeyboard());
-        onView(withId(R.id.start_text_field)).perform(typeText(startDate), closeSoftKeyboard());
+        onView(withId(R.id.start_text_field)).perform(click());
+        Calendar validCalendar = Calendar.getInstance();
+        validCalendar.setTime(Utils.convertDate(startDate));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(validCalendar.get(Calendar.YEAR),validCalendar.get(Calendar.MONTH)+1,validCalendar.get(Calendar.DAY_OF_MONTH)));
+        onView(withText("OK")).perform(click());
         onView(withId(R.id.payment_opt_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(payment.getName()))).perform(click());
         onView(withId(R.id.category_spinner)).perform(click());
@@ -158,7 +176,11 @@ public class InOutPermsTest {
     public void testInvalidAddIntakeGUI4() {
         onView(withId(R.id.name_text_field)).perform(typeText(""), closeSoftKeyboard());
         onView(withId(R.id.value_text_field)).perform(typeText(value_string), closeSoftKeyboard());
-        onView(withId(R.id.start_text_field)).perform(typeText(startDate), closeSoftKeyboard());
+        onView(withId(R.id.start_text_field)).perform(click());
+        Calendar validCalendar = Calendar.getInstance();
+        validCalendar.setTime(Utils.convertDate(startDate));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(validCalendar.get(Calendar.YEAR),validCalendar.get(Calendar.MONTH)+1,validCalendar.get(Calendar.DAY_OF_MONTH)));
+        onView(withText("OK")).perform(click());
         onView(withId(R.id.payment_opt_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(payment.getName()))).perform(click());
         onView(withId(R.id.category_spinner)).perform(click());
@@ -179,7 +201,11 @@ public class InOutPermsTest {
     public void testInvalidAddIntakeGUI5() {
         onView(withId(R.id.name_text_field)).perform(typeText(name), closeSoftKeyboard());
         onView(withId(R.id.value_text_field)).perform(typeText(value_string), closeSoftKeyboard());
-        onView(withId(R.id.start_text_field)).perform(typeText(invalidStartDate), closeSoftKeyboard());
+        onView(withId(R.id.start_text_field)).perform(click());
+        Calendar invalidCalendar = Calendar.getInstance();
+        invalidCalendar.setTime(Utils.convertDate(invalidStartDate));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(invalidCalendar.get(Calendar.YEAR),invalidCalendar.get(Calendar.MONTH)+1,invalidCalendar.get(Calendar.DAY_OF_MONTH)));
+        onView(withText("OK")).perform(click());
         onView(withId(R.id.payment_opt_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(payment.getName()))).perform(click());
         onView(withId(R.id.category_spinner)).perform(click());

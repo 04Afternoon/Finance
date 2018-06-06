@@ -236,7 +236,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && endDate.isEmpty()) {
+                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
 
                         if (outGoing) {
