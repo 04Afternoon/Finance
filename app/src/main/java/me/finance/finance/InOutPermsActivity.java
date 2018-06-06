@@ -88,6 +88,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             EasyImage.openChooserWithGallery(InOutPermsActivity.this, "Choose your receipt", 0);
         });
 
+        final EditText end_date_text_field = findViewById(R.id.end_text_field);
 
         Calendar calendar = Calendar.getInstance();
         start_date_text_field.setText(Utils.convertDate(calendar.getTime()));
@@ -95,10 +96,32 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             calendar.setTime(Utils.convertDate(start_date_text_field.getText().toString()));
             DatePickerDialog datePickerDialog = new DatePickerDialog(InOutPermsActivity.this);
             datePickerDialog.getDatePicker().init(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),null);
+            if(isPermanent){
+                datePickerDialog.getDatePicker().setMaxDate( Utils.convertDate(end_date_text_field.getText().toString()).getTime());
+            }
             datePickerDialog.setOnDateSetListener((datePicker, year, month, day) -> {
                 Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(year,month,day);
                 start_date_text_field.setText(Utils.convertDate(calendar1.getTime()));
+            });
+            datePickerDialog.show();
+        });
+
+
+
+        Calendar calendar_end = Calendar.getInstance();
+        end_date_text_field.setText(Utils.convertDate(calendar.getTime()));
+        end_date_text_field.setOnClickListener(view -> {
+            calendar_end.setTime(Utils.convertDate(end_date_text_field.getText().toString()));
+            DatePickerDialog datePickerDialog = new DatePickerDialog(InOutPermsActivity.this);
+            datePickerDialog.getDatePicker().init(calendar_end.get(Calendar.YEAR),calendar_end.get(Calendar.MONTH),calendar_end.get(Calendar.DAY_OF_MONTH),null);
+            if(isPermanent){
+                datePickerDialog.getDatePicker().setMinDate( Utils.convertDate(start_date_text_field.getText().toString()).getTime());
+            }
+            datePickerDialog.setOnDateSetListener((datePicker, year, month, day) -> {
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.set(year,month,day);
+                end_date_text_field.setText(Utils.convertDate(calendar1.getTime()));
             });
             datePickerDialog.show();
         });
@@ -124,8 +147,11 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_inoutperms);
 
-        final EditText end_date_text_field = findViewById(R.id.end_text_field);
         final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
+
+
+
+
 
         List<String> categorySpinnerList = new ArrayList<String>();
         categoryList = databaseHandler.getCategories();
