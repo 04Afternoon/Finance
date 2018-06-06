@@ -38,7 +38,6 @@ public class FragmentPermanents extends Fragment {
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(getContext());
     private View view;
     private StandingOrdersAdapter adapter;
-    private TextView selected;
     private String selectedName;
 
     public FragmentPermanents() {

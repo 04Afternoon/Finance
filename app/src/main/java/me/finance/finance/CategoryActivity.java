@@ -24,7 +24,6 @@ import me.finance.finance.Model.Payment;
 public class CategoryActivity extends AppCompatActivity {
 
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
-    private TextView title;
     private ListAdapter adapter;
     private Toolbar myToolbar;
 
