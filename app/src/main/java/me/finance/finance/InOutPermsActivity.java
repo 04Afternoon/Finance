@@ -390,6 +390,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             @Override
             public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
                 File imageFile = imageFiles.get(0);
+                filePath = imageFile.getAbsolutePath();
                 Picasso
                         .get()
                         .load(imageFile)

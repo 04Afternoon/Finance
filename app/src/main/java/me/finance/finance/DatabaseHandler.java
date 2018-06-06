@@ -477,16 +477,16 @@ public class DatabaseHandler{
 
 
         //database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-200.5, '2018-05-30', 'Felix Auf', 'Lohn' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-95.5, '2018-05-30', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (95.5, '2018-06-01', 'Harald Koinig', 'Biergeld' , " + pet_id + "," + cash_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (19.80, '2018-06-02', 'Harald Koinig', 'OEH Beitrag'," + car_id + "," + american_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (15.5, '2018-06-01', '1', 'Netflix' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-06-02', '2', 'Amazon'," + foods_id + "," + apple_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-95.5, '2018-05-30', 'Harald Koinig', '' , " + pet_id + "," + cash_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (95.5, '2018-06-01', 'Harald Koinig', '' , " + pet_id + "," + cash_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (19.80, '2018-06-02', 'Harald Koinig', ''," + car_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (15.5, '2018-06-01', '1', '' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-06-02', '2', ''," + foods_id + "," + apple_id + ");");
 
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (5.51, '2018-06-01', '3', 'Taxi' , " + home_id + "," + visa_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (399.99, '2018-06-02', '4', 'David'," + car_id + "," + american_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (101.05, '2018-06-01', '5', 'Party' , " + foods_id + "," + apple_id + ");");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (33.10, '2018-06-02', '6', 'Car'," + car_id + "," + paypal_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (5.51, '2018-06-01', '3', '' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (399.99, '2018-06-02', '4', ''," + car_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (101.05, '2018-06-01', '5', '' , " + foods_id + "," + apple_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (33.10, '2018-06-02', '6', ''," + car_id + "," + paypal_id + ");");
 
 
         database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment, category, payment_opt) " +

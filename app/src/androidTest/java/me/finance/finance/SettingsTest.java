@@ -26,6 +26,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -68,6 +69,7 @@ public class SettingsTest {
 
         onView(withId(R.id.navigation_settings)).perform(click());
         onView(withId(R.id.clear_database_button)).perform(click());
+        onView(withText("Yes")).perform(click());
 
         assertTrue(databaseHandler.getCategories().size() == 0);
         assertTrue(databaseHandler.getIntakes().size() == 0);
