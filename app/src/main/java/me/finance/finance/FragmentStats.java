@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -166,6 +167,8 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
                 fragment.setEndDate(endDate);
                 fragment.setValueFrom(0);
                 fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+                BottomNavigationView navigationView = getActivity().findViewById(R.id.navigation);
+                navigationView.setSelectedItemId(R.id.navigation_months);
             }
 
             @Override
@@ -185,6 +188,8 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
                 fragment.setEndDate(endDate);
                 fragment.setValueTo(0);
                 fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+                BottomNavigationView navigationView = getActivity().findViewById(R.id.navigation);
+                navigationView.setSelectedItemId(R.id.navigation_months);
             }
 
             @Override
@@ -257,6 +262,8 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
                 fragment.setEndDate(endDate);
                 fragment.setValueFrom(0);
                 fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+                BottomNavigationView navigationView = getActivity().findViewById(R.id.navigation);
+                navigationView.setSelectedItemId(R.id.navigation_months);
             }
 
             @Override
@@ -276,6 +283,8 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
                 fragment.setEndDate(endDate);
                 fragment.setValueTo(0);
                 fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+                BottomNavigationView navigationView = getActivity().findViewById(R.id.navigation);
+                navigationView.setSelectedItemId(R.id.navigation_months);
             }
 
             @Override
@@ -379,6 +388,8 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
                     fragment.setValueFrom(0);
                 }
                 fragmentManager.beginTransaction().replace(R.id.fragment, fragment).commit();
+                BottomNavigationView navigationView = getActivity().findViewById(R.id.navigation);
+                navigationView.setSelectedItemId(R.id.navigation_months);
             }
 
             @Override
