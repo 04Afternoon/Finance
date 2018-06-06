@@ -109,9 +109,14 @@ public class CategoryActivity extends AppCompatActivity {
                 }
                 else if(getIntent().getStringExtra("settings").equals("manage accounts"))
                 {
-                    intent.putExtra("status", "payments");
-                    finish();
-                    startActivity(intent);
+                    if (name.equals("Cash")) {
+                        Toast toast = Toast.makeText(view.getContext(), "Cannot edit Cash", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else {
+                        intent.putExtra("status", "payments");
+                        finish();
+                        startActivity(intent);
+                    }
                 }
             }
         });
