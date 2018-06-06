@@ -59,6 +59,7 @@ public class MonthAdapter extends BaseAdapter {
         TextView textViewItemDate = convertView.findViewById(R.id.monthDate);
         TextView textViewItemCategory = convertView.findViewById(R.id.monthCategory);
         TextView textViewItemPayment = convertView.findViewById(R.id.payment_textfield_months);
+        TextView textViewItemImage = convertView.findViewById(R.id.image_textfield_month);
 
         textViewItemName.setText(currentItem.getName());
 
@@ -102,7 +103,13 @@ public class MonthAdapter extends BaseAdapter {
 
         });
 
-        return convertView;
+        if (currentItem.getComment() != null && !currentItem.getComment().isEmpty()) {
+            textViewItemImage.setText("📷");
+        }else{
+            textViewItemImage.setText("");
+        }
+
+            return convertView;
     }
 
     public void setItems(List<Intake> items) {
