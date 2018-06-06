@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +20,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private DatabaseHandler DBHandler;
     private Toolbar myToolbar;
 
+
+    private static final int NUM_PAGES = 5;
+    private ViewPager mPager;
+    private FragmentPagerAdapter mPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
         databaseHandler.open();
         databaseHandler.createTables();
-        //databaseHandler.insertDummyValues();
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -34,12 +40,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
         getSupportActionBar().hide();
-        //setSupportActionBar(myToolbar);
-
-        //System.out.println("Database closed");
-        //databaseHandler.close();
 
         switchFragment(R.id.navigation_balance);
+/*
+
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        */
     }
 
     @Override
