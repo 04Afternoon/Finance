@@ -59,6 +59,11 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
     private RadioButton outgoingRadioButton;
     private RadioGroup radioGroup;
 
+
+    private RadioButton weeklyRadioButton;
+    private RadioButton monthlyRadioButton;
+    private RadioGroup radioGroup_weekly_monthly;
+
     private TextView endDateLabel;
     private TextView intervallabel;
 
@@ -132,11 +137,17 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
 
+
+
+        weeklyRadioButton = findViewById(R.id.radioButtonWeekly);
+        monthlyRadioButton = findViewById(R.id.radioButtonMonthly);
+        radioGroup_weekly_monthly = findViewById(R.id.radioGroup2);
+        radioGroup_weekly_monthly.setOnCheckedChangeListener(this);
+
+
         if (outGoing) {
-            outgoingRadioButton.setChecked(true);
             value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
         } else {
-            intakeRadioButton.setChecked(true);
             value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
         }
 
@@ -146,9 +157,6 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         getSupportActionBar().hide();
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_inoutperms);
-
-        final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
-
 
 
 
@@ -174,7 +182,9 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
         if (!isPermanent) {
             end_date_text_field.setVisibility(View.GONE);
-            intervall_text_field.setVisibility(View.GONE);
+            radioGroup_weekly_monthly.setVisibility(View.GONE);
+            monthlyRadioButton.setVisibility(View.GONE);
+            weeklyRadioButton.setVisibility(View.GONE);
             endDateLabel.setVisibility(View.GONE);
             intervallabel.setVisibility(View.GONE);
         }
@@ -192,7 +202,10 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                 String value_string = value_text_field.getText().toString();
                 String startDate = start_date_text_field.getText().toString();
                 String endDate = end_date_text_field.getText().toString();
-                String intervall = intervall_text_field.getText().toString();
+
+
+
+
 
                 String error = "";
 
@@ -223,7 +236,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
 
                         if (outGoing) {
@@ -252,7 +265,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if (isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                    } else if (isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Standing order saved!", Toast.LENGTH_SHORT);
 
                         if (outGoing) {
@@ -281,7 +294,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         next_exec.setTime(convertDate(startDate));
                         Calendar endCal = Calendar.getInstance();
                         endCal.setTime(convertDate(endDate));
-                        if (intervall.equals("M")) {
+                        if (monthlyRadioButton.isChecked()) {
                             Calendar currentDate = Calendar.getInstance();
                             currentDate.set(Calendar.HOUR, 23);
                             currentDate.set(Calendar.MINUTE, 59);
@@ -294,7 +307,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                                     break;
                                 }
                             }
-                        } else if (intervall.equals("W")) {
+                        } else {
                             Calendar currentDate = Calendar.getInstance();
                             currentDate.set(Calendar.HOUR, 23);
                             currentDate.set(Calendar.MINUTE, 59);
@@ -309,10 +322,10 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             }
                         }
 
-                        database.addPermanet(new Permanent(value, convertDate(startDate), intervall, convertDate(endDate), name, filePath, categoryId, paymentId, next_exec.getTime()));
+                        database.addPermanet(new Permanent(value, convertDate(startDate), monthlyRadioButton.isChecked()?"M":"W", convertDate(endDate), name, filePath, categoryId, paymentId, next_exec.getTime()));
 
                         toast.show();
-                        System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + intervall + " " + 0);
+                        System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + (monthlyRadioButton.isChecked()?"M":"W") + " " + 0);
                         setResult(Activity.RESULT_OK);
                         finish();
                     } else {
