@@ -1,6 +1,7 @@
 package me.finance.finance;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -64,6 +65,11 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
     private RadioButton outgoingRadioButton;
     private RadioGroup radioGroup;
 
+
+    private RadioButton weeklyRadioButton;
+    private RadioButton monthlyRadioButton;
+    private RadioGroup radioGroup_weekly_monthly;
+
     private TextView endDateLabel;
     private TextView intervallabel;
 
@@ -96,17 +102,61 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             EasyImage.openChooserWithGallery(InOutPermsActivity.this, "Choose your receipt", 0);
         });
 
+        final EditText end_date_text_field = findViewById(R.id.end_text_field);
+
+        Calendar calendar = Calendar.getInstance();
+        start_date_text_field.setText(Utils.convertDate(calendar.getTime()));
+        start_date_text_field.setOnClickListener(view -> {
+            calendar.setTime(Utils.convertDate(start_date_text_field.getText().toString()));
+            DatePickerDialog datePickerDialog = new DatePickerDialog(InOutPermsActivity.this);
+            datePickerDialog.getDatePicker().init(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),null);
+            if(isPermanent){
+                datePickerDialog.getDatePicker().setMaxDate( Utils.convertDate(end_date_text_field.getText().toString()).getTime());
+            }
+            datePickerDialog.setOnDateSetListener((datePicker, year, month, day) -> {
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.set(year,month,day);
+                start_date_text_field.setText(Utils.convertDate(calendar1.getTime()));
+            });
+            datePickerDialog.show();
+        });
+
+
+
+        Calendar calendar_end = Calendar.getInstance();
+        end_date_text_field.setText(Utils.convertDate(calendar.getTime()));
+        end_date_text_field.setOnClickListener(view -> {
+            calendar_end.setTime(Utils.convertDate(end_date_text_field.getText().toString()));
+            DatePickerDialog datePickerDialog = new DatePickerDialog(InOutPermsActivity.this);
+            datePickerDialog.getDatePicker().init(calendar_end.get(Calendar.YEAR),calendar_end.get(Calendar.MONTH),calendar_end.get(Calendar.DAY_OF_MONTH),null);
+            if(isPermanent){
+                datePickerDialog.getDatePicker().setMinDate( Utils.convertDate(start_date_text_field.getText().toString()).getTime());
+            }
+            datePickerDialog.setOnDateSetListener((datePicker, year, month, day) -> {
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.set(year,month,day);
+                end_date_text_field.setText(Utils.convertDate(calendar1.getTime()));
+            });
+            datePickerDialog.show();
+        });
+
 
         intakeRadioButton = findViewById(R.id.radioButtonIncome);
         outgoingRadioButton = findViewById(R.id.radioButtonOutgoing);
         radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
 
+
+
+        weeklyRadioButton = findViewById(R.id.radioButtonWeekly);
+        monthlyRadioButton = findViewById(R.id.radioButtonMonthly);
+        radioGroup_weekly_monthly = findViewById(R.id.radioGroup2);
+        radioGroup_weekly_monthly.setOnCheckedChangeListener(this);
+
+
         if (outGoing) {
-            outgoingRadioButton.setChecked(true);
             value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
         } else {
-            intakeRadioButton.setChecked(true);
             value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
         }
 
@@ -117,8 +167,8 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_inoutperms);
 
-        final EditText end_date_text_field = findViewById(R.id.end_text_field);
-        final EditText intervall_text_field = findViewById(R.id.intervall_text_field);
+
+
 
         List<String> categorySpinnerList = new ArrayList<String>();
         categoryList = databaseHandler.getCategories();
@@ -141,7 +191,9 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
         if (!isPermanent) {
             end_date_text_field.setVisibility(View.GONE);
-            intervall_text_field.setVisibility(View.GONE);
+            radioGroup_weekly_monthly.setVisibility(View.GONE);
+            monthlyRadioButton.setVisibility(View.GONE);
+            weeklyRadioButton.setVisibility(View.GONE);
             endDateLabel.setVisibility(View.GONE);
             intervallabel.setVisibility(View.GONE);
         }
@@ -159,7 +211,10 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                 String value_string = value_text_field.getText().toString();
                 String startDate = start_date_text_field.getText().toString();
                 String endDate = end_date_text_field.getText().toString();
-                String intervall = intervall_text_field.getText().toString();
+
+
+
+
 
                 String error = "";
 
@@ -190,7 +245,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                 if (error.isEmpty()) {
                     DatabaseHandler database = DatabaseHandler.getInstance(getApplicationContext());
                     //database.open();
-                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && intervall.isEmpty() && endDate.isEmpty()) {
+                    if (!isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Transaction saved", Toast.LENGTH_SHORT);
 
                         if (outGoing) {
@@ -219,7 +274,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         System.out.println("DEBUG: !Once! " + name + " " + value + " " + startDate + " " + categoryId + " " + "ONCE" + " " + paymentId);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if (isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !intervall.isEmpty() && !endDate.isEmpty()) {
+                    } else if (isPermanent && !name.isEmpty() && !value_string.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Standing order saved!", Toast.LENGTH_SHORT);
 
                         if (outGoing) {
@@ -248,7 +303,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                         next_exec.setTime(convertDate(startDate));
                         Calendar endCal = Calendar.getInstance();
                         endCal.setTime(convertDate(endDate));
-                        if (intervall.equals("M")) {
+                        if (monthlyRadioButton.isChecked()) {
                             Calendar currentDate = Calendar.getInstance();
                             currentDate.set(Calendar.HOUR, 23);
                             currentDate.set(Calendar.MINUTE, 59);
@@ -261,7 +316,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                                     break;
                                 }
                             }
-                        } else if (intervall.equals("W")) {
+                        } else {
                             Calendar currentDate = Calendar.getInstance();
                             currentDate.set(Calendar.HOUR, 23);
                             currentDate.set(Calendar.MINUTE, 59);
@@ -276,10 +331,10 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
                             }
                         }
 
-                        database.addPermanet(new Permanent(value, convertDate(startDate), intervall, convertDate(endDate), name, filePath, categoryId, paymentId, next_exec.getTime()));
+                        database.addPermanet(new Permanent(value, convertDate(startDate), monthlyRadioButton.isChecked()?"M":"W", convertDate(endDate), name, filePath, categoryId, paymentId, next_exec.getTime()));
 
                         toast.show();
-                        System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + intervall + " " + 0);
+                        System.out.println("DEBUG: !Permanent! " + name + " " + value_string + " " + startDate + " " + endDate + " " + (monthlyRadioButton.isChecked()?"M":"W") + " " + 0);
                         setResult(Activity.RESULT_OK);
                         finish();
                     } else {
