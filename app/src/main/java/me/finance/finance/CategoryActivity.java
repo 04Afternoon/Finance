@@ -3,11 +3,10 @@ package me.finance.finance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,32 +24,34 @@ import me.finance.finance.Model.Payment;
 public class CategoryActivity extends AppCompatActivity {
 
     private DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
-    private TextView title;
     private ListAdapter adapter;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-        title = findViewById(R.id.settings_title);
-        title.setText(getIntent().getStringExtra("settings"));
+        setTitle(getIntent().getStringExtra("settings"));
+
+        getSupportActionBar().hide();
+
+        myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
 
         Button create_category_button = findViewById(R.id.create_category);
-        ToggleButton remove_category_button = (ToggleButton) findViewById(R.id.remove_category);
         Button exit_categories_button = findViewById(R.id.exitCategoriesButton);
 
-        if(title.getText().toString().equals("manage accounts")){
+        if(getIntent().getStringExtra("settings").equals("manage accounts")){
             create_category_button.setText("Add Account");
         }
 
         databaseHandler.open();
 
-        if(title.getText().toString().equals("manage categories"))
+        if(getIntent().getStringExtra("settings").equals("manage categories"))
         {
           ArrayList<Category> categories = databaseHandler.getCategories();
           populateCategoryListView(categories);
         }
-        else if(title.getText().toString().equals("manage accounts"))
+        else if(getIntent().getStringExtra("settings").equals("manage accounts"))
         {
             ArrayList<Payment> accounts = databaseHandler.getPayments();
             populateAccountListView(accounts);
@@ -61,18 +62,28 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String name = ((EditText) findViewById(R.id.categoryName)).getText().toString();
-                if(title.getText().toString().equals("manage categories") && !name.isEmpty())
+                if(getIntent().getStringExtra("settings").equals("manage categories") && !name.isEmpty())
                 {
-                    databaseHandler.addCategoryBetter(name);
-                    ArrayList<Category> categories = databaseHandler.getCategories();
-                    populateCategoryListView(categories);
+                    if (databaseHandler.getCategories(name).isEmpty()) {
+                        databaseHandler.addCategoryBetter(name);
+                        ArrayList<Category> categories = databaseHandler.getCategories();
+                        populateCategoryListView(categories);
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Category already exists!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     ((EditText) findViewById(R.id.categoryName)).setText("");
                 }
-                else if(title.getText().toString().equals("manage accounts") && !name.isEmpty())
+                else if(getIntent().getStringExtra("settings").equals("manage accounts") && !name.isEmpty())
                 {
-                    databaseHandler.addPaymentBetter(name);
-                    ArrayList<Payment> accounts = databaseHandler.getPayments();
-                    populateAccountListView(accounts);
+                    if (databaseHandler.getPayments(name).isEmpty()) {
+                        databaseHandler.addPaymentBetter(name);
+                        ArrayList<Payment> accounts = databaseHandler.getPayments();
+                        populateAccountListView(accounts);
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Account already exists!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     ((EditText) findViewById(R.id.categoryName)).setText("");
                 } else {
                     Toast toast = Toast.makeText(view.getContext(), "Empty name!", Toast.LENGTH_SHORT);
@@ -81,42 +92,31 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
-        remove_category_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                {
-                    final ListView categoryList = (ListView) findViewById(R.id.categoryList);
-                    categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String name = (String) categoryList.getItemAtPosition(i);
+        final Intent intent = new Intent(this, EditAccounts.class);
 
-                            if(title.getText().toString().equals("manage categories"))
-                            {
-                                databaseHandler.removeCategory(name);
-                                ArrayList<Category> categories = databaseHandler.getCategories();
-                                populateCategoryListView(categories);
-                            }
-                            else if(title.getText().toString().equals("manage accounts"))
-                            {
-                                databaseHandler.removePayment(name);
-                                ArrayList<Payment> accounts = databaseHandler.getPayments();
-                                populateAccountListView(accounts);
-                            }
-                        }
-                    });
-                }
-                else
+
+        final ListView categoryList = (ListView) findViewById(R.id.categoryList);
+        categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = (String) categoryList.getItemAtPosition(i);
+                intent.putExtra("name", name);
+                if(getIntent().getStringExtra("settings").equals("manage categories"))
                 {
-                    ListView categoryList = (ListView) findViewById(R.id.categoryList);
-                    categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Toast toast = Toast.makeText(view.getContext(), "Jesus Christ what are you doing??", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    });
+                    intent.putExtra("status", "categories");
+                    finish();
+                    startActivity(intent);
+                }
+                else if(getIntent().getStringExtra("settings").equals("manage accounts"))
+                {
+                    if (name.equals("Cash")) {
+                        Toast toast = Toast.makeText(view.getContext(), "Cannot edit Cash", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else {
+                        intent.putExtra("status", "payments");
+                        finish();
+                        startActivity(intent);
+                    }
                 }
             }
         });

@@ -11,21 +11,23 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import me.finance.finance.Model.Category;
 import me.finance.finance.Model.Intake;
 import me.finance.finance.Model.Payment;
 import me.finance.finance.Model.Permanent;
+import me.finance.finance.Model.Sort;
+
+import static me.finance.finance.Utils.convertDate;
 
 public class DatabaseHandler{
 
     private SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
     private static DatabaseHandler instance;
-
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "finances.db";
 
     private DatabaseHandler(Context context) {
         this.openHelper = new DatabaseHelper(context);
@@ -104,11 +106,29 @@ public class DatabaseHandler{
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT " +
                 ");");
+
+        database.execSQL("INSERT INTO payment (name)\n" +
+                "SELECT * FROM (SELECT 'Cash') AS tmp\n" +
+                "WHERE NOT EXISTS (\n" +
+                "    SELECT name FROM payment WHERE name = 'Cash'\n" +
+                ") LIMIT 1;");
     }
 
     public ArrayList<Category> getCategories() {
         ArrayList<Category> categories = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM categories", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            categories.add(new Category(cursor.getInt(0), cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return categories;
+    }
+
+    public ArrayList<Category> getCategories(String name) {
+        ArrayList<Category> categories = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[] {name});
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             categories.add(new Category(cursor.getInt(0),cursor.getString(1)));
@@ -128,9 +148,42 @@ public class DatabaseHandler{
         return category;
     }
 
+    public Category getCategory(String name) {
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            category = new Category(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return category;
+    }
+
+    public Payment getPayment(String name) {
+        Payment payment = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            payment = new Payment(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return payment;
+    }
+
+
     public ArrayList<Payment> getPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM payment", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return payments;
+    }
+
+    public ArrayList<Payment> getPayments(String name) {
+        ArrayList<Payment> payments = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[] {name});
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             payments.add(new Payment(cursor.getInt(0),cursor.getString(1)));
@@ -166,6 +219,14 @@ public class DatabaseHandler{
         database.delete("payment", null, null);
     }
 
+    public void deleteIntakes() {
+        database.delete("intakes", null, null);
+    }
+
+    public void deletePermanents() {
+        database.delete("permanents", null, null);
+    }
+
     public boolean updateIntakes(Intake... intakes){
         for(Intake intake : intakes){
             ContentValues values = new ContentValues();
@@ -183,27 +244,17 @@ public class DatabaseHandler{
         return true;
     }
 
-    public boolean updateCategories(Category... categories){
-        for(Category category : categories){
-            ContentValues values = new ContentValues();
-            values.put("name",category.getName());
-
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(category.getId())}) != 1){
-                return false;
-            }
-        }
+    public boolean updatePayment(String new_name, String old_name){
+        ContentValues values = new ContentValues();
+        values.put("name", new_name);
+        database.update("payment", values, "name = ?", new String[] { old_name });
         return true;
     }
 
-    public boolean updatePayment(Payment... payments){
-        for(Payment payment : payments){
-            ContentValues values = new ContentValues();
-            values.put("name",payment.getName());
-
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(payment.getId())}) != 1){
-                return false;
-            }
-        }
+    public boolean updateCategories(String new_name, String old_name){
+        ContentValues values = new ContentValues();
+        values.put("name", new_name);
+        database.update("categories", values, "name = ?", new String[] { old_name });
         return true;
     }
 
@@ -211,16 +262,16 @@ public class DatabaseHandler{
         for(Permanent permanent : permanents){
             ContentValues values = new ContentValues();
             values.put("value",permanent.getValue());
-            values.put("start_date",permanent.getStartDate());
+            values.put("start_date",convertDate(permanent.getStartDate()));
             values.put("iteration",permanent.getIteration());
-            values.put("end_date",permanent.getEndDate());
+            values.put("end_date",convertDate(permanent.getEndDate()));
             values.put("name",permanent.getName());
             values.put("comment",permanent.getComment());
             values.put("category",permanent.getCategory());
             values.put("payment_opt",permanent.getPayment_opt());
-            values.put("next_exec",permanent.getNext_exec());
+            values.put("next_exec",convertDate(permanent.getNext_exec()));
 
-            if(database.update("categories",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
+            if(database.update("permanents",values,"_id = ?", new String[]{String.valueOf(permanent.getId())}) != 1){
                 return false;
             }
         }
@@ -236,39 +287,41 @@ public class DatabaseHandler{
         Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE _id = ?", new String[]{String.valueOf(id)});
         if(cursor.moveToFirst())
         {
-            intake =  new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6));
+            if (cursor.isNull(5)) {
+                intake = new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3),cursor.getString(4), null, cursor.getInt(6));
+            } else {
+                intake = new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6));
+            }
         }
         cursor.close();
         return intake;
     }
 
-    public ArrayList<Intake> getPositiveIntakes()
+    public List<Intake> getIntakes(Payment payment_opt, Date startDate, Date endDate)
     {
-        ArrayList<Intake> intakes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
-        if(cursor.moveToFirst())
-        {
-            do {
-                if(cursor.getFloat(1) > 0)
-                  intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
-
-            }while(cursor.moveToNext());
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND payment_opt = ?", new String[]{convertDate(startDate), convertDate(endDate), String.valueOf(payment_opt.getId())});
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(5)) {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, cursor.getInt(6)));
+            } else {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
+            }
         }
         cursor.close();
         return intakes;
     }
 
-    public ArrayList<Intake> getNegativeIntakes()
+    public List<Intake> getIntakes(Category category, Date startDate, Date endDate)
     {
-        ArrayList<Intake> intakes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
-        if(cursor.moveToFirst())
-        {
-            do {
-                if(cursor.getFloat(1) < 0)
-                    intakes.add(new Intake(cursor.getInt(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getInt(5),cursor.getInt(6)));
-
-            }while(cursor.moveToNext());
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND  category = ?", new String[]{convertDate(startDate), convertDate(endDate), String.valueOf(category.getId())});
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(5)) {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, cursor.getInt(6)));
+            } else {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
+            }
         }
         cursor.close();
         return intakes;
@@ -281,8 +334,13 @@ public class DatabaseHandler{
             Cursor cursorIntakes = database.rawQuery("SELECT * FROM intakes", null);
             if (cursorIntakes.moveToFirst()) {
                 do {
-                    intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
-                            cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                    if (cursorIntakes.isNull(5)) {
+                        intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                                cursorIntakes.getString(4), null, cursorIntakes.getInt(6)));
+                    } else {
+                        intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                                cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                    }
                 } while (cursorIntakes.moveToNext());
             }
             cursorIntakes.close();
@@ -299,7 +357,11 @@ public class DatabaseHandler{
         sql.bindString(2, intake.getDateFormatted());
         sql.bindString(3, intake.getName());
         sql.bindString(4, intake.getComment());
-        sql.bindLong(5,intake.getCategory());
+        if (intake.getCategory() == null) {
+            sql.bindNull(5);
+        } else {
+            sql.bindLong(5, intake.getCategory());
+        }
         sql.bindLong(6, intake.getPayment_opt());
         long id = sql.executeInsert();
 
@@ -321,18 +383,31 @@ public class DatabaseHandler{
                 "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         sql.bindDouble(1, permanent.getValue());
-        sql.bindString(2,permanent.getStartDate());
+        sql.bindString(2,convertDate(permanent.getStartDate()));
         sql.bindString(3,permanent.getIteration());
-        sql.bindString(4,permanent.getEndDate());
+        sql.bindString(4,convertDate(permanent.getEndDate()));
         sql.bindString(5,permanent.getName());
         sql.bindString(6,permanent.getComment());
-        sql.bindLong(7,permanent.getCategory());
-        sql.bindLong(8,permanent.getPayment_opt());
-        sql.bindString(9,permanent.getNext_exec());
+        if (permanent.getCategory() == null) {
+            sql.bindNull(7);
+        } else {
+            sql.bindLong(7, permanent.getCategory());
+        }
+        if (permanent.getPayment_opt() == null) {
+            sql.bindNull(8);
+        } else {
+            sql.bindLong(8, permanent.getPayment_opt());
+        }
+        sql.bindString(9,convertDate(permanent.getNext_exec()));
 
         long id = sql.executeInsert();
 
         return id;
+    }
+
+    public void removeStandingOrder(String name)
+    {
+      database.delete("permanents", "name = '" + name + "'", null);
     }
 
     public long addCategory(Category category)
@@ -368,13 +443,58 @@ public class DatabaseHandler{
      * ***TESTING***
      */
     public void insertDummyValues() {
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (-200.5, '2017-12-17', 'Felix Auf', 'Lohn');");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (95.5, '2017-06-07', 'Harald Koinig', 'Biergeld');");
-        database.execSQL("INSERT INTO intakes (value, date, name, comment) VALUES (19.80, '2018-01-07', 'Harald Koinig', 'OEH Beitrag');");
 
-        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente');");
-        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus');");
-        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment) VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag');");
+
+
+        database.execSQL("INSERT INTO payment (name) VALUES ('Cash')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('Visa')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('Mastercard')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('American Express')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('Apple Pay')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('PayPal')");
+        database.execSQL("INSERT INTO payment (name) VALUES ('VPay')");
+
+        int cash_id = getPayments("Cash").get(0).getId();
+        int visa_id = getPayments("Visa").get(0).getId();
+        int mastercard_id = getPayments("Mastercard").get(0).getId();
+        int american_id = getPayments("American Express").get(0).getId();
+        int apple_id = getPayments("Apple Pay").get(0).getId();
+        int paypal_id = getPayments("PayPal").get(0).getId();
+        int Vpay_id = getPayments("PayPal").get(0).getId();
+
+
+        database.execSQL("INSERT INTO categories (name) VALUES ('Home')");
+        database.execSQL("INSERT INTO categories (name) VALUES ('Pet')");
+        database.execSQL("INSERT INTO categories (name) VALUES ('Foods')");
+        database.execSQL("INSERT INTO categories (name) VALUES ('Car')");
+        database.execSQL("INSERT INTO categories (name) VALUES ('Books')");
+
+
+        int home_id = getCategories("Home").get(0).getId();
+        int pet_id = getCategories("Pet").get(0).getId();
+        int foods_id = getCategories("Foods").get(0).getId();
+        int car_id = getCategories("Car").get(0).getId();
+
+
+        //database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-200.5, '2018-05-30', 'Felix Auf', 'Lohn' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (-95.5, '2018-05-30', 'Harald Koinig', '' , " + pet_id + "," + cash_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (95.5, '2018-06-01', 'Harald Koinig', '' , " + pet_id + "," + cash_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (19.80, '2018-06-02', 'Harald Koinig', ''," + car_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (15.5, '2018-06-01', '1', '' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (99.90, '2018-06-02', '2', ''," + foods_id + "," + apple_id + ");");
+
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (5.51, '2018-06-01', '3', '' , " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (399.99, '2018-06-02', '4', ''," + car_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (101.05, '2018-06-01', '5', '' , " + foods_id + "," + apple_id + ");");
+        database.execSQL("INSERT INTO intakes (value, date, name, comment, category, payment_opt) VALUES (33.10, '2018-06-02', '6', ''," + car_id + "," + paypal_id + ");");
+
+
+        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment, category, payment_opt) " +
+                "VALUES (5.55, '2014-01-07', 'MONTHLY' , '2019-12-12', 'Ignazius Bierus', 'Alimente', " + home_id + "," + visa_id + ");");
+        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment, category, payment_opt) " +
+                "VALUES (-9.35, '2015-05-17', 'WEEKLY' , '2019-01-02', 'Harald Koinig', 'Minus', " + foods_id + "," + american_id + ");");
+        database.execSQL("INSERT INTO permanents (value, start_date, iteration, end_date, name, comment, category, payment_opt) " +
+                "VALUES (255.25, '2016-01-01', 'YEARLY' , '2019-06-01', 'Fitnessstudio', 'Beitrag', " + car_id + "," + mastercard_id + ");");
 
         List<String> intakes = new ArrayList<String>();
         Cursor cursor = database.rawQuery("SELECT * FROM intakes", null);
@@ -418,6 +538,133 @@ public class DatabaseHandler{
         }
         cursor4.close();
         System.out.println("PAYMENT " + payment);
+    }
+
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category, Payment payment, double valueFrom, double valueTo) {
+
+        ArrayList<Intake> intakes = new ArrayList<>();
+        try {
+            List<String> selectionArgs = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
+
+
+            selectionArgs.add(Utils.convertDate(startDate));
+            selectionArgs.add(Utils.convertDate(endDate));
+            stringBuilder.append("SELECT * FROM intakes WHERE date BETWEEN ? AND ?");
+
+            if(category != null){
+                selectionArgs.add(Integer.toString(category.getId()));
+                stringBuilder.append(" AND category = ?");
+            }
+
+            if(payment != null){
+                selectionArgs.add(Integer.toString(payment.getId()));
+                stringBuilder.append(" AND payment_opt = ?");
+            }
+
+            if(!Double.isNaN(valueFrom)){
+                selectionArgs.add(String.format("%.2f", valueFrom));
+                stringBuilder.append(" AND value >= ?");
+            }
+
+            if(!Double.isNaN(valueTo)){
+                selectionArgs.add(String.format("%.2f", valueTo));
+                stringBuilder.append(" AND value <= ?");
+            }
+
+
+
+
+            stringBuilder.append(String.format(" ORDER BY %s %s",sort.getColumn().getDatabasename(),sort.getOrder().getDatabasename()));
+
+
+
+            Cursor cursorIntakes = database.rawQuery(stringBuilder.toString(), selectionArgs.toArray(new String[0]));
+            if (cursorIntakes.moveToFirst()) {
+                do {
+                    intakes.add(new Intake(cursorIntakes.getInt(0), cursorIntakes.getDouble(1), cursorIntakes.getString(2), cursorIntakes.getString(3),
+                            cursorIntakes.getString(4), cursorIntakes.getInt(5), cursorIntakes.getInt(6)));
+                } while (cursorIntakes.moveToNext());
+            }
+            cursorIntakes.close();
+        } catch(Exception e) {
+            System.out.println("");
+        }
+        return intakes;
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category, Payment payment) {
+        return getIntakes(startDate,endDate,sort,category,payment,Double.NaN,Double.NaN);
+
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort, Category category) {
+        return getIntakes(startDate,endDate,sort,category,null);
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate, Sort sort) {
+        return getIntakes(startDate,endDate,sort,null);
+    }
+
+    public List<Intake> getIntakes(Date startDate, Date endDate) {
+        return getIntakes(startDate,endDate,new Sort(Sort.Column.DATE,Sort.Order.ASC));
+    }
+
+    public List<Permanent> getPermanents() {
+        ArrayList<Permanent> permanents = new ArrayList<>();
+        String[] columns = new String[] {
+                "_id", "value", "start_date", "iteration", "end_date",
+                "name", "comment", "category", "payment_opt", "next_exec"
+        };
+
+        try {
+            Cursor cursor = database.query("permanents", columns, "", null, "", "", "start_date");
+            if (cursor.moveToFirst()) {
+                do {
+                    permanents.add(new Permanent(cursor.getInt(0),
+                            cursor.getDouble(1), cursor.getString(2),
+                            cursor.getString(3), cursor.getString(4),
+                            cursor.getString(5), cursor.getString(6),
+                            cursor.isNull(7) ? null : cursor.getInt(7),
+                            cursor.isNull(8) ? null : cursor.getInt(8),
+                            cursor.getString(9)));
+                } while(cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return permanents;
+    }
+
+    public List<Permanent> getDuePermanents() {
+        ArrayList<Permanent> permanents = new ArrayList<>();
+        String[] columns = new String[] {
+                "_id", "value", "start_date", "iteration", "end_date",
+                "name", "comment", "category", "payment_opt", "next_exec"
+        };
+
+        try {
+            Cursor cursor = database.query("permanents", columns, "next_exec < date('now') and end_date > date('now')", null, "", "", "start_date");
+            if (cursor.moveToFirst()) {
+                do {
+                    permanents.add(new Permanent(cursor.getInt(0),
+                            cursor.getDouble(1), cursor.getString(2),
+                            cursor.getString(3), cursor.getString(4),
+                            cursor.getString(5), cursor.getString(6),
+                            cursor.isNull(7) ? null : cursor.getInt(7),
+                            cursor.isNull(8) ? null : cursor.getInt(8),
+                            cursor.getString(9)));
+                } while(cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return permanents;
     }
 
 

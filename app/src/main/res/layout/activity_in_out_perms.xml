@@ -8,49 +8,48 @@
     tools:context=".InOutPermsActivity">
 
 
-    <TextView
-        android:id="@+id/auftrag_text"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border"
-        android:gravity="center"
-        android:text="placehodler"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/auftrag_exit_button"
+    <RadioGroup
+        android:id="@+id/radioGroup2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:background="@android:color/black"
-        android:backgroundTint="@android:color/transparent"
-        android:tint="@android:color/background_dark"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_delete" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:checkedButton="@+id/radioButton"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/intervalLabel"
+        app:layout_constraintEnd_toEndOf="@+id/name_text_field"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintStart_toStartOf="@+id/name_text_field"
+        app:layout_constraintTop_toTopOf="@+id/intervalLabel">
+
+        <RadioButton
+            android:id="@+id/radioButtonWeekly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Weekly" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMonthly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Monthly" />
+
+    </RadioGroup>
 
     <EditText
         android:id="@+id/name_text_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="name"
+        android:hint="name:"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
 
     <EditText
         android:id="@+id/value_text_field"
@@ -61,8 +60,9 @@
         android:ems="10"
         android:hint="value"
         android:inputType="number|numberDecimal"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_text_field" />
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
 
     <EditText
         android:id="@+id/start_text_field"
@@ -70,47 +70,43 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
+
         android:ems="10"
+        android:focusable="false"
+        android:clickable="true"
         android:hint="YYYY-MM-DD"
         android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="@+id/textView10"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/value_text_field" />
+        app:layout_constraintTop_toTopOf="@+id/textView10" />
 
     <EditText
         android:id="@+id/end_text_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
+
+        android:focusable="false"
+        android:clickable="true"
         android:hint="YYYY-MM-DD"
         android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="@+id/endDateLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_text_field" />
-
-    <EditText
-        android:id="@+id/intervall_text_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="W (weekly) / M (monthly)"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/end_text_field" />
+        app:layout_constraintTop_toTopOf="@+id/endDateLabel" />
 
     <Button
         android:id="@+id/auftrag_finish_button"
-        android:layout_width="123dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="8dp"
         android:text="confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -133,10 +129,10 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/intervalLabel" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/intervalLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -146,10 +142,10 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/endDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -179,13 +175,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="*value:"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
         android:id="@+id/textView8"
@@ -205,17 +201,111 @@
         android:layout_width="214dp"
         android:layout_height="38dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/payment_opt_spinner" />
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
 
     <Spinner
         android:id="@+id/payment_opt_spinner"
         android:layout_width="214dp"
         android:layout_height="38dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/intervall_text_field" />
+        app:layout_constraintTop_toTopOf="@+id/textView" />
 
+
+    <ImageView
+        android:id="@+id/receiptImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/auftrag_finish_button"
+        app:layout_constraintEnd_toStartOf="@+id/takePictureButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/takePictureButton" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:checkedButton="@+id/radioButton"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintEnd_toEndOf="@+id/name_text_field"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="@+id/name_text_field"
+        app:layout_constraintTop_toTopOf="@+id/textView6"
+        app:layout_constraintVertical_bias="0.0">
+
+        <RadioButton
+            android:id="@+id/radioButtonIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/income" />
+
+        <RadioButton
+            android:id="@+id/radioButtonOutgoing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="@string/outgoing" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/in_out"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_inoutperms"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="Order">
+
+
+        <ImageButton
+            android:id="@+id/auftrag_exit_button"
+            android:layout_width="42dp"
+            android:layout_height="39dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:drawable/ic_delete"
+            android:backgroundTint="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <Button
+        android:id="@+id/takePictureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/take_a_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
 </android.support.constraint.ConstraintLayout>

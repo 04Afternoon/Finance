@@ -11,34 +11,34 @@ public class Intake {
     private double value_;
     private Date date_;
     private String name_;
-    private String comment_;
-    private int category_;
+    private String filePath_;
+    private Integer category_;
     private int payment_opt_;
 
-    public Intake(int id_, double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
-        this(value_,date_,name_,comment_,category_,payment_opt_);
+    public Intake(int id_, double value_, String date_, String name_, String filePath_, Integer category_, int payment_opt_) {
+        this(value_,date_,name_, filePath_,category_,payment_opt_);
         this.id_ = id_;
     }
 
-    public Intake(double value_, String date_, String name_, String comment_, int category_, int payment_opt_) {
+    public Intake(double value_, String date_, String name_, String filePath_, Integer category_, int payment_opt_) {
         this.value_ = value_;
         this.setDateFormatted(date_);
         this.name_ = name_;
-        this.comment_ = comment_;
+        this.filePath_ = filePath_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
     }
 
-    public Intake(int id_, double value_, Date date_, String name_, String comment_, int category_, int payment_opt_) {
-        this(value_,date_,name_,comment_,category_,payment_opt_);
+    public Intake(int id_, double value_, Date date_, String name_, String filePath_, Integer category_, int payment_opt_) {
+        this(value_,date_,name_, filePath_,category_,payment_opt_);
         this.id_ = id_;
     }
 
-    public Intake(double value_, Date date_, String name_, String comment_, int category_, int payment_opt_) {
+    public Intake(double value_, Date date_, String name_, String filePath_, Integer category_, int payment_opt_) {
         this.value_ = value_;
         this.date_ = date_;
         this.name_ = name_;
-        this.comment_ = comment_;
+        this.filePath_ = filePath_;
         this.category_ = category_;
         this.payment_opt_ = payment_opt_;
     }
@@ -90,18 +90,18 @@ public class Intake {
     }
 
     public String getComment() {
-        return comment_;
+        return filePath_;
     }
 
     public void setComment(String comment_) {
-        this.comment_ = comment_;
+        this.filePath_ = comment_;
     }
 
-    public int getCategory(){
+    public Integer getCategory(){
         return category_;
     }
 
-    public void setCategory(int category_){
+    public void setCategory(Integer category_){
         this.category_ = category_;
     }
 
