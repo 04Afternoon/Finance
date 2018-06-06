@@ -338,22 +338,4 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         });
     }
 
-    public int getOrientation(String image_absolute_path) throws IOException {
-        ExifInterface ei = new ExifInterface(image_absolute_path);
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return 90;
-
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return 180;
-
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return 270;
-
-            default:
-                return 0;
-        }
-    }
 }

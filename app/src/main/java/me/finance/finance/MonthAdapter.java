@@ -105,10 +105,6 @@ public class MonthAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public List<Intake> getItems() {
-        return items;
-    }
-
     public void setItems(List<Intake> items) {
         this.items = items;
     }

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance(this);
         databaseHandler.open();
         databaseHandler.createTables();
-        //databaseHandler.insertDummyValues();
+//        databaseHandler.insertDummyValues();
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

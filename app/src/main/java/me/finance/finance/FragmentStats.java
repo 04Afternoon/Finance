@@ -467,7 +467,6 @@ public class FragmentStats extends Fragment implements DialogInterface.OnClickLi
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        AlertDialog dialog = (AlertDialog) dialogInterface;
         List<Date> dates = calendar.getSelectedDates();
         startDate = dates.get(0);
         endDate = dates.get(dates.size() - 1);
