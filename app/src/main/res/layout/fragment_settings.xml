@@ -37,20 +37,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
-        android:layout_width="382dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:background="#bed4dc"
-        android:text="( ͡° ͜ʖ ͡°)"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clear_database_button" />
-
-    <Button
         android:id="@+id/clear_database_button"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
@@ -63,20 +49,6 @@
         app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accounts_settings_button" />
-
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="382dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:background="#bed4dc"
-        android:text="(☞ﾟヮﾟ)☞"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_settings"
