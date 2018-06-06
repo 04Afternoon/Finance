@@ -102,6 +102,9 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             EasyImage.openChooserWithGallery(InOutPermsActivity.this, "Choose your receipt", 0);
         });
 
+
+
+
         final EditText end_date_text_field = findViewById(R.id.end_text_field);
 
         Calendar calendar = Calendar.getInstance();
@@ -180,6 +183,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
         }
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorySpinnerList);
         categorySpinner = findViewById(R.id.category_spinner);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
 
         ArrayList<String> paymentSpinnerList = new ArrayList<String>();
@@ -188,6 +192,7 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
             paymentSpinnerList.add(paymentList.get(i).getName());
         }
         ArrayAdapter<String> paymentAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentSpinnerList);
+        paymentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paymentSpinner = findViewById(R.id.payment_opt_spinner);
         paymentSpinner.setAdapter(paymentAdapter);
 
