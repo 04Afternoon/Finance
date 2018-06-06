@@ -2,7 +2,9 @@ package me.finance.finance;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -66,11 +68,22 @@ public class FragmentSettings extends Fragment {
         clear_database.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseHandler.deleteTableContents();
-                databaseHandler.addPayment(new Payment("Cash"));
 
-                Toast toast = Toast.makeText(view.getContext(), "Database cleared successfully!", Toast.LENGTH_SHORT);
-                toast.show();
+
+                AlertDialog.Builder alertDialogBuilder =
+                        new AlertDialog.Builder(FragmentSettings.this.getContext())
+                                .setTitle("Delete Database")
+                                .setMessage("Do you want to delete the Database?")
+                                .setPositiveButton("Yes", (dialog, which) -> {
+                                    databaseHandler.deleteTableContents();
+                                    databaseHandler.addPayment(new Payment("Cash"));
+                                    Toast toast = Toast.makeText(view.getContext(), "Database cleared successfully!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                })
+                                .setNegativeButton("No", (dialog, which) -> dialog.cancel());
+
+                alertDialogBuilder.show();
+
             }
         });
         return view;
