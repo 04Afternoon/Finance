@@ -2,10 +2,14 @@ package me.finance.finance;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,11 +23,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private TextView mTextMessage;
     private DatabaseHandler DBHandler;
     private Toolbar myToolbar;
-
-
-    private static final int NUM_PAGES = 5;
-    private ViewPager mPager;
-    private FragmentPagerAdapter mPagerAdapter;
+    private ViewPager mViewPager;
+    private FragmentManager fragmentManager;
+    private BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +37,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         databaseHandler.createTables();
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
         getSupportActionBar().hide();
 
-        switchFragment(R.id.navigation_balance);
-/*
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setAdapter(new SamplePagerAdapter(
+                getSupportFragmentManager()));
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        */
+        switchFragment(R.id.navigation_balance);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private boolean switchFragment(int id) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         switch (id) {
             case R.id.navigation_balance:
                 myToolbar = (Toolbar) findViewById(R.id.toolbar_balance);
@@ -92,5 +92,43 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
 
+    }
+    public class SamplePagerAdapter extends FragmentPagerAdapter {
+
+        public SamplePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            /** Show a Fragment based on the position of the current screen */
+            if (position == 0) {
+                //switchFragment(R.layout.fragment_balance);
+                navigation.setSelectedItemId(0);
+                FragmentBalance bal = new FragmentBalance();
+                return bal;
+            } else if(position == 1) {
+                //switchFragment(R.layout.fragment_months);
+                navigation.setSelectedItemId(R.id.navigation_months);
+                return new FragmentMonths();
+            } else if(position == 2) {
+                //switchFragment(R.layout.fragment_permanents);
+                navigation.setSelectedItemId(R.id.navigation_permanents);
+                return new FragmentPermanents();
+            } else if(position == 3) {
+                //switchFragment(R.layout.fragment_stats);
+                navigation.setSelectedItemId(R.id.navigation_stats);
+                return new FragmentStats();
+            } else {
+                //switchFragment(R.layout.fragment_settings);
+                navigation.setSelectedItemId(R.id.navigation_settings);
+                return new FragmentSettings();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
     }
 }
