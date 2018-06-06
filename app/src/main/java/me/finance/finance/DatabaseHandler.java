@@ -151,6 +151,26 @@ public class DatabaseHandler{
         return category;
     }
 
+    public Category getCategory(String name) {
+        Category category = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            category = new Category(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return category;
+    }
+
+    public Payment getPayment(String name) {
+        Payment payment = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM payment WHERE name = ?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            payment = new Payment(cursor.getInt(0), cursor.getString(1));
+        }
+        cursor.close();
+        return payment;
+    }
+
     public int getCategoryId(String name)
     {
         Cursor cursor = database.rawQuery("SELECT * FROM categories WHERE name = ?", new String[]{String.valueOf(name)});
@@ -322,6 +342,36 @@ public class DatabaseHandler{
         }
         cursor.close();
         return intake;
+    }
+
+    public List<Intake> getIntakes(Payment payment_opt, Date startDate, Date endDate)
+    {
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND payment_opt = ?", new String[]{convertDate(startDate), convertDate(endDate), String.valueOf(payment_opt.getId())});
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(5)) {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, cursor.getInt(6)));
+            } else {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
+            }
+        }
+        cursor.close();
+        return intakes;
+    }
+
+    public List<Intake> getIntakes(Category category, Date startDate, Date endDate)
+    {
+        List<Intake> intakes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM intakes WHERE date BETWEEN ? AND ? AND  category = ?", new String[]{convertDate(startDate), convertDate(endDate), String.valueOf(category.getId())});
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(5)) {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, cursor.getInt(6)));
+            } else {
+                intakes.add(new Intake(cursor.getInt(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)));
+            }
+        }
+        cursor.close();
+        return intakes;
     }
 
     public ArrayList<Intake> getPositiveIntakes()
