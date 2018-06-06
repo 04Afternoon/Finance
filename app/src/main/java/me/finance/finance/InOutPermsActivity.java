@@ -155,8 +155,10 @@ public class InOutPermsActivity extends AppCompatActivity implements RadioGroup.
 
 
         if (outGoing) {
+            outgoingRadioButton.setChecked(true);
             value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_minus), null, null, null);
         } else {
+            intakeRadioButton.setChecked(true);
             value_text_field.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_action_add), null, null, null);
         }
 
